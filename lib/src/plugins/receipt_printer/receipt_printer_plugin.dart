@@ -1,56 +1,77 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/registry/registry.dart';
 import 'package:flutter/foundation.dart';
 
-// Добавлено: строковая константа для типа
-const String receiptPrinterType = 'receipt';
-
-/// Настройки для Receipt-принтера
 class ReceiptPrinterSettings extends PrinterSettings {
-  ReceiptPrinterSettings({required super.connectionParams});
+  ReceiptPrinterSettings({
+    required super.initConnectionParams,
+    required super.onSettingsChanged,
+  });
 
-  // Реализация обязательного геттера
+  final PaperSize paperSize = PaperSize.mm80;
+
   @override
-  Map<String, dynamic> get extraSettingsToJson => {
-    // Добавьте сюда специфичные для Receipt-принтера поля для сериализации
-  };
+  PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
+    languages: const [PrinterLanguage.esc],
+    connectionTypes: const [
+      DiscoveryConnectionType.usb,
+      DiscoveryConnectionType.tcp,
+      DiscoveryConnectionType.sdk,
+    ],
+  );
+
+  @override
+  Map<String, dynamic> get extraSettingsToJson => {};
 }
 
-/// Обработчик протокола для Receipt-принтера
 class ReceiptPrinterHandler
     extends PrinterProtocolHandler<ReceiptPrinterSettings> {
-  ReceiptPrinterHandler(super.settings); // Передача настроек в super
+  ReceiptPrinterHandler({required super.settings, required super.manager});
 
   @override
-  Future<void> connect() async {
-    // TODO: Реализовать подключение к принтеру (USB или сеть)
-    debugPrint('Connecting to Receipt Printer...');
-    await Future.delayed(const Duration(milliseconds: 500)); // Placeholder
+  Future<bool> getStatus() async {
+    if (settings.connectionParams == null) {
+      return false;
+    }
+    final status = await manager.api.getPrinterStatus(
+      settings.connectionParams!,
+    );
+    return status.success;
+  }
+
+  @override
+  Future<void> testPrint() async {
+    await print(ReceiptPrintJob(receiptHTML: '<h1>Test Print</h1>'));
   }
 
   @override
   Future<PrintResult> print(PrintJob job) async {
-    // TODO: Реализовать отправку данных на принтер
-    debugPrint('Printing on Receipt Printer: ${job.runtimeType}');
-    await Future.delayed(const Duration(seconds: 1)); // Placeholder
+    if (settings.connectionParams == null) {
+      return PrintResult(
+        success: false,
+        message: 'Connection parameters are null',
+      );
+    }
+    if (job is! ReceiptPrintJob) {
+      return PrintResult(success: false, message: 'Invalid job type');
+    }
+    final receiptHTML = job.receiptHTML;
+    debugPrint('Printing on Receipt Printer: $receiptHTML');
+    try {
+      await manager.api.printEscHTML(
+        settings.connectionParams!,
+        receiptHTML,
+        settings.paperSize.value,
+      );
+    } catch (e) {
+      debugPrint('Error printing receipt: $e');
+      return PrintResult(success: false, message: e.toString());
+    }
     return PrintResult(success: true);
-  }
-
-  @override
-  Future<void> disconnect() async {
-    // TODO: Реализовать отключение
-    debugPrint('Disconnecting from Receipt Printer...');
-    await Future.delayed(const Duration(milliseconds: 100)); // Placeholder
   }
 }
 
-/// Регистрация Receipt-принтера
-void registerReceiptPrinter() {
-  PrinterPluginRegistry.registerWithCtor<ReceiptPrinterSettings>(
-    // Используем константу
-    typeName: receiptPrinterType,
-    ctor: (params, json) => ReceiptPrinterSettings(connectionParams: params),
-    createHandler:
-        (settings) => ReceiptPrinterHandler(settings as ReceiptPrinterSettings),
-  );
+class ReceiptPrintJob extends PrintJob {
+  final String receiptHTML;
+
+  ReceiptPrintJob({required this.receiptHTML});
 }

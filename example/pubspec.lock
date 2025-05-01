@@ -49,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -214,24 +206,16 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1+2025041701"
+    version: "0.2.3+2025042701"
   pos_printers:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
-      ref: "4e9dc5f618d8b7c313b0e72dedb493d515313e95"
-      resolved-ref: "4e9dc5f618d8b7c313b0e72dedb493d515313e95"
+      ref: "01dac75d5febb7c6415fb140c3d7ed20092915e9"
+      resolved-ref: "01dac75d5febb7c6415fb140c3d7ed20092915e9"
       url: "https://github.com/nikitiser/pos_printers.git"
     source: git
-    version: "0.3.1+2025041901"
-  rxdart:
-    dependency: "direct main"
-    description:
-      name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.27.7"
+    version: "0.3.2+2025050103"
   shared_preferences:
     dependency: transitive
     description:

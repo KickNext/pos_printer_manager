@@ -1,5 +1,5 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printers/pos_printers.dart';
+import 'package:pos_printer_manager/src/models/printer_config.dart';
 
 /// Функция десериализации настроек принтера из JSON
 typedef SettingsDeserializer =
@@ -11,26 +11,26 @@ typedef HandlerFactory =
 
 class PrinterPluginRegistry {
   // Изменено: ключи теперь строки
-  static final Map<String, SettingsDeserializer> _deserializers = {};
-  static final Map<String, HandlerFactory> _factories = {};
+  static final Map<PrinterPOSType, SettingsDeserializer> _deserializers = {};
+  static final Map<PrinterPOSType, HandlerFactory> _factories = {};
 
   /// Регистрирует плагин по строковому типу настроек
   static void register<T extends PrinterSettings>({
     // Добавлено: строковый идентификатор типа
-    required String typeName,
+    required PrinterPOSType printerType,
     required SettingsDeserializer deserializeSettings,
     required HandlerFactory createHandler,
   }) {
-    _deserializers[typeName] = deserializeSettings;
-    _factories[typeName] = createHandler;
+    _deserializers[printerType] = deserializeSettings;
+    _factories[printerType] = createHandler;
   }
 
   /// Упрощённая регистрация плагина
   static void registerWithCtor<T extends PrinterSettings>({
     // Добавлено: строковый идентификатор типа
-    required String typeName,
+    required PrinterPOSType printerPosType,
     required T Function(
-      PrinterConnectionParams params,
+      PrinterConnectionParamsDTO? params,
       Map<String, dynamic> json,
     )
     ctor,
@@ -38,7 +38,7 @@ class PrinterPluginRegistry {
   }) {
     register<T>(
       // Передаем typeName
-      typeName: typeName,
+      printerType: printerPosType,
       deserializeSettings: (json) => PrinterSettings.fromJson(json, ctor),
       createHandler: createHandler,
     );
@@ -47,12 +47,12 @@ class PrinterPluginRegistry {
   /// Строит обработчик протокола принтера по конфигурации
   static PrinterProtocolHandler buildHandler(PrinterConfig config) {
     // Используем строковый тип из конфига
-    final typeName = config.settingsType;
-    final deser = _deserializers[typeName];
-    final factory = _factories[typeName];
+    final printerPosType = config.printerPosType;
+    final deser = _deserializers[printerPosType];
+    final factory = _factories[printerPosType];
     if (deser == null || factory == null) {
       throw StateError(
-        'Handler for type \'$typeName\' is not registered',
+        'Handler for type \'$printerPosType\' is not registered',
       );
     }
     final settings = deser(config.rawSettings);

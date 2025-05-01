@@ -1,55 +1,77 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/registry/registry.dart';
 import 'package:flutter/foundation.dart';
 
-// Добавлено: строковая константа для типа
-const String kitchenPrinterType = 'kitchen';
-
-/// Настройки для Kitchen-принтера
 class KitchenPrinterSettings extends PrinterSettings {
-  KitchenPrinterSettings({required super.connectionParams});
+  KitchenPrinterSettings({
+    required super.initConnectionParams,
+    required super.onSettingsChanged,
+  });
+
+  final PaperSize paperSize = PaperSize.mm80;
 
   @override
-  Map<String, dynamic> get extraSettingsToJson => {
-    // Добавьте сюда специфичные для Kitchen-принтера поля для сериализации
-  };
+  PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
+    languages: const [PrinterLanguage.esc],
+    connectionTypes: const [
+      DiscoveryConnectionType.usb,
+      DiscoveryConnectionType.tcp,
+      DiscoveryConnectionType.sdk,
+    ],
+  );
+
+  @override
+  Map<String, dynamic> get extraSettingsToJson => {};
 }
 
-/// Обработчик протокола для Kitchen-принтера
 class KitchenPrinterHandler
     extends PrinterProtocolHandler<KitchenPrinterSettings> {
-  KitchenPrinterHandler(super.settings);
+  KitchenPrinterHandler({required super.settings, required super.manager});
 
   @override
-  Future<void> connect() async {
-    // TODO: Implement connection logic for kitchen printer
-    await Future.delayed(const Duration(milliseconds: 500)); // Placeholder
-    debugPrint('Connecting to Kitchen Printer...');
+  Future<bool> getStatus() async {
+    if (settings.connectionParams == null) {
+      return false;
+    }
+    final status = await manager.api.getPrinterStatus(
+      settings.connectionParams!,
+    );
+    return status.success;
   }
 
   @override
-  Future<void> disconnect() async {
-    // TODO: Implement disconnection logic for kitchen printer
-    await Future.delayed(const Duration(milliseconds: 100)); // Placeholder
-    debugPrint('Disconnecting from Kitchen Printer...');
+  Future<void> testPrint() async {
+    await print(KitchenPrintJob(data: buildEscTestPrintCommand("Test print")));
   }
 
   @override
   Future<PrintResult> print(PrintJob job) async {
-    // TODO: Implement print logic for kitchen printer
-    debugPrint('Printing on Kitchen Printer: ${job.runtimeType}');
-    await Future.delayed(const Duration(seconds: 1)); // Placeholder
+    if (settings.connectionParams == null) {
+      return PrintResult(
+        success: false,
+        message: 'Connection parameters are null',
+      );
+    }
+    if (job is! KitchenPrintJob) {
+      return PrintResult(success: false, message: 'Invalid job type');
+    }
+    final dataForPrint = job.data;
+    debugPrint('Printing on Kitchen Printer: $dataForPrint');
+    try {
+      await manager.api.printEscRawData(
+        settings.connectionParams!,
+        dataForPrint,
+        settings.paperSize.value,
+      );
+    } catch (e) {
+      debugPrint('Error printing kitchen order: $e');
+      return PrintResult(success: false, message: e.toString());
+    }
     return PrintResult(success: true);
   }
 }
 
-/// Регистрация Kitchen-принтера
-void registerKitchenPrinter() {
-  PrinterPluginRegistry.registerWithCtor<KitchenPrinterSettings>(
-    // Используем константу
-    typeName: kitchenPrinterType,
-    ctor: (params, json) => KitchenPrinterSettings(connectionParams: params),
-    createHandler:
-        (settings) => KitchenPrinterHandler(settings as KitchenPrinterSettings),
-  );
+class KitchenPrintJob extends PrintJob {
+  final Uint8List data;
+
+  KitchenPrintJob({required this.data});
 }

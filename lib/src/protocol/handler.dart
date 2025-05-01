@@ -1,21 +1,21 @@
-import '../plugins/printer_settings.dart';
+import 'package:pos_printer_manager/pos_printer_manager.dart';
 
 /// Абстрактный обработчик протокола принтера
 abstract class PrinterProtocolHandler<T extends PrinterSettings> {
+  final PrintersManager manager;
+
   /// Поле для хранения настроек
   final T settings;
 
   /// Конструктор для приема настроек
-  PrinterProtocolHandler(this.settings);
+  PrinterProtocolHandler({required this.settings, required this.manager});
 
-  /// Установить соединение с принтером
-  Future<void> connect();
+  Future<bool> getStatus(); //TODO:(kicknext) более точный статус
 
   /// Отправить задание на печать
   Future<PrintResult> print(PrintJob job);
 
-  /// Разорвать соединение
-  Future<void> disconnect();
+  Future<void> testPrint();
 }
 
 /// Результат печати
@@ -24,14 +24,4 @@ class PrintResult {
   final String? message;
 
   PrintResult({required this.success, this.message});
-}
-
-/// Базовый класс задания на печать
-abstract class PrintJob {}
-
-/// Простое задание, отправляющее сырые байты
-class RawPrintJob extends PrintJob {
-  final List<int> data;
-
-  RawPrintJob(this.data);
 }

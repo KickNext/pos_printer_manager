@@ -1,7 +1,6 @@
-// Реализация репозитория через SharedPreferences
 import 'dart:convert';
 
-import 'package:pos_printer_manager/src/config/config.dart';
+import 'package:pos_printer_manager/src/models/printer_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'repository.dart';

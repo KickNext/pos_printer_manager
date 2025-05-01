@@ -1,52 +1,89 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/registry/registry.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pos_printer_manager/src/plugins/label_printer/zpl_demo.dart';
 
-// Добавлено: строковая константа для типа
-const String labelPrinterType = 'label';
-
-/// Настройки для Label-принтера
 class LabelPrinterSettings extends PrinterSettings {
-  LabelPrinterSettings({required super.connectionParams});
+  LabelPrinterSettings({
+    required super.initConnectionParams,
+    required super.onSettingsChanged,
+  });
 
   @override
-  Map<String, dynamic> get extraSettingsToJson => {
-    // Добавьте сюда специфичные для Label-принтера поля для сериализации
-  };
+  PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
+    languages: const [PrinterLanguage.zpl],
+    connectionTypes: const [
+      DiscoveryConnectionType.usb,
+      DiscoveryConnectionType.tcp,
+      DiscoveryConnectionType.sdk,
+    ],
+  );
+
+  @override
+  Map<String, dynamic> get extraSettingsToJson => {};
 }
 
-/// Обработчик протокола для Label-принтера
 class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
-  LabelPrinterHandler(super.settings);
+  LabelPrinterHandler({required super.settings, required super.manager});
 
   @override
-  Future<void> connect() async {
-    // TODO: Implement connection logic for label printer
-    await Future.delayed(const Duration(milliseconds: 500)); // Placeholder
+  Future<bool> getStatus() async {
+    if (settings.connectionParams == null) {
+      return false;
+    }
+    final status = await manager.api.getZPLPrinterStatus(
+      settings.connectionParams!,
+    );
+    return status.success;
   }
 
   @override
-  Future<void> disconnect() async {
-    // TODO: Implement disconnection logic for label printer
-    await Future.delayed(const Duration(milliseconds: 100)); // Placeholder
+  Future<void> testPrint() async {
+    final zpl = buildZplLabel(
+      LabelData(
+        itemName: 'Test item for print label test',
+        unitAbr: 'kg',
+        oldPrice: r'$250010.34',
+        price: r'$250006.34',
+        storeName: 'Test Store Name',
+        date: '01/01/2025',
+        qrText: '0000000000000000',
+      ),
+    );
+    await print(LabelPrintJob(zplRawString: zpl));
   }
 
   @override
   Future<PrintResult> print(PrintJob job) async {
-    // TODO: Implement print logic for label printer
-    debugPrint('Printing on Label Printer: ${job.runtimeType}');
-    await Future.delayed(const Duration(seconds: 1)); // Placeholder
+    if (settings.connectionParams == null) {
+      return PrintResult(
+        success: false,
+        message: 'Connection parameters are null',
+      );
+    }
+    if (job is! LabelPrintJob) {
+      return PrintResult(success: false, message: 'Invalid job type');
+    }
+    final labelHTML = job.zplRawString;
+    debugPrint('''Printing on Label Printer: $labelHTML''');
+    final data = Uint8List.fromList(labelHTML.codeUnits);
+
+    try {
+      await manager.api.printZplRawData(
+        settings.connectionParams!,
+        data,
+        650, // 58 mm at 8 dots/mm
+        // 449, // 40 mm at 8 dots/mm
+      );
+    } catch (e) {
+      debugPrint('Error printing label: $e');
+      return PrintResult(success: false, message: e.toString());
+    }
     return PrintResult(success: true);
   }
 }
 
-/// Регистрация Label-принтера
-void registerLabelPrinter() {
-  PrinterPluginRegistry.registerWithCtor<LabelPrinterSettings>(
-    // Используем константу
-    typeName: labelPrinterType,
-    ctor: (params, json) => LabelPrinterSettings(connectionParams: params),
-    createHandler:
-        (settings) => LabelPrinterHandler(settings as LabelPrinterSettings),
-  );
+class LabelPrintJob extends PrintJob {
+  final String zplRawString;
+
+  LabelPrintJob({required this.zplRawString});
 }

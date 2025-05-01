@@ -1,30 +1,50 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pos_printer_manager/src/plugins/printer_connection_params_extension.dart';
 import 'package:pos_printers/pos_printers.dart';
 
 abstract class PrinterSettings {
-  final PrinterConnectionParams connectionParams;
+  PrinterConnectionParamsDTO? _connectionParams;
+  final Future<void> Function() onSettingsChanged;
 
-  PrinterSettings({required this.connectionParams});
+  PrinterConnectionParamsDTO? get connectionParams => _connectionParams;
+
+  PrinterSettings({
+    required initConnectionParams,
+    required this.onSettingsChanged,
+  }) {
+    _connectionParams = initConnectionParams;
+  }
+
+  PrinterDiscoveryFilter get discoveryFilter;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{
-      'connectionParams': connectionParams.encode(),
+      'connectionParams': connectionParams?.toJson(),
     };
     map.addAll(extraSettingsToJson);
     return map;
   }
 
+  Future<void> updateConnectionParams(
+    PrinterConnectionParamsDTO? newConnectionParams,
+  ) async {
+    _connectionParams = newConnectionParams;
+    await onSettingsChanged();
+  }
+
   @protected
   Map<String, dynamic> get extraSettingsToJson;
 
-  /// Декодирование настроек через переданный фабричный метод.
-  /// Creator получает параметры подключения и полный JSON для разбора дополнительных полей.
   static T fromJson<T extends PrinterSettings>(
     Map<String, dynamic> json,
-    T Function(PrinterConnectionParams params, Map<String, dynamic> json)
+    T Function(PrinterConnectionParamsDTO? params, Map<String, dynamic> json)
     creator,
   ) {
-    final cp = PrinterConnectionParams.decode(json['connectionParams']);
-    return creator(cp, json);
+    PrinterConnectionParamsDTO? pcp;
+    final pcpJson = json['connectionParams'] as Map<String, dynamic>?;
+    if (pcpJson != null) {
+      pcp = PrinterConnectionParamsExtension.fromJson(json['connectionParams']);
+    }
+    return creator(pcp, json);
   }
 }

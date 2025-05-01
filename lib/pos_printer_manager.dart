@@ -1,17 +1,20 @@
-library;
+// Auto-generated exports
 
 export 'src/manager.dart';
-export 'src/protocol/handler.dart';
-// Добавлено: экспорт protocol.dart для PrinterState
-export 'src/protocol/protocol.dart';
-// Добавлено: экспорт config.dart для PrinterConfig
-export 'src/config/config.dart';
-// Добавлено: экспорт констант типов принтеров
-export 'src/plugins/receipt_printer/receipt_printer_plugin.dart'
-    show receiptPrinterType, ReceiptPrinterSettings, registerReceiptPrinter;
-export 'src/plugins/kitchen_printer/kitchen_printer_plugin.dart'
-    show kitchenPrinterType, KitchenPrinterSettings, registerKitchenPrinter;
-export 'src/plugins/label_printer/label_printer_plugin.dart'
-    show labelPrinterType, LabelPrinterSettings, registerLabelPrinter;
-// Добавлено: экспорт базовых настроек
+export 'src/models/pos_printer.dart';
+export 'src/models/printer_config.dart';
+export 'src/plugins/kitchen_printer/kitchen_printer_plugin.dart';
+export 'src/plugins/label_printer/label_printer_plugin.dart';
+export 'src/plugins/label_printer/zpl_demo.dart';
+export 'src/plugins/printer_connection_params_extension.dart';
 export 'src/plugins/printer_settings.dart';
+export 'src/plugins/printer_type.dart';
+export 'src/plugins/receipt_printer/receipt_printer_plugin.dart';
+export 'src/printers_connections_handler.dart';
+export 'src/printers_finder.dart';
+export 'src/protocol/handler.dart';
+export 'src/protocol/print_job.dart';
+export 'src/registry/registry.dart';
+export 'src/repository/repository.dart';
+export 'src/repository/shared_prefs_repo.dart';
+export 'package:pos_printers/pos_printers.dart';
