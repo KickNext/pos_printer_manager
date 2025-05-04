@@ -14,7 +14,7 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
   late String? printerName =
       'Printer ${widget.printerManager.printers.length + 1}';
 
-  PrinterPOSType selectedPrinterType = PrinterPOSType.receiptPrinter;
+  PrinterPOSType? selectedPrinterType;
 
   void back() {
     Navigator.of(context).pop();
@@ -41,24 +41,52 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     SegmentedButton<PrinterPOSType>(
-                      segments: const <ButtonSegment<PrinterPOSType>>[
+                      emptySelectionAllowed: true,
+                      segments: <ButtonSegment<PrinterPOSType>>[
                         ButtonSegment<PrinterPOSType>(
                           value: PrinterPOSType.receiptPrinter,
                           label: Text('Receipt printer'),
                           icon: Icon(Icons.receipt_long_rounded),
+                          enabled:
+                              widget.printerManager.maxReceiptPrinters >
+                              widget.printerManager.printers
+                                  .where(
+                                    (p) =>
+                                        p.type == PrinterPOSType.receiptPrinter,
+                                  )
+                                  .length,
                         ),
                         ButtonSegment<PrinterPOSType>(
                           value: PrinterPOSType.kitchenPrinter,
                           label: Text('Kitchen printer'),
                           icon: Icon(Icons.soup_kitchen_rounded),
+                          enabled:
+                              widget.printerManager.maxKitchenPrinters >
+                              widget.printerManager.printers
+                                  .where(
+                                    (p) =>
+                                        p.type == PrinterPOSType.kitchenPrinter,
+                                  )
+                                  .length,
                         ),
                         ButtonSegment<PrinterPOSType>(
                           value: PrinterPOSType.labelPrinter,
                           label: Text('Label printer'),
                           icon: Icon(Icons.sticky_note_2_rounded),
+                          enabled:
+                              widget.printerManager.maxLabelPrinters >
+                              widget.printerManager.printers
+                                  .where(
+                                    (p) =>
+                                        p.type == PrinterPOSType.labelPrinter,
+                                  )
+                                  .length,
                         ),
                       ],
-                      selected: <PrinterPOSType>{selectedPrinterType},
+                      selected:
+                          selectedPrinterType != null
+                              ? <PrinterPOSType>{selectedPrinterType!}
+                              : <PrinterPOSType>{},
                       onSelectionChanged: (Set<PrinterPOSType> newSelection) {
                         setState(() {
                           // By default there is only a single segment that can be
@@ -80,17 +108,20 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                         },
                       ),
                     ),
-                
+
                     ElevatedButton.icon(
-                      onPressed: () async {
-                        if (printerName != null && printerName!.isNotEmpty) {
-                          await widget.printerManager.addPosPrinter(
-                            printerName ?? '',
-                            selectedPrinterType,
-                          );
-                          back();
-                        }
-                      },
+                      onPressed:
+                          printerName != null &&
+                                  printerName!.isNotEmpty &&
+                                  selectedPrinterType != null
+                              ? () async {
+                                await widget.printerManager.addPosPrinter(
+                                  printerName ?? '',
+                                  selectedPrinterType!,
+                                );
+                                back();
+                              }
+                              : null,
                       icon: const Icon(Icons.add_rounded),
                       label: const Text('Add printer'),
                     ),

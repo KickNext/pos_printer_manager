@@ -56,30 +56,151 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          spacing: 16,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16,
-              children: [
-                Text('Printer Type: ${widget.printer.type.displayName}'),
-                Text('Printer Name: ${widget.printer.config.name}'),
-                ElevatedButton(
-                  onPressed: () async {
-                    await widget.printer.handler.testPrint();
-                  },
-                  child: Text('Test Print'),
-                ),
-              ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 800),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 600;
+                return Padding(
+                  padding:
+                      isWide
+                          ? const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            bottom: 16,
+                          )
+                          : const EdgeInsets.all(16),
+                  child:
+                      isWide
+                          ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  margin: const EdgeInsets.only(
+                                    right: 16,
+                                    bottom: 16,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(
+                                          widget.printer.isConnected
+                                              ? Icons.check_circle
+                                              : Icons.cancel,
+                                          color:
+                                              widget.printer.isConnected
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                        ),
+                                        title: Text(widget.printer.config.name),
+                                        subtitle: Text(
+                                          'Type: ${widget.printer.type.displayName}',
+                                        ),
+                                      ),
+                                      ButtonBar(
+                                        alignment: MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton.icon(
+                                            onPressed: () async {
+                                              await widget.printer.handler
+                                                  .testPrint();
+                                            },
+                                            icon: Icon(Icons.print),
+                                            label: Text('Test Print'),
+                                          ),
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              unawaited(
+                                                widget.printer.handler.manager
+                                                    .removePosPrinter(
+                                                      widget.printer.id,
+                                                    ),
+                                              );
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: Icon(Icons.delete),
+                                            label: Text('Remove Printer'),
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: ConnectionParameters(
+                                  printer: widget.printer,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        widget.printer.isConnected
+                                            ? Icons.check_circle
+                                            : Icons.cancel,
+                                        color:
+                                            widget.printer.isConnected
+                                                ? Colors.green
+                                                : Colors.red,
+                                      ),
+                                      title: Text(widget.printer.config.name),
+                                      subtitle: Text(
+                                        'Type: ${widget.printer.type.displayName}',
+                                      ),
+                                    ),
+                                    ButtonBar(
+                                      alignment: MainAxisAlignment.end,
+                                      children: [
+                                        ElevatedButton.icon(
+                                          onPressed: () async {
+                                            await widget.printer.handler
+                                                .testPrint();
+                                          },
+                                          icon: Icon(Icons.print),
+                                          label: Text('Test Print'),
+                                        ),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                            unawaited(
+                                              widget.printer.handler.manager
+                                                  .removePosPrinter(
+                                                    widget.printer.id,
+                                                  ),
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                          icon: Icon(Icons.delete),
+                                          label: Text('Remove Printer'),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ConnectionParameters(printer: widget.printer),
+                            ],
+                          ),
+                );
+              },
             ),
-            ConnectionParameters(printer: widget.printer),
-          ],
+          ),
         ),
       ),
     );

@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: PrintersPage(printerManager: printerManager),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Printers Manager Demo'),
+        ),
+        body: PrintersPage(printerManager: printerManager)),
     );
   }
 }

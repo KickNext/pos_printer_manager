@@ -34,14 +34,17 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
 
   @override
   Widget build(BuildContext context) {
-    return connectionParams == null
-        ? ElevatedButton(
-          onPressed: () {
-            _connectPrinter();
-          },
-          child: Text('Connect printer'),
-        )
-        : _buildConnectionParameters();
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 360),
+      child:
+          connectionParams == null
+              ? ElevatedButton.icon(
+                onPressed: _connectPrinter,
+                icon: Icon(Icons.usb),
+                label: Text('Connect Printer'),
+              )
+              : _buildConnectionParameters(),
+    );
   }
 
   Widget _buildConnectionParameters() {
@@ -49,74 +52,115 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
       return const Text('No connection parameters available');
     }
     final params = connectionParams!;
-    switch (connectionParams!.connectionType) {
+    switch (params.connectionType) {
       case PosPrinterConnectionType.usb:
         return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('USB Connection'),
-                Text(
-                  '${params.usbParams?.manufacturer} ${params.usbParams?.productName}',
-                ),
-                Text('Serial Number: ${params.usbParams?.serialNumber}'),
-                Text('Vendor ID: ${params.usbParams?.vendorId}'),
-                Text('Product ID: ${params.usbParams?.productId}'),
-                ElevatedButton(
-                  onPressed: () {
-                    _connectPrinter();
-                  },
-                  child: Text('Change connection'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _disconnectPrinter();
-                  },
-                  child: Text('Remove connection'),
-                ),
-              ],
-            ),
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(leading: Icon(Icons.usb), title: Text('USB Connection')),
+              Divider(),
+              ListTile(
+                leading: Icon(Icons.business),
+                title: Text('Manufacturer'),
+                subtitle: Text(params.usbParams?.manufacturer ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.label),
+                title: Text('Product Name'),
+                subtitle: Text(params.usbParams?.productName ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.confirmation_number),
+                title: Text('Serial Number'),
+                subtitle: Text(params.usbParams?.serialNumber ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.numbers),
+                title: Text('Vendor ID'),
+                subtitle: Text('${params.usbParams?.vendorId ?? '-'}'),
+              ),
+              ListTile(
+                leading: Icon(Icons.numbers),
+                title: Text('Product ID'),
+                subtitle: Text('${params.usbParams?.productId ?? '-'}'),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: _connectPrinter,
+                    icon: Icon(Icons.edit),
+                    label: Text('Change'),
+                  ),
+                  TextButton.icon(
+                    onPressed: _disconnectPrinter,
+                    icon: Icon(Icons.delete),
+                    label: Text('Remove'),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
+
       case PosPrinterConnectionType.network:
         return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Network Connection'),
-                Text('IP Address: ${params.networkParams!.ipAddress}'),
-                Text('Mask: ${params.networkParams?.mask ?? 'Unknown'}'),
-                Text('Geteway: ${params.networkParams?.gateway ?? 'Unknown'}'),
-                Text(
-                  'Mac Address: ${params.networkParams?.macAddress ?? 'Unknown'}',
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.wifi),
+                title: Text('Network Connection'),
+              ),
+              Divider(),
+              ListTile(
+                leading: Icon(Icons.network_wifi),
+                title: Text('IP Address'),
+                subtitle: Text(params.networkParams?.ipAddress ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.router),
+                title: Text('Subnet Mask'),
+                subtitle: Text(params.networkParams?.mask ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.dns),
+                title: Text('Gateway'),
+                subtitle: Text(params.networkParams?.gateway ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.link),
+                title: Text('MAC Address'),
+                subtitle: Text(params.networkParams?.macAddress ?? '-'),
+              ),
+              ListTile(
+                leading: Icon(Icons.settings_ethernet),
+                title: Text('DHCP'),
+                subtitle: Text(
+                  params.networkParams?.dhcp == null
+                      ? '-'
+                      : (params.networkParams!.dhcp! ? 'Enabled' : 'Disabled'),
                 ),
-                Text(
-                  'DHCP: ${params.networkParams?.dhcp == null
-                      ? 'Unknown'
-                      : params.networkParams!.dhcp!
-                      ? 'Enabled'
-                      : 'Disabled'}',
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _connectPrinter();
-                  },
-                  child: Text('Change connection'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _disconnectPrinter();
-                  },
-                  child: Text('Remove connection'),
-                ),
-              ],
-            ),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: _connectPrinter,
+                    icon: Icon(Icons.edit),
+                    label: Text('Change'),
+                  ),
+                  TextButton.icon(
+                    onPressed: _disconnectPrinter,
+                    icon: Icon(Icons.delete),
+                    label: Text('Remove'),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
     }

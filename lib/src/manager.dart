@@ -10,6 +10,37 @@ class PrintersManager with ChangeNotifier {
 
   late final PrintersConnectionsHandler _connectionsHandler;
 
+  final int maxReceiptPrinters = 1;
+  final int maxKitchenPrinters = 0;
+  final int maxLabelPrinters = 1;
+
+  bool get canAddPrinter {
+    if (printers.isEmpty) {
+      return true;
+    }
+    final receiptPrinters =
+        printers
+            .where((printer) => printer.type == PrinterPOSType.receiptPrinter)
+            .length;
+    final kitchenPrinters =
+        printers
+            .where((printer) => printer.type == PrinterPOSType.kitchenPrinter)
+            .length;
+    final labelPrinters =
+        printers
+            .where((printer) => printer.type == PrinterPOSType.labelPrinter)
+            .length;
+
+    // Отладочный вывод
+    debugPrint(
+      'Receipt Printers: $receiptPrinters, Kitchen Printers: $kitchenPrinters, Label Printers: $labelPrinters',
+    );
+
+    return receiptPrinters < maxReceiptPrinters ||
+        kitchenPrinters < maxKitchenPrinters ||
+        labelPrinters < maxLabelPrinters;
+  }
+
   List<PosPrinter> _printers = [];
 
   List<PosPrinter> get printers => List.unmodifiable(_printers);
@@ -43,7 +74,13 @@ class PrintersManager with ChangeNotifier {
       printerPosType: type,
       rawSettings: {},
     );
-    _printers.add(PosPrinter(config: config, saveConfig: () => saveConfigs(), notify: () => notifyListeners()));
+    _printers.add(
+      PosPrinter(
+        config: config,
+        saveConfig: () => saveConfigs(),
+        notify: () => notifyListeners(),
+      ),
+    );
     await saveConfigs();
     notifyListeners();
   }

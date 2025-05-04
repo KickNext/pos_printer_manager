@@ -40,22 +40,22 @@ class _PrintersPageState extends State<PrintersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Printers')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Wrap(
           spacing: 16,
           runSpacing: 16,
-        crossAxisAlignment: WrapCrossAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            IconButton.filledTonal(
-              onPressed: onAddPrinter,
-              icon: const Icon(Icons.add),
-              tooltip: 'Add Printer',
+            if (widget.printerManager.canAddPrinter)
+              IconButton.filledTonal(
+                onPressed: onAddPrinter,
+                icon: const Icon(Icons.add),
+                tooltip: 'Add Printer',
+              ),
+            ...widget.printerManager.printers.map(
+              (p) => PrinterCard(printer: p),
             ),
-            ...widget.printerManager.printers
-                .map((p) => PrinterCard(printer: p))
-                .toList(),
           ],
         ),
       ),
