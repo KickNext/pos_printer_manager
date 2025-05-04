@@ -40,7 +40,28 @@ class ReceiptPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    await print(ReceiptPrintJob(receiptHTML: '<h1>Test Print</h1>'));
+    final index = manager.printers.indexWhere(
+      (p) => p.id == settings.connectionParams?.id,
+    );
+    if (index == -1) {
+      debugPrint('Printer not found in manager');
+      return;
+    }
+    final printer = manager.printers[index];
+    await print(ReceiptPrintJob(receiptHTML: '<h1>${printer.config.name}</h1>'));
+  }
+
+  Future<void> openCashDrawer() async {
+    if (settings.connectionParams == null) {
+      return;
+    }
+    try {
+      await manager.api.openCashBox(
+        settings.connectionParams!,
+      );
+    } catch (e) {
+      debugPrint('Error opening cash drawer: $e');
+    }
   }
 
   @override

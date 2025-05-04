@@ -1,5 +1,4 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/models/printer_config.dart';
 
 /// Функция десериализации настроек принтера из JSON
 typedef SettingsDeserializer =

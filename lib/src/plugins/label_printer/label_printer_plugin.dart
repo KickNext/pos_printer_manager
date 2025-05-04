@@ -1,6 +1,5 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pos_printer_manager/src/plugins/label_printer/zpl_demo.dart';
 
 class LabelPrinterSettings extends PrinterSettings {
   LabelPrinterSettings({
