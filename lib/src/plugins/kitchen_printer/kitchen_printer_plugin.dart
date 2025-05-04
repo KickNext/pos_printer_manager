@@ -5,9 +5,12 @@ class KitchenPrinterSettings extends PrinterSettings {
   KitchenPrinterSettings({
     required super.initConnectionParams,
     required super.onSettingsChanged,
+    required this.categoriesIds,
   });
 
   final PaperSize paperSize = PaperSize.mm80;
+
+  final List<String> categoriesIds;
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
@@ -19,8 +22,16 @@ class KitchenPrinterSettings extends PrinterSettings {
     ],
   );
 
+  Future<void> updateCategoriesIds(List<String> newCategoriesIds) async {
+    categoriesIds.clear();
+    categoriesIds.addAll(newCategoriesIds);
+    await onSettingsChanged();
+  }
+
   @override
-  Map<String, dynamic> get extraSettingsToJson => {};
+  Map<String, dynamic> get extraSettingsToJson => {
+    'categoriesIds': categoriesIds,
+  };
 }
 
 class KitchenPrinterHandler

@@ -65,11 +65,6 @@ class PrintersManager with ChangeNotifier {
         return e.config;
       }).toList(),
     );
-    for (var printer in _printers) {
-      if (!printer.isConnected) {
-        await printer.getStatus();
-      }
-    }
     notifyListeners();
   }
 

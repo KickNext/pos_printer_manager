@@ -48,6 +48,7 @@ enum PrinterPOSType {
               (params, json) => KitchenPrinterSettings(
                 initConnectionParams: params,
                 onSettingsChanged: () async => await manager.saveConfigs(),
+                categoriesIds: json['categoriesIds'] as List<String>? ?? [],
               ),
           createHandler:
               (settings) => KitchenPrinterHandler(
