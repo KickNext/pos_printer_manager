@@ -67,6 +67,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                   padding:
                       isWide
                           ? const EdgeInsets.only(
+                            top: 16,
                             left: 16,
                             right: 16,
                             bottom: 16,
