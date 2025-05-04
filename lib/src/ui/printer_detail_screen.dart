@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:example/connection_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 

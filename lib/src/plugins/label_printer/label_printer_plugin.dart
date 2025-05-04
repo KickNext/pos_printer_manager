@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,6 +7,9 @@ class LabelPrinterSettings extends PrinterSettings {
     required super.initConnectionParams,
     required super.onSettingsChanged,
   });
+  
+  @override
+  final IconData icon = Icons.sticky_note_2_rounded;
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
@@ -70,8 +74,7 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
       await manager.api.printZplRawData(
         settings.connectionParams!,
         data,
-        650, // 58 mm at 8 dots/mm
-        // 449, // 40 mm at 8 dots/mm
+        457,
       );
     } catch (e) {
       debugPrint('Error printing label: $e');

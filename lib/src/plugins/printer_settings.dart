@@ -17,6 +17,8 @@ abstract class PrinterSettings {
 
   PrinterDiscoveryFilter get discoveryFilter;
 
+  IconData get icon;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{
       'connectionParams': connectionParams?.toJson(),

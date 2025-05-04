@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,6 +9,9 @@ class ReceiptPrinterSettings extends PrinterSettings {
   });
 
   final PaperSize paperSize = PaperSize.mm80;
+
+  @override
+  final IconData icon = Icons.receipt_long_rounded;
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
@@ -40,15 +44,9 @@ class ReceiptPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    final index = manager.printers.indexWhere(
-      (p) => p.id == settings.connectionParams?.id,
+    await print(
+      ReceiptPrintJob(receiptHTML: '<h1>Test print</h1>'),
     );
-    if (index == -1) {
-      debugPrint('Printer not found in manager');
-      return;
-    }
-    final printer = manager.printers[index];
-    await print(ReceiptPrintJob(receiptHTML: '<h1>${printer.config.name}</h1>'));
   }
 
   Future<void> openCashDrawer() async {
@@ -56,9 +54,7 @@ class ReceiptPrinterHandler
       return;
     }
     try {
-      await manager.api.openCashBox(
-        settings.connectionParams!,
-      );
+      await manager.api.openCashBox(settings.connectionParams!);
     } catch (e) {
       debugPrint('Error opening cash drawer: $e');
     }

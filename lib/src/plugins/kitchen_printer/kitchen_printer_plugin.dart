@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,6 +12,9 @@ class KitchenPrinterSettings extends PrinterSettings {
   final PaperSize paperSize = PaperSize.mm80;
 
   final List<String> categoriesIds;
+  
+  @override
+  final IconData icon = Icons.soup_kitchen_rounded;
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(

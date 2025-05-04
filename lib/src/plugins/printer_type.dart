@@ -26,7 +26,6 @@ enum PrinterPOSType {
     switch (this) {
       case PrinterPOSType.receiptPrinter:
         PrinterPluginRegistry.registerWithCtor<ReceiptPrinterSettings>(
-          // Используем константу
           printerPosType: PrinterPOSType.receiptPrinter,
           ctor:
               (params, json) => ReceiptPrinterSettings(
@@ -42,14 +41,20 @@ enum PrinterPOSType {
         break;
       case PrinterPOSType.kitchenPrinter:
         PrinterPluginRegistry.registerWithCtor<KitchenPrinterSettings>(
-          // Используем константу
           printerPosType: PrinterPOSType.kitchenPrinter,
-          ctor:
-              (params, json) => KitchenPrinterSettings(
-                initConnectionParams: params,
-                onSettingsChanged: () async => await manager.saveConfigs(),
-                categoriesIds: json['categoriesIds'] as List<String>? ?? [],
-              ),
+          ctor: (params, json) {
+            final categoriesIdsJson = json['categoriesIds'];
+            final categoriesIds =
+                categoriesIdsJson is List
+                    ? categoriesIdsJson.map((e) => e as String).toList()
+                    : <String>[];
+
+            return KitchenPrinterSettings(
+              initConnectionParams: params,
+              onSettingsChanged: () async => await manager.saveConfigs(),
+              categoriesIds: categoriesIds,
+            );
+          },
           createHandler:
               (settings) => KitchenPrinterHandler(
                 settings: settings as KitchenPrinterSettings,
@@ -59,7 +64,6 @@ enum PrinterPOSType {
         break;
       case PrinterPOSType.labelPrinter:
         PrinterPluginRegistry.registerWithCtor<LabelPrinterSettings>(
-          // Используем константу
           printerPosType: PrinterPOSType.labelPrinter,
           ctor:
               (params, json) => LabelPrinterSettings(

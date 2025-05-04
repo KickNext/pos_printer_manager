@@ -1,4 +1,3 @@
-import 'package:example/discovered_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
