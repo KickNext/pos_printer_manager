@@ -20,7 +20,6 @@ class PrintersConnectionsHandler {
     _connectionEventsSub = _api.connectionEvents.listen((event) {
       if (event.type == PrinterConnectionEventType.attached) {
         if (event.printer != null) {
-          print('Printer attached: ${event.printer?.id}');
           if (_savedPrinters.any(
             (printer) =>
                 printer.handler.settings.connectionParams?.id ==
