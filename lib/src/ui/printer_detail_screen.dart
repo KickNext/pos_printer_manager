@@ -101,7 +101,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                                           'Type: ${widget.printer.type.displayName}',
                                         ),
                                       ),
-                                      ButtonBar(
+                                      OverflowBar(
                                         alignment: MainAxisAlignment.end,
                                         children: [
                                           ElevatedButton.icon(
@@ -163,7 +163,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                                         'Type: ${widget.printer.type.displayName}',
                                       ),
                                     ),
-                                    ButtonBar(
+                                    OverflowBar(
                                       alignment: MainAxisAlignment.end,
                                       children: [
                                         ElevatedButton.icon(

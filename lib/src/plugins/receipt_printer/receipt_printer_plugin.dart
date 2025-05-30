@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:flutter/foundation.dart';
 
 class ReceiptPrinterSettings extends PrinterSettings {
   ReceiptPrinterSettings({

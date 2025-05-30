@@ -86,7 +86,7 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
                 title: Text('Product ID'),
                 subtitle: Text('${params.usbParams?.productId ?? '-'}'),
               ),
-              ButtonBar(
+              OverflowBar(
                 alignment: MainAxisAlignment.end,
                 children: [
                   TextButton.icon(
@@ -145,7 +145,7 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
                       : (params.networkParams!.dhcp! ? 'Enabled' : 'Disabled'),
                 ),
               ),
-              ButtonBar(
+              OverflowBar(
                 alignment: MainAxisAlignment.end,
                 children: [
                   TextButton.icon(
