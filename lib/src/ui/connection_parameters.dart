@@ -11,15 +11,11 @@ class ConnectionParameters extends StatefulWidget {
 }
 
 class _ConnectionParametersState extends State<ConnectionParameters> {
-  PrinterConnectionParamsDTO? get connectionParams {
-    if (widget.printer.handler.settings.connectionParams == null) {
-      return null;
-    }
-    return widget.printer.handler.settings.connectionParams;
-  }
+  PrinterConnectionParamsDTO? get _params =>
+      widget.printer.handler.settings.connectionParams;
 
   Future<void> _connectPrinter() async {
-    showDialog(
+    await showDialog(
       context: context,
       builder: (_) => FindPrintersDialog(printer: widget.printer),
     );
@@ -35,134 +31,127 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 360),
+      constraints: const BoxConstraints(maxWidth: 360),
       child:
-          connectionParams == null
+          _params == null
               ? ElevatedButton.icon(
                 onPressed: _connectPrinter,
-                icon: Icon(Icons.usb),
-                label: Text('Connect Printer'),
+                icon: const Icon(Icons.usb),
+                label: const Text('Connect Printer'),
               )
-              : _buildConnectionParameters(),
+              : _buildConnectionParameters(_params!),
     );
   }
 
-  Widget _buildConnectionParameters() {
-    if (connectionParams == null) {
-      return const Text('No connection parameters available');
-    }
-    final params = connectionParams!;
+  Widget _buildConnectionParameters(PrinterConnectionParamsDTO params) {
     switch (params.connectionType) {
       case PosPrinterConnectionType.usb:
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(leading: Icon(Icons.usb), title: Text('USB Connection')),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.business),
-                title: Text('Manufacturer'),
-                subtitle: Text(params.usbParams?.manufacturer ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.label),
-                title: Text('Product Name'),
-                subtitle: Text(params.usbParams?.productName ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.confirmation_number),
-                title: Text('Serial Number'),
-                subtitle: Text(params.usbParams?.serialNumber ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.numbers),
-                title: Text('Vendor ID'),
-                subtitle: Text('${params.usbParams?.vendorId ?? '-'}'),
-              ),
-              ListTile(
-                leading: Icon(Icons.numbers),
-                title: Text('Product ID'),
-                subtitle: Text('${params.usbParams?.productId ?? '-'}'),
-              ),
-              OverflowBar(
-                alignment: MainAxisAlignment.end,
-                children: [
-                  TextButton.icon(
-                    onPressed: _connectPrinter,
-                    icon: Icon(Icons.edit),
-                    label: Text('Change'),
-                  ),
-                  TextButton.icon(
-                    onPressed: _disconnectPrinter,
-                    icon: Icon(Icons.delete),
-                    label: Text('Remove'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        final usb = params.usbParams;
+        return _ConnectionCard(
+          icon: Icons.usb,
+          title: 'USB Connection',
+          fields: [
+            _Field(Icons.business, 'Manufacturer', usb?.manufacturer),
+            _Field(Icons.label, 'Product Name', usb?.productName),
+            _Field(
+              Icons.confirmation_number,
+              'Serial Number',
+              usb?.serialNumber,
+            ),
+            _Field(Icons.numbers, 'Vendor ID', usb?.vendorId.toString()),
+            _Field(Icons.numbers, 'Product ID', usb?.productId.toString()),
+          ],
+          onEdit: _connectPrinter,
+          onRemove: _disconnectPrinter,
         );
-
       case PosPrinterConnectionType.network:
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.wifi),
-                title: Text('Network Connection'),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.network_wifi),
-                title: Text('IP Address'),
-                subtitle: Text(params.networkParams?.ipAddress ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.router),
-                title: Text('Subnet Mask'),
-                subtitle: Text(params.networkParams?.mask ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.dns),
-                title: Text('Gateway'),
-                subtitle: Text(params.networkParams?.gateway ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.link),
-                title: Text('MAC Address'),
-                subtitle: Text(params.networkParams?.macAddress ?? '-'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings_ethernet),
-                title: Text('DHCP'),
-                subtitle: Text(
-                  params.networkParams?.dhcp == null
-                      ? '-'
-                      : (params.networkParams!.dhcp! ? 'Enabled' : 'Disabled'),
-                ),
-              ),
-              OverflowBar(
-                alignment: MainAxisAlignment.end,
-                children: [
-                  TextButton.icon(
-                    onPressed: _connectPrinter,
-                    icon: Icon(Icons.edit),
-                    label: Text('Change'),
-                  ),
-                  TextButton.icon(
-                    onPressed: _disconnectPrinter,
-                    icon: Icon(Icons.delete),
-                    label: Text('Remove'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        final net = params.networkParams;
+        return _ConnectionCard(
+          icon: Icons.wifi,
+          title: 'Network Connection',
+          fields: [
+            _Field(Icons.network_wifi, 'IP Address', net?.ipAddress),
+            _Field(Icons.router, 'Subnet Mask', net?.mask),
+            _Field(Icons.dns, 'Gateway', net?.gateway),
+            _Field(Icons.link, 'MAC Address', net?.macAddress),
+            _Field(
+              Icons.settings_ethernet,
+              'DHCP',
+              net?.dhcp == null ? null : (net!.dhcp! ? 'Enabled' : 'Disabled'),
+            ),
+          ],
+          onEdit: _connectPrinter,
+          onRemove: _disconnectPrinter,
         );
     }
   }
+}
+
+class _ConnectionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final List<_Field> fields;
+  final VoidCallback onEdit;
+  final VoidCallback onRemove;
+
+  const _ConnectionCard({
+    required this.icon,
+    required this.title,
+    required this.fields,
+    required this.onEdit,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 360,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(leading: Icon(icon), title: Text(title), dense: true),
+            const Divider(),
+            ...fields.map((f) => f),
+            OverflowBar(
+              alignment: MainAxisAlignment.end,
+              children: [
+                TextButton.icon(
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Change'),
+                ),
+                TextButton.icon(
+                  onPressed: onRemove,
+                  icon: const Icon(Icons.delete),
+                  label: const Text('Remove'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Field extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String? value;
+
+  const _Field(this.icon, this.title, this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(value ?? '-'),
+      visualDensity: VisualDensity.compact,
+    );
+  }
+
+  // конец файла
 }

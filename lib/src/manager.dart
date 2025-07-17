@@ -11,8 +11,9 @@ class PrintersManager with ChangeNotifier {
   late final PrintersConnectionsHandler _connectionsHandler;
 
   final int maxReceiptPrinters = 1;
-  final int maxKitchenPrinters = 0;
+  final int maxKitchenPrinters = 9999;
   final int maxLabelPrinters = 1;
+  final int maxAndroBarPrinters = 1;
 
   bool get canAddPrinter {
     if (printers.isEmpty) {

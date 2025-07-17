@@ -1,8 +1,10 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
+import 'andro_bar_printer/andro_bar_printer_plugin.dart';
 
 enum PrinterPOSType {
   receiptPrinter,
   kitchenPrinter,
+  androBar,
   labelPrinter;
 
   String get displayName {
@@ -13,6 +15,8 @@ enum PrinterPOSType {
         return 'Kitchen printer';
       case PrinterPOSType.labelPrinter:
         return 'Label printer';
+      case PrinterPOSType.androBar:
+        return 'AndroBar';
     }
   }
 
@@ -73,6 +77,29 @@ enum PrinterPOSType {
           createHandler:
               (settings) => LabelPrinterHandler(
                 settings: settings as LabelPrinterSettings,
+                manager: manager,
+              ),
+        );
+        break;
+      case PrinterPOSType.androBar:
+        PrinterPluginRegistry.registerWithCtor<AndroBarPrinterSettings>(
+          printerPosType: PrinterPOSType.androBar,
+          ctor: (params, json) {
+            final categoriesIdsJson = json['categoriesIds'];
+            final categoriesIds =
+                categoriesIdsJson is List
+                    ? categoriesIdsJson.map((e) => e as String).toList()
+                    : <String>[];
+
+            return AndroBarPrinterSettings(
+              initConnectionParams: params,
+              onSettingsChanged: () async => await manager.saveConfigs(),
+              categoriesIds: categoriesIds,
+            );
+          },
+          createHandler:
+              (settings) => AndroBarPrinterHandler(
+                settings: settings as AndroBarPrinterSettings,
                 manager: manager,
               ),
         );

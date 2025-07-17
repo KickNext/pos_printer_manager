@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
 class PrinterCard extends StatelessWidget {
-  const PrinterCard({super.key, required this.printer});
+  const PrinterCard({super.key, required this.printer, required this.onTap});
 
   final PosPrinter printer;
+
+  final void Function(PosPrinter) onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap:
-            () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PrinterDetailsScreen(printer: printer),
-              ),
-            ),
+        onTap: () => onTap(printer),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -45,10 +42,14 @@ class PrinterCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(printer.config.name, 
-                      style: Theme.of(context).textTheme.titleMedium),
-                  Text(printer.type.displayName, 
-                      style: Theme.of(context).textTheme.bodyMedium),
+                  Text(
+                    printer.config.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Text(
+                    printer.type.displayName,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   Text(
                     printer.handler.settings.connectionParams?.displayName ??
                         'No connection parameters available',

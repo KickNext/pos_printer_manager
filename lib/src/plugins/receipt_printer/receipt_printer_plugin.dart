@@ -24,6 +24,9 @@ class ReceiptPrinterSettings extends PrinterSettings {
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {};
+
+  @override
+  List<Widget> get customWidgets => [];
 }
 
 class ReceiptPrinterHandler
@@ -43,9 +46,7 @@ class ReceiptPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    await print(
-      ReceiptPrintJob(receiptHTML: '<h1>Test print</h1>'),
-    );
+    await print(ReceiptPrintJob(receiptHTML: '<h1>Test print</h1>'));
   }
 
   Future<void> openCashDrawer() async {

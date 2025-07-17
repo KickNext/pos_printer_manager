@@ -31,6 +31,15 @@ class _PrintersPageState extends State<PrintersPage> {
     setState(() {});
   }
 
+  Future<void> toPrinterDetails(PosPrinter printer) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PrinterDetailsScreen(printer: printer),
+      ),
+    );
+    setState(() {});
+  }
+
   @override
   void dispose() {
     widget.printerManager.removeListener(update);
@@ -54,7 +63,7 @@ class _PrintersPageState extends State<PrintersPage> {
                 tooltip: 'Add Printer',
               ),
             ...widget.printerManager.printers.map(
-              (p) => PrinterCard(printer: p),
+              (p) => PrinterCard(printer: p, onTap: toPrinterDetails),
             ),
           ],
         ),

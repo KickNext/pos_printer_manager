@@ -8,6 +8,8 @@ abstract class PrinterSettings {
 
   PrinterConnectionParamsDTO? get connectionParams => _connectionParams;
 
+  List<Widget> get customWidgets;
+
   PrinterSettings({
     required initConnectionParams,
     required this.onSettingsChanged,

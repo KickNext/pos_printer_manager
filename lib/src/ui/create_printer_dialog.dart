@@ -34,19 +34,31 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 16,
                   children: [
                     Text(
                       'Add printer',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    SegmentedButton<PrinterPOSType>(
-                      emptySelectionAllowed: true,
-                      segments: <ButtonSegment<PrinterPOSType>>[
-                        ButtonSegment<PrinterPOSType>(
-                          value: PrinterPOSType.receiptPrinter,
-                          label: Text('Receipt printer'),
-                          icon: Icon(Icons.receipt_long_rounded),
+                    const SizedBox(height: 16),
+                    // Пояснение для выбора типа принтера
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        'Please select the printer type:',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
+                    // Адаптивная сетка выбора типа принтера через Wrap (2 колонки, без фиксированных размеров)
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        _buildPrinterTypeChip(
+                          type: PrinterPOSType.receiptPrinter,
+                          label: 'Receipt printer',
+                          icon: Icons.receipt_long_rounded,
                           enabled:
                               widget.printerManager.maxReceiptPrinters >
                               widget.printerManager.printers
@@ -56,10 +68,10 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                                   )
                                   .length,
                         ),
-                        ButtonSegment<PrinterPOSType>(
-                          value: PrinterPOSType.kitchenPrinter,
-                          label: Text('Kitchen printer'),
-                          icon: Icon(Icons.soup_kitchen_rounded),
+                        _buildPrinterTypeChip(
+                          type: PrinterPOSType.kitchenPrinter,
+                          label: 'Kitchen printer',
+                          icon: Icons.soup_kitchen_rounded,
                           enabled:
                               widget.printerManager.maxKitchenPrinters >
                               widget.printerManager.printers
@@ -69,10 +81,10 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                                   )
                                   .length,
                         ),
-                        ButtonSegment<PrinterPOSType>(
-                          value: PrinterPOSType.labelPrinter,
-                          label: Text('Label printer'),
-                          icon: Icon(Icons.sticky_note_2_rounded),
+                        _buildPrinterTypeChip(
+                          type: PrinterPOSType.labelPrinter,
+                          label: 'Label printer',
+                          icon: Icons.sticky_note_2_rounded,
                           enabled:
                               widget.printerManager.maxLabelPrinters >
                               widget.printerManager.printers
@@ -82,20 +94,16 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                                   )
                                   .length,
                         ),
+                        _buildPrinterTypeChip(
+                          type: PrinterPOSType.androBar,
+                          label: 'AndroBar',
+                          icon: Icons.local_bar_rounded,
+                          enabled:
+                              true, // Можно добавить ограничение по аналогии, если потребуется
+                        ),
                       ],
-                      selected:
-                          selectedPrinterType != null
-                              ? <PrinterPOSType>{selectedPrinterType!}
-                              : <PrinterPOSType>{},
-                      onSelectionChanged: (Set<PrinterPOSType> newSelection) {
-                        setState(() {
-                          // By default there is only a single segment that can be
-                          // selected at one time, so its value is always the first
-                          // item in the selected set.
-                          selectedPrinterType = newSelection.first;
-                        });
-                      },
                     ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       width: 300,
                       child: TextField(
@@ -108,8 +116,8 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                         },
                       ),
                     ),
-
-                    ElevatedButton.icon(
+                    const SizedBox(height: 16),
+                    ElevatedButton(
                       onPressed:
                           printerName != null &&
                                   printerName!.isNotEmpty &&
@@ -122,8 +130,7 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
                                 back();
                               }
                               : null,
-                      icon: const Icon(Icons.add_rounded),
-                      label: const Text('Add printer'),
+                      child: const Text('Add printer'),
                     ),
                   ],
                 ),
@@ -145,6 +152,41 @@ class _CreatePrinterDialogState extends State<CreatePrinterDialog> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPrinterTypeChip({
+    required PrinterPOSType type,
+    required String label,
+    required IconData icon,
+    required bool enabled,
+  }) {
+    return ChoiceChip(
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [Icon(icon, size: 20), const SizedBox(width: 8), Text(label)],
+      ),
+      selected: selectedPrinterType == type,
+      onSelected:
+          enabled
+              ? (selected) {
+                setState(() {
+                  selectedPrinterType = selected ? type : null;
+                });
+              }
+              : null,
+      selectedColor: Theme.of(context).colorScheme.primary,
+      disabledColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
+      labelStyle: TextStyle(
+        color:
+            enabled
+                ? (selectedPrinterType == type ? Colors.white : Colors.black87)
+                : Colors.grey,
+      ),
+      avatar: null,
+      showCheckmark: false,
+      elevation: 2,
     );
   }
 }

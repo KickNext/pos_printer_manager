@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
@@ -39,7 +38,25 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
               widget.printer.isConnected ? Icons.check : Icons.close,
               color: widget.printer.isConnected ? Colors.green : Colors.red,
             ),
-            Text(widget.printer.config.name),
+            const SizedBox(width: 8),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => _showRenameDialog(context),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.printer.config.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.edit, size: 18, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -57,152 +74,128 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 800),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isWide = constraints.maxWidth > 600;
-                return Padding(
-                  padding:
-                      isWide
-                          ? const EdgeInsets.only(
-                            top: 16,
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          )
-                          : const EdgeInsets.all(16),
-                  child:
-                      isWide
-                          ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  margin: const EdgeInsets.only(
-                                    right: 16,
-                                    bottom: 16,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        leading: Icon(
-                                          widget.printer.isConnected
-                                              ? Icons.check_circle
-                                              : Icons.cancel,
-                                          color:
-                                              widget.printer.isConnected
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                        ),
-                                        title: Text(widget.printer.config.name),
-                                        subtitle: Text(
-                                          'Type: ${widget.printer.type.displayName}',
-                                        ),
-                                      ),
-                                      OverflowBar(
-                                        alignment: MainAxisAlignment.end,
-                                        children: [
-                                          ElevatedButton.icon(
-                                            onPressed: () async {
-                                              await widget.printer.handler
-                                                  .testPrint();
-                                            },
-                                            icon: Icon(Icons.print),
-                                            label: Text('Test Print'),
-                                          ),
-                                          TextButton.icon(
-                                            onPressed: () {
-                                              unawaited(
-                                                widget.printer.handler.manager
-                                                    .removePosPrinter(
-                                                      widget.printer.id,
-                                                    ),
-                                              );
-                                              Navigator.of(context).pop();
-                                            },
-                                            icon: Icon(Icons.delete),
-                                            label: Text('Remove Printer'),
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: ConnectionParameters(
-                                  printer: widget.printer,
-                                ),
-                              ),
-                            ],
-                          )
-                          : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Card(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(
-                                        widget.printer.isConnected
-                                            ? Icons.check_circle
-                                            : Icons.cancel,
-                                        color:
-                                            widget.printer.isConnected
-                                                ? Colors.green
-                                                : Colors.red,
-                                      ),
-                                      title: Text(widget.printer.config.name),
-                                      subtitle: Text(
-                                        'Type: ${widget.printer.type.displayName}',
-                                      ),
-                                    ),
-                                    OverflowBar(
-                                      alignment: MainAxisAlignment.end,
-                                      children: [
-                                        ElevatedButton.icon(
-                                          onPressed: () async {
-                                            await widget.printer.handler
-                                                .testPrint();
-                                          },
-                                          icon: Icon(Icons.print),
-                                          label: Text('Test Print'),
-                                        ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            unawaited(
-                                              widget.printer.handler.manager
-                                                  .removePosPrinter(
-                                                    widget.printer.id,
-                                                  ),
-                                            );
-                                            Navigator.of(context).pop();
-                                          },
-                                          icon: Icon(Icons.delete),
-                                          label: Text('Remove Printer'),
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors.red,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ConnectionParameters(printer: widget.printer),
-                            ],
-                          ),
-                );
-              },
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Wrap(
+            spacing: 24,
+            runSpacing: 24,
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.start,
+            children: [
+              PrinterInfoCard(printer: widget.printer),
+              // PrinterActions(printer: widget.printer),
+              PluginWidgetsWrap(printer: widget.printer),
+              ConnectionParameters(printer: widget.printer),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _showRenameDialog(BuildContext context) async {
+    final controller = TextEditingController(text: widget.printer.config.name);
+    final result = await showDialog<String>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Rename printer'),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: const InputDecoration(labelText: 'New name'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed:
+                    () => Navigator.of(context).pop(controller.text.trim()),
+                child: const Text('Save'),
+              ),
+            ],
+          ),
+    );
+    if (result != null &&
+        result.isNotEmpty &&
+        result != widget.printer.config.name) {
+      // TODO: implement printer name change via manager/repository
+      setState(() {
+        // Temporary: only local, not persistent
+        widget.printer.config.name = result;
+      });
+    }
+  }
+}
+
+class PrinterInfoCard extends StatelessWidget {
+  final PosPrinter printer;
+  const PrinterInfoCard({super.key, required this.printer});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 360,
+      child: Card(
+        child: ListTile(
+          leading: Icon(
+            printer.isConnected ? Icons.check_circle : Icons.cancel,
+            color: printer.isConnected ? Colors.green : Colors.red,
+          ),
+          title: Text(printer.config.name),
+          subtitle: Text('Type: ${printer.type.displayName}'),
+        ),
+      ),
+    );
+  }
+}
+
+class PrinterActions extends StatelessWidget {
+  final PosPrinter printer;
+  const PrinterActions({super.key, required this.printer});
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBar(
+      alignment: MainAxisAlignment.end,
+      children: [
+        ElevatedButton.icon(
+          onPressed: () async {
+            await printer.handler.testPrint();
+          },
+          icon: const Icon(Icons.print),
+          label: const Text('Test print'),
+        ),
+        TextButton.icon(
+          onPressed: () {
+            unawaited(printer.handler.manager.removePosPrinter(printer.id));
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.delete),
+          label: const Text('Remove printer'),
+          style: TextButton.styleFrom(foregroundColor: Colors.red),
+        ),
+      ],
+    );
+  }
+}
+
+class PluginWidgetsWrap extends StatelessWidget {
+  final PosPrinter printer;
+  const PluginWidgetsWrap({super.key, required this.printer});
+
+  @override
+  Widget build(BuildContext context) {
+    final pluginWidgets = printer.handler.settings.customWidgets;
+    if (pluginWidgets.isEmpty) {
+      return const SizedBox();
+    }
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Wrap(spacing: 12, runSpacing: 12, children: pluginWidgets),
       ),
     );
   }

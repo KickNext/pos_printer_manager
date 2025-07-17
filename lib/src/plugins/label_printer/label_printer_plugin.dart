@@ -7,7 +7,7 @@ class LabelPrinterSettings extends PrinterSettings {
     required super.initConnectionParams,
     required super.onSettingsChanged,
   });
-  
+
   @override
   final IconData icon = Icons.sticky_note_2_rounded;
 
@@ -23,6 +23,9 @@ class LabelPrinterSettings extends PrinterSettings {
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {};
+
+  @override
+  List<Widget> get customWidgets => [];
 }
 
 class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
@@ -71,11 +74,7 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
     final data = Uint8List.fromList(labelHTML.codeUnits);
 
     try {
-      await manager.api.printZplRawData(
-        settings.connectionParams!,
-        data,
-        457,
-      );
+      await manager.api.printZplRawData(settings.connectionParams!, data, 457);
     } catch (e) {
       debugPrint('Error printing label: $e');
       return PrintResult(success: false, message: e.toString());
