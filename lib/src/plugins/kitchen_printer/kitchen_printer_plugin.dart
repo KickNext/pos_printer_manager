@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 class KitchenPrinterSettings extends PrinterSettings {
   KitchenPrinterSettings({
     required super.initConnectionParams,
     required super.onSettingsChanged,
-    required this.categoriesIds,
+    required this.categories,
   });
 
   final PaperSize paperSize = PaperSize.mm80;
 
-  final List<String> categoriesIds;
-  
+  final List<CategoryForPrinter> categories;
+
   @override
   final IconData icon = Icons.soup_kitchen_rounded;
 
@@ -26,19 +27,16 @@ class KitchenPrinterSettings extends PrinterSettings {
     ],
   );
 
-  Future<void> updateCategoriesIds(List<String> newCategoriesIds) async {
-    categoriesIds.clear();
-    categoriesIds.addAll(newCategoriesIds);
+  Future<void> updateCategories(List<CategoryForPrinter> newCategories) async {
+    categories.clear();
+    categories.addAll(newCategories);
     await onSettingsChanged();
   }
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {
-    'categoriesIds': categoriesIds,
+    'categories': categories.map((e) => e.toJson()).toList(),
   };
-  
-  @override
-  List<Widget> get customWidgets => [];
 }
 
 class KitchenPrinterHandler
@@ -86,6 +84,36 @@ class KitchenPrinterHandler
     }
     return PrintResult(success: true);
   }
+
+  @override
+  List<Widget> get customWidgets => [
+    SizedBox(
+      width: 360,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 4.0,
+        children: [
+          ...settings.categories.map(
+            (category) => Chip(
+              label: Text(category.displayName),
+              color: WidgetStateProperty.all(category.color),
+              labelStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newCategories = await manager.getCategoriesForPrinters;
+              await settings.updateCategories(newCategories);
+            },
+            child: const Text('Update Categories'),
+          ),
+        ],
+      ),
+    ),
+  ];
 }
 
 class KitchenPrintJob extends PrintJob {

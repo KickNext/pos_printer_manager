@@ -34,44 +34,15 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(
-              widget.printer.isConnected ? Icons.check : Icons.close,
-              color: widget.printer.isConnected ? Colors.green : Colors.red,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => _showRenameDialog(context),
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        widget.printer.config.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.edit, size: 18, color: Colors.grey),
-                  ],
-                ),
+            Flexible(
+              child: Text(
+                widget.printer.config.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              unawaited(
-                widget.printer.handler.manager.removePosPrinter(
-                  widget.printer.id,
-                ),
-              );
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -82,8 +53,10 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
             alignment: WrapAlignment.start,
             crossAxisAlignment: WrapCrossAlignment.start,
             children: [
-              PrinterInfoCard(printer: widget.printer),
-              // PrinterActions(printer: widget.printer),
+              PrinterInfoCard(
+                printer: widget.printer,
+                onRename: _showRenameDialog,
+              ),
               PluginWidgetsWrap(printer: widget.printer),
               ConnectionParameters(printer: widget.printer),
             ],
@@ -132,20 +105,41 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
 
 class PrinterInfoCard extends StatelessWidget {
   final PosPrinter printer;
-  const PrinterInfoCard({super.key, required this.printer});
+  const PrinterInfoCard({
+    super.key,
+    required this.printer,
+    required this.onRename,
+  });
+
+  final Function(BuildContext) onRename;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 360,
       child: Card(
-        child: ListTile(
-          leading: Icon(
-            printer.isConnected ? Icons.check_circle : Icons.cancel,
-            color: printer.isConnected ? Colors.green : Colors.red,
-          ),
-          title: Text(printer.config.name),
-          subtitle: Text('Type: ${printer.type.displayName}'),
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(
+                printer.isConnected ? Icons.check_circle : Icons.cancel,
+                color: printer.isConnected ? Colors.green : Colors.red,
+              ),
+              title: Text(printer.config.name),
+              subtitle: Text('Type: ${printer.type.displayName}'),
+              trailing: IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.edit, size: 20),
+                onPressed: () {
+                  onRename(context);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: PrinterActions(printer: printer),
+            ),
+          ],
         ),
       ),
     );
@@ -188,7 +182,7 @@ class PluginWidgetsWrap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pluginWidgets = printer.handler.settings.customWidgets;
+    final pluginWidgets = printer.handler.customWidgets;
     if (pluginWidgets.isEmpty) {
       return const SizedBox();
     }

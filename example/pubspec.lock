@@ -214,7 +214,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.5+2025053001"
+    version: "0.2.7+2025071802"
   pos_printers:
     dependency: transitive
     description:

@@ -23,9 +23,6 @@ class LabelPrinterSettings extends PrinterSettings {
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {};
-
-  @override
-  List<Widget> get customWidgets => [];
 }
 
 class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
@@ -81,6 +78,9 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
     }
     return PrintResult(success: true);
   }
+
+  @override
+  List<Widget> get customWidgets => [];
 }
 
 class LabelPrintJob extends PrintJob {

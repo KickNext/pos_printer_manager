@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
 /// Абстрактный обработчик протокола принтера
@@ -16,6 +17,8 @@ abstract class PrinterProtocolHandler<T extends PrinterSettings> {
   Future<PrintResult> print(PrintJob job);
 
   Future<void> testPrint();
+
+  List<Widget> get customWidgets;
 }
 
 /// Результат печати

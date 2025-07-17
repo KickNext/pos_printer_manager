@@ -4,6 +4,7 @@ export 'src/manager.dart';
 export 'src/models/pos_printer.dart';
 export 'src/models/printer_config.dart';
 export 'src/plugins/andro_bar_printer/andro_bar_printer_plugin.dart';
+export 'src/plugins/category_for_printer.dart';
 export 'src/plugins/kitchen_printer/kitchen_printer_plugin.dart';
 export 'src/plugins/label_printer/label_printer_plugin.dart';
 export 'src/plugins/label_printer/zpl_demo.dart';

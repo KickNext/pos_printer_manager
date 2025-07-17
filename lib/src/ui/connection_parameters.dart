@@ -30,16 +30,18 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 360),
-      child:
-          _params == null
-              ? ElevatedButton.icon(
-                onPressed: _connectPrinter,
-                icon: const Icon(Icons.usb),
-                label: const Text('Connect Printer'),
-              )
-              : _buildConnectionParameters(_params!),
+    return Card(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 360),
+        child:
+            _params == null
+                ? ElevatedButton.icon(
+                  onPressed: _connectPrinter,
+                  icon: const Icon(Icons.usb),
+                  label: const Text('Connect Printer'),
+                )
+                : _buildConnectionParameters(_params!),
+      ),
     );
   }
 

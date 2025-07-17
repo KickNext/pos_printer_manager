@@ -24,9 +24,6 @@ class ReceiptPrinterSettings extends PrinterSettings {
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {};
-
-  @override
-  List<Widget> get customWidgets => [];
 }
 
 class ReceiptPrinterHandler
@@ -85,6 +82,10 @@ class ReceiptPrinterHandler
     }
     return PrintResult(success: true);
   }
+
+  @override
+  List<Widget> get customWidgets => [
+  ];
 }
 
 class ReceiptPrintJob extends PrintJob {

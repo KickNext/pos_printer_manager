@@ -1,5 +1,5 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'andro_bar_printer/andro_bar_printer_plugin.dart';
+import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 enum PrinterPOSType {
   receiptPrinter,
@@ -47,16 +47,16 @@ enum PrinterPOSType {
         PrinterPluginRegistry.registerWithCtor<KitchenPrinterSettings>(
           printerPosType: PrinterPOSType.kitchenPrinter,
           ctor: (params, json) {
-            final categoriesIdsJson = json['categoriesIds'];
-            final categoriesIds =
-                categoriesIdsJson is List
-                    ? categoriesIdsJson.map((e) => e as String).toList()
-                    : <String>[];
+            final categoriesJson = json['categories'];
+            final categories =
+                categoriesJson is List
+                    ? categoriesJson.map((e) => CategoryForPrinter.fromJson(e)).toList()
+                    : <CategoryForPrinter>[];
 
             return KitchenPrinterSettings(
               initConnectionParams: params,
               onSettingsChanged: () async => await manager.saveConfigs(),
-              categoriesIds: categoriesIds,
+              categories: categories,
             );
           },
           createHandler:
@@ -85,16 +85,16 @@ enum PrinterPOSType {
         PrinterPluginRegistry.registerWithCtor<AndroBarPrinterSettings>(
           printerPosType: PrinterPOSType.androBar,
           ctor: (params, json) {
-            final categoriesIdsJson = json['categoriesIds'];
-            final categoriesIds =
-                categoriesIdsJson is List
-                    ? categoriesIdsJson.map((e) => e as String).toList()
-                    : <String>[];
+            final categoriesJson = json['categories'];
+            final categories =
+                categoriesJson is List
+                    ? categoriesJson.map((e) => CategoryForPrinter.fromJson(e)).toList()
+                    : <CategoryForPrinter>[];
 
             return AndroBarPrinterSettings(
               initConnectionParams: params,
               onSettingsChanged: () async => await manager.saveConfigs(),
-              categoriesIds: categoriesIds,
+              categories: categories,
             );
           },
           createHandler:

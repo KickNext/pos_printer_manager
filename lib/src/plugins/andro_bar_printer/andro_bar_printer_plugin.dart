@@ -1,19 +1,18 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 class AndroBarPrinterSettings extends PrinterSettings {
   AndroBarPrinterSettings({
     required super.initConnectionParams,
     required super.onSettingsChanged,
-    required this.categoriesIds,
+    required this.categories,
   });
 
   final PaperSize paperSize = PaperSize.mm80;
 
-  final List<String> categoriesIds;
+  final List<CategoryForPrinter> categories;
 
   @override
   final IconData icon = Icons.local_bar_rounded;
@@ -24,42 +23,16 @@ class AndroBarPrinterSettings extends PrinterSettings {
     connectionTypes: const [DiscoveryConnectionType.tcp],
   );
 
-  Future<void> updateCategoriesIds(List<String> newCategoriesIds) async {
-    categoriesIds.clear();
-    categoriesIds.addAll(newCategoriesIds);
+  Future<void> updateCategories(List<CategoryForPrinter> newCategories) async {
+    categories.clear();
+    categories.addAll(newCategories);
     await onSettingsChanged();
   }
 
   @override
   Map<String, dynamic> get extraSettingsToJson => {
-    'categoriesIds': categoriesIds,
+    'categories': categories.map((e) => e.toJson()).toList(),
   };
-
-  @override
-  List<Widget> get customWidgets => [
-    categoriesIds.isNotEmpty
-        ? Text('Categories: ${categoriesIds.join(', ')}')
-        : const Text('No categories selected'),
-    ElevatedButton(
-      onPressed: () async {
-        // Logic to select categories
-        // This is just a placeholder for the actual implementation
-        final newCategories = [
-          'Category1',
-          'Category2',
-          'Category3',
-          'Category4',
-          'Category5',
-          'Category6',
-          'Category7',
-          'Category8',
-          'Category9',
-        ];
-        await updateCategoriesIds(Random().nextBool() ? newCategories : []);
-      },
-      child: const Text('Select Categories'),
-    ),
-  ];
 }
 
 class AndroBarPrinterHandler
@@ -107,6 +80,36 @@ class AndroBarPrinterHandler
     }
     return PrintResult(success: true);
   }
+
+  @override
+  List<Widget> get customWidgets => [
+    SizedBox(
+      width: 360,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 4.0,
+        children: [
+          ...settings.categories.map(
+            (category) => Chip(
+              label: Text(category.displayName),
+              color: WidgetStateProperty.all(category.color),
+              labelStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newCategories = await manager.getCategoriesForPrinters;
+              await settings.updateCategories(newCategories);
+            },
+            child: const Text('Update Categories'),
+          ),
+        ],
+      ),
+    ),
+  ];
 }
 
 class AndroBarPrintJob extends PrintJob {
