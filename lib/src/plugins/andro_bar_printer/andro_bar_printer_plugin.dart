@@ -101,7 +101,9 @@ class AndroBarPrinterHandler
           ),
           ElevatedButton(
             onPressed: () async {
-              final newCategories = await manager.getCategoriesForPrinters;
+              final newCategories = await manager.getCategoriesForPrinter(
+                currentCategories: settings.categories,
+              );
               await settings.updateCategories(newCategories);
             },
             child: const Text('Update Categories'),

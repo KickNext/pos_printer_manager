@@ -6,12 +6,14 @@ Future<void> main() async {
 
   // Создание и инициализация менеджера
   final manager = PrintersManager();
-  await manager.init(categoriesFuture: categoriesFuture());
+  await manager.init(getCategoriesFunction: categoriesFuture);
 
   runApp(MyApp(printerManager: manager));
 }
 
-Future<List<CategoryForPrinter>> categoriesFuture() async {
+Future<List<CategoryForPrinter>> categoriesFuture({
+  required List<CategoryForPrinter> currentCategories,
+}) async {
   return [
     CategoryForPrinter(id: '1', displayName: 'Category 1', color: Colors.red),
     CategoryForPrinter(id: '2', displayName: 'Category 2', color: Colors.green),

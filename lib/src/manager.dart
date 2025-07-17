@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 class PrintersManager with ChangeNotifier {
   final PosPrintersManager api = PosPrintersManager();
@@ -11,7 +10,10 @@ class PrintersManager with ChangeNotifier {
 
   late final PrintersConnectionsHandler _connectionsHandler;
 
-  late final Future<List<CategoryForPrinter>> getCategoriesForPrinters;
+  late final Future<List<CategoryForPrinter>> Function({
+    required List<CategoryForPrinter> currentCategories,
+  })
+  getCategoriesForPrinter;
 
   final int maxReceiptPrinters = 1;
   final int maxKitchenPrinters = 9999;
@@ -55,9 +57,12 @@ class PrintersManager with ChangeNotifier {
   }
 
   Future<void> init({
-    required Future<List<CategoryForPrinter>> categoriesFuture,
+    required Future<List<CategoryForPrinter>> Function({
+      required List<CategoryForPrinter> currentCategories,
+    })
+    getCategoriesFunction,
   }) async {
-    getCategoriesForPrinters = categoriesFuture;
+    getCategoriesForPrinter = getCategoriesFunction;
     PrinterPOSType.registerPrinterTypes(this);
     final configs = await _repository.loadConfigs();
     _printers =
