@@ -1,5 +1,4 @@
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 enum PrinterPOSType {
   receiptPrinter,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pos_printer_manager/src/plugins/category_for_printer.dart';
 
 class AndroBarPrinterSettings extends PrinterSettings {
   AndroBarPrinterSettings({
