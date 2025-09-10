@@ -28,6 +28,29 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
     setState(() {});
   }
 
+  Future<void> _updateDhcp(bool value) async {
+    final params = _params;
+    if (params == null || params.connectionType != PosPrinterConnectionType.network) return;
+    final net = params.networkParams;
+    if (net == null) return;
+
+    final updated = PrinterConnectionParamsDTO(
+      id: params.id,
+      connectionType: params.connectionType,
+      usbParams: null,
+      networkParams: NetworkParams(
+        ipAddress: net.ipAddress,
+        mask: net.mask,
+        gateway: net.gateway,
+        macAddress: net.macAddress,
+        dhcp: value,
+      ),
+    );
+
+    await widget.printer.handler.settings.updateConnectionParams(updated);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -76,10 +99,13 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
             _Field(Icons.router, 'Subnet Mask', net?.mask),
             _Field(Icons.dns, 'Gateway', net?.gateway),
             _Field(Icons.link, 'MAC Address', net?.macAddress),
-            _Field(
-              Icons.settings_ethernet,
-              'DHCP',
-              net?.dhcp == null ? null : (net!.dhcp! ? 'Enabled' : 'Disabled'),
+            SwitchListTile(
+              title: const Text('DHCP'),
+              secondary: const Icon(Icons.settings_ethernet),
+              value: net?.dhcp ?? false,
+              onChanged: (v) => _updateDhcp(v),
+              subtitle: Text((net?.dhcp ?? false) ? 'Enabled' : 'Disabled'),
+              dense: true,
             ),
           ],
           onEdit: _connectPrinter,
@@ -92,7 +118,7 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
 class _ConnectionCard extends StatelessWidget {
   final IconData icon;
   final String title;
-  final List<_Field> fields;
+  final List<Widget> fields;
   final VoidCallback onEdit;
   final VoidCallback onRemove;
 
@@ -115,7 +141,7 @@ class _ConnectionCard extends StatelessWidget {
           children: [
             ListTile(leading: Icon(icon), title: Text(title), dense: true),
             const Divider(),
-            ...fields.map((f) => f),
+            ...fields,
             OverflowBar(
               alignment: MainAxisAlignment.end,
               children: [
