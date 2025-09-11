@@ -69,8 +69,9 @@ class PrintersManager with ChangeNotifier {
             notify: () => notifyListeners(),
           );
         }).toList();
+    // Default all printers to connected on init (no I/O), per new logic.
     for (var printer in _printers) {
-      await printer.getStatus();
+      printer.updateStatus(true);
     }
   }
 

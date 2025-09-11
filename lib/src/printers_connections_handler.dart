@@ -42,7 +42,8 @@ class PrintersConnectionsHandler {
           )) {
             for (var printer in _savedPrinters) {
               if (printer.handler.settings.connectionParams?.id == event.id) {
-                unawaited(printer.getStatus());
+                // On detach mark as error immediately; don't block with status probes.
+                printer.updateStatus(false);
               }
             }
           }

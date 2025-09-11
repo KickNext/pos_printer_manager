@@ -1,7 +1,7 @@
 name: pos_printer_manager
 description: "A service for printing receipts and labels using various printers."
 publish_to: none
-version: 0.3.0+2025091102
+version: 0.3.1+2025091103
 
 environment:
   sdk: ^3.7.2

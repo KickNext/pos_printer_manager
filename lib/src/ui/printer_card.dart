@@ -50,18 +50,6 @@ class PrinterCard extends StatelessWidget {
                         'No connection parameters available',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  if (printer.lastError != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Error: ${printer.lastError!.message}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
                 ],
               ),
             ],
