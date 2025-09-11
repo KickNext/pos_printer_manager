@@ -75,7 +75,9 @@ class _FindPrintersDialogState extends State<FindPrintersDialog> {
                             onConnect: () async {
                               await widget.printer.handler.settings
                                   .updateConnectionParams(dPrinter);
-                              Navigator.of(context).pop();
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
                             },
                           ),
                       ],

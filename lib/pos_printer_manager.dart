@@ -12,7 +12,6 @@ export 'src/plugins/printer_connection_params_extension.dart';
 export 'src/plugins/printer_settings.dart';
 export 'src/plugins/printer_type.dart';
 export 'src/plugins/receipt_printer/receipt_printer_plugin.dart';
-export 'src/printers_connections_handler.dart';
 export 'src/printers_finder.dart';
 export 'src/protocol/handler.dart';
 export 'src/protocol/print_job.dart';

@@ -51,7 +51,12 @@ class AndroBarPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    await print(AndroBarPrintJob(data: buildEscTestPrintCommand("Test print")));
+    final result = await print(
+      AndroBarPrintJob(data: buildEscTestPrintCommand("Test print")),
+    );
+    if (!result.success) {
+      throw Exception(result.message ?? 'Test print failed');
+    }
   }
 
   @override

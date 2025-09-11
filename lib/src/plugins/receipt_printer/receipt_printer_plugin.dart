@@ -43,7 +43,10 @@ class ReceiptPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    await print(ReceiptPrintJob(receiptHTML: '<h1>Test print</h1>'));
+    final result = await print(ReceiptPrintJob(receiptHTML: '<h1>Test print</h1>'));
+    if (!result.success) {
+      throw Exception(result.message ?? 'Test print failed');
+    }
   }
 
   Future<void> openCashDrawer() async {

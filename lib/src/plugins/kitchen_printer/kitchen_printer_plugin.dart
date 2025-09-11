@@ -55,7 +55,12 @@ class KitchenPrinterHandler
 
   @override
   Future<void> testPrint() async {
-    await print(KitchenPrintJob(data: buildEscTestPrintCommand("Test print")));
+    final result = await print(
+      KitchenPrintJob(data: buildEscTestPrintCommand("Test print")),
+    );
+    if (!result.success) {
+      throw Exception(result.message ?? 'Test print failed');
+    }
   }
 
   @override

@@ -52,7 +52,10 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
         qrText: '0000000000000000',
       ),
     );
-    await print(LabelPrintJob(zplRawString: zpl));
+    final result = await print(LabelPrintJob(zplRawString: zpl));
+    if (!result.success) {
+      throw Exception(result.message ?? 'Test print failed');
+    }
   }
 
   @override

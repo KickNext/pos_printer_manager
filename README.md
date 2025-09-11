@@ -5,6 +5,7 @@
 ---
 
 ## Содержание
+
 1. [Обзор](#обзор)
 2. [Ключевые возможности](#ключевые-возможности)
 3. [Структура](#структура)
@@ -187,6 +188,69 @@ await manager.retryConnection(newConfig.id);
 
 // Не забудьте освободить ресурсы менеджера
 // manager.dispose(); // В dispose вашего виджета/приложения
+```
+
+### Прямой доступ к POS Printers API
+
+Для прямой работы с принтерами можно использовать низкоуровневый API:
+
+```dart
+import 'package:pos_printer_manager/pos_printer_manager.dart';
+
+// Прямое использование PosPrintersManager (как описано в pos-printers.md)
+final posManager = PosPrintersManager();
+
+// Поиск принтеров
+final printerStream = posManager.findPrinters(filter: null);
+printerStream.listen((printer) {
+  print('Найден принтер: ${printer.id}');
+});
+
+// Печать HTML на чековом принтере 80мм
+await posManager.printEscHTML(
+  printer,
+  '<html><body><h1>Чек</h1><p>Сумма: 150 руб.</p></body></html>',
+  PaperSize.mm80.value
+);
+
+// Печать HTML на этикеточном принтере
+await posManager.printZplHtml(
+  printer,
+  '<html><body><h1>Этикетка</h1><p>Код: ABC123</p></body></html>',
+  PaperSize.mm80.value
+);
+
+// Получение статуса принтера
+final status = await posManager.getPrinterStatus(printer);
+if (status.success) {
+  print('Статус принтера: ${status.status}');
+}
+
+// Конфигурация сети принтера через USB
+final networkParams = NetworkParams(
+  ipAddress: '192.168.1.100',
+  mask: '255.255.255.0',
+  gateway: '192.168.1.1',
+  dhcp: false,
+);
+await posManager.setNetSettings(usbPrinter, networkParams);
+
+// Освобождение ресурсов
+posManager.dispose();
+```
+
+### Доступ через PrintersManager
+
+```dart
+// Через высокоуровневый менеджер также доступны все методы pos_printers
+final manager = PrintersManager();
+await manager.init(getCategoriesFunction: categoriesFuture);
+
+// Все методы PosPrintersManager доступны напрямую:
+final discoveryStream = manager.findPrinters(filter: null);
+await manager.printEscHTML(printer, html, PaperSize.mm80.value);
+await manager.openCashBox(printer);
+// и т.д.
 ```
 
 ---

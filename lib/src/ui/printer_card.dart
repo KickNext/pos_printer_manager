@@ -30,12 +30,7 @@ class PrinterCard extends StatelessWidget {
                     size: 32,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  Icon(
-                    printer.isConnected
-                        ? Icons.link_rounded
-                        : Icons.link_off_rounded,
-                    color: printer.isConnected ? Colors.green : Colors.red,
-                  ),
+                  _buildStatusIcon(context),
                 ],
               ),
               Column(
@@ -55,6 +50,18 @@ class PrinterCard extends StatelessWidget {
                         'No connection parameters available',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  if (printer.lastError != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'Error: ${printer.lastError!.message}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -62,5 +69,16 @@ class PrinterCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildStatusIcon(BuildContext context) {
+    switch (printer.status) {
+      case PrinterConnectionStatus.connected:
+        return const Icon(Icons.check_circle, color: Colors.green, size: 20);
+      case PrinterConnectionStatus.error:
+        return const Icon(Icons.error, color: Colors.red, size: 20);
+      case PrinterConnectionStatus.unknown:
+        return Icon(Icons.help_outline, color: Colors.grey[600], size: 20);
+    }
   }
 }
