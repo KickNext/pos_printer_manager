@@ -48,11 +48,12 @@ class _HarnessState extends State<_Harness> {
 
   @override
   Widget build(BuildContext context) {
-    final handler = KitchenPrinterHandler(settings: settings, manager: widget.manager);
+    final handler = KitchenPrinterHandler(
+      settings: settings,
+      manager: widget.manager,
+    );
     return MaterialApp(
-      home: Scaffold(
-        body: Column(children: handler.customWidgets),
-      ),
+      home: Scaffold(body: Column(children: handler.customWidgets)),
     );
   }
 }
@@ -62,7 +63,9 @@ CategoryForPrinter _cat(String id, String name, Color color) =>
 
 void main() {
   group('KitchenPrinterHandler.customWidgets Update Categories', () {
-    testWidgets('returns SAME list instance: should NOT clear existing items', (tester) async {
+    testWidgets('returns SAME list instance: should NOT clear existing items', (
+      tester,
+    ) async {
       // Arrange
       final manager = PrintersManager(repository: _InMemoryRepo());
       await manager.init(
@@ -80,12 +83,14 @@ void main() {
       int settingsChanged = 0;
       late KitchenPrinterSettings settings;
 
-      await tester.pumpWidget(_Harness(
-        manager: manager,
-        initial: initial,
-        onSettingsReady: (s) => settings = s,
-        onSettingsChanged: () => settingsChanged++,
-      ));
+      await tester.pumpWidget(
+        _Harness(
+          manager: manager,
+          initial: initial,
+          onSettingsReady: (s) => settings = s,
+          onSettingsChanged: () => settingsChanged++,
+        ),
+      );
 
       await tester.pumpAndSettle();
 
@@ -94,22 +99,28 @@ void main() {
       expect(settings.categories.length, 2);
 
       // Act
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Update Categories'));
+      await tester.tap(
+        find.widgetWithText(ElevatedButton, 'Update Categories'),
+      );
       await tester.pumpAndSettle();
 
       // Assert: list should remain intact (bug repro would make it 0)
-      expect(settings.categories.length, 2,
-          reason: 'Categories must not be cleared if same list instance is returned');
+      expect(
+        settings.categories.length,
+        2,
+        reason:
+            'Categories must not be cleared if same list instance is returned',
+      );
       expect(find.byType(Chip), findsNWidgets(2));
       expect(settingsChanged, 1);
     });
 
-    testWidgets('returns NEW list instance: should replace categories', (tester) async {
+    testWidgets('returns NEW list instance: should replace categories', (
+      tester,
+    ) async {
       // Arrange
       final manager = PrintersManager(repository: _InMemoryRepo());
-      final newList = <CategoryForPrinter>[
-        _cat('3', 'Drinks', Colors.green),
-      ];
+      final newList = <CategoryForPrinter>[_cat('3', 'Drinks', Colors.green)];
       await manager.init(
         getCategoriesFunction: ({required currentCategories}) async {
           // emulate returning a different list instance
@@ -124,12 +135,14 @@ void main() {
 
       int settingsChanged = 0;
       late KitchenPrinterSettings settings;
-      await tester.pumpWidget(_Harness(
-        manager: manager,
-        initial: initial,
-        onSettingsReady: (s) => settings = s,
-        onSettingsChanged: () => settingsChanged++,
-      ));
+      await tester.pumpWidget(
+        _Harness(
+          manager: manager,
+          initial: initial,
+          onSettingsReady: (s) => settings = s,
+          onSettingsChanged: () => settingsChanged++,
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Sanity
@@ -137,7 +150,9 @@ void main() {
       expect(settings.categories.length, 2);
 
       // Act
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Update Categories'));
+      await tester.tap(
+        find.widgetWithText(ElevatedButton, 'Update Categories'),
+      );
       await tester.pumpAndSettle();
 
       // Assert: list replaced with newList
