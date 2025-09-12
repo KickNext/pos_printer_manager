@@ -23,8 +23,16 @@ class AndroBarPrinterSettings extends PrinterSettings {
   );
 
   Future<void> updateCategories(List<CategoryForPrinter> newCategories) async {
-    categories.clear();
-    categories.addAll(newCategories);
+    if (identical(newCategories, categories)) {
+      final snapshot = List<CategoryForPrinter>.from(newCategories);
+      categories
+        ..clear()
+        ..addAll(snapshot);
+    } else {
+      categories
+        ..clear()
+        ..addAll(newCategories);
+    }
     await onSettingsChanged();
   }
 

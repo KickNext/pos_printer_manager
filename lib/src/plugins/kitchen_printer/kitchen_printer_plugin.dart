@@ -27,8 +27,18 @@ class KitchenPrinterSettings extends PrinterSettings {
   );
 
   Future<void> updateCategories(List<CategoryForPrinter> newCategories) async {
-    categories.clear();
-    categories.addAll(newCategories);
+    // Protect against receiving the same list instance (aliasing),
+    // which would be cleared before we can copy values.
+    if (identical(newCategories, categories)) {
+      final snapshot = List<CategoryForPrinter>.from(newCategories);
+      categories
+        ..clear()
+        ..addAll(snapshot);
+    } else {
+      categories
+        ..clear()
+        ..addAll(newCategories);
+    }
     await onSettingsChanged();
   }
 
