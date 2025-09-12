@@ -32,7 +32,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-  appBar: AppBar(),
+      appBar: AppBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final w = constraints.maxWidth;
@@ -54,53 +54,51 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
           final danger = DangerZoneCard(onRemove: _confirmAndRemove);
 
           Widget col(List<Widget> children) => Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (int i = 0; i < children.length; i++) ...[
-                    children[i],
-                    if (i != children.length - 1) const SizedBox(height: gap),
-                  ],
-                ],
-              );
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (int i = 0; i < children.length; i++) ...[
+                children[i],
+                if (i != children.length - 1) const SizedBox(height: gap),
+              ],
+            ],
+          );
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: isThreeCols
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(child: col([info, diagnostics])),
-                      const SizedBox(width: gap),
-                      Expanded(child: col([connection])),
-                      const SizedBox(width: gap),
-                      Expanded(child: col([
-                        if (hasPlugins) plugins,
-                        danger,
-                      ])),
-                    ],
-                  )
-                : isTwoCols
+            child:
+                isThreeCols
                     ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(child: col([info, diagnostics])),
-                          const SizedBox(width: gap),
-                          Expanded(
-                            child: col([
-                              connection,
-                              if (hasPlugins) plugins,
-                              danger,
-                            ]),
-                          ),
-                        ],
-                      )
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: col([info, diagnostics])),
+                        const SizedBox(width: gap),
+                        Expanded(child: col([connection])),
+                        const SizedBox(width: gap),
+                        Expanded(child: col([if (hasPlugins) plugins, danger])),
+                      ],
+                    )
+                    : isTwoCols
+                    ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: col([info, diagnostics])),
+                        const SizedBox(width: gap),
+                        Expanded(
+                          child: col([
+                            connection,
+                            if (hasPlugins) plugins,
+                            danger,
+                          ]),
+                        ),
+                      ],
+                    )
                     : col([
-                        info,
-                        diagnostics,
-                        connection,
-                        if (hasPlugins) plugins,
-                        danger,
-                      ]),
+                      info,
+                      diagnostics,
+                      connection,
+                      if (hasPlugins) plugins,
+                      danger,
+                    ]),
           );
         },
       ),
@@ -146,30 +144,33 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
   Future<void> _confirmAndRemove() async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove printer'),
-        content: const Text(
-          'This action will remove the printer from your list. You can add it again later. Continue?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton.tonal(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red[100],
-              foregroundColor: Colors.red[800],
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Remove printer'),
+            content: const Text(
+              'This action will remove the printer from your list. You can add it again later. Continue?',
             ),
-            child: const Text('Remove'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton.tonal(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red[100],
+                  foregroundColor: Colors.red[800],
+                ),
+                child: const Text('Remove'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
     if (!mounted) return;
     if (result == true) {
-      unawaited(widget.printer.handler.manager.removePosPrinter(widget.printer.id));
+      unawaited(
+        widget.printer.handler.manager.removePosPrinter(widget.printer.id),
+      );
       Navigator.of(context).pop();
     }
   }
@@ -224,7 +225,6 @@ class PrinterInfoCard extends StatelessWidget {
         return Icon(Icons.help_outline, color: Colors.grey[600], size: size);
     }
   }
-
 }
 
 class PrinterPrimaryActions extends StatefulWidget {
@@ -245,27 +245,29 @@ class _PrinterPrimaryActionsState extends State<PrinterPrimaryActions> {
       alignment: MainAxisAlignment.end,
       children: [
         ElevatedButton.icon(
-          onPressed: _isPrinting
-              ? null
-              : () async {
-                  setState(() => _isPrinting = true);
-                  try {
-                    // Use PosPrinter API to also capture lastError on failure
-                    await printer.testConnection();
-                  } finally {
-                    if (mounted) setState(() => _isPrinting = false);
-                  }
-                },
-          icon: _isPrinting
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.print),
+          onPressed:
+              _isPrinting
+                  ? null
+                  : () async {
+                    setState(() => _isPrinting = true);
+                    try {
+                      // Use PosPrinter API to also capture lastError on failure
+                      await printer.testConnection();
+                    } finally {
+                      if (mounted) setState(() => _isPrinting = false);
+                    }
+                  },
+          icon:
+              _isPrinting
+                  ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                  : const Icon(Icons.print),
           label: Text(_isPrinting ? 'Printing…' : 'Test print'),
         ),
-  // No error-specific actions in the first card anymore
+        // No error-specific actions in the first card anymore
       ],
     );
   }
@@ -304,7 +306,11 @@ class DiagnosticsCard extends StatelessWidget {
 
                     if (err != null) {
                       title = 'Error';
-                      icon = const Icon(Icons.error, color: Colors.red, size: 24);
+                      icon = const Icon(
+                        Icons.error,
+                        color: Colors.red,
+                        size: 24,
+                      );
                       body = [
                         Text(err.message),
                         const SizedBox(height: 8),
@@ -327,24 +333,40 @@ class DiagnosticsCard extends StatelessWidget {
                       switch (status) {
                         case PrinterConnectionStatus.connected:
                           title = 'Connected';
-                          icon = const Icon(Icons.check_circle, color: Colors.green, size: 24);
+                          icon = const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 24,
+                          );
                           body = const [
-                            Text('No errors recorded. The printer is considered connected.'),
+                            Text(
+                              'No errors recorded. The printer is considered connected.',
+                            ),
                           ];
                           break;
                         case PrinterConnectionStatus.error:
                           // Should not happen when err == null, but handle gracefully
                           title = 'Error';
-                          icon = const Icon(Icons.error, color: Colors.red, size: 24);
+                          icon = const Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 24,
+                          );
                           body = const [Text('Printer reported error state.')];
                           break;
                         case PrinterConnectionStatus.unknown:
                           title = 'Unknown';
-                          icon = Icon(Icons.help_outline, color: Colors.grey[700], size: 24);
+                          icon = Icon(
+                            Icons.help_outline,
+                            color: Colors.grey[700],
+                            size: 24,
+                          );
                           body = const [
                             Text('The printer status is not determined yet.'),
                             SizedBox(height: 8),
-                            Text('Use Test print or configure connection to verify.'),
+                            Text(
+                              'Use Test print or configure connection to verify.',
+                            ),
                           ];
                           break;
                       }
@@ -352,26 +374,27 @@ class DiagnosticsCard extends StatelessWidget {
 
                     await showDialog(
                       context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: Row(
-                          children: [
-                            icon,
-                            const SizedBox(width: 8),
-                            Text(title),
-                          ],
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: body,
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(),
-                            child: const Text('Close'),
+                      builder:
+                          (ctx) => AlertDialog(
+                            title: Row(
+                              children: [
+                                icon,
+                                const SizedBox(width: 8),
+                                Text(title),
+                              ],
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: body,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(),
+                                child: const Text('Close'),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
                     );
                   },
                   icon: const Icon(Icons.info_outline),
@@ -401,7 +424,11 @@ class DangerZoneCard extends StatelessWidget {
           children: [
             const Padding(padding: EdgeInsets.symmetric(horizontal: 12)),
             CardHeader(
-              leading: Icon(Icons.warning_amber_rounded, color: scheme.error, size: 20),
+              leading: Icon(
+                Icons.warning_amber_rounded,
+                color: scheme.error,
+                size: 20,
+              ),
               title: 'Danger zone',
             ),
             const SizedBox(height: 8),

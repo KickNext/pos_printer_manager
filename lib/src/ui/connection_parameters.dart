@@ -61,24 +61,26 @@ class _ConnectionParametersState extends State<ConnectionParameters> {
         child:
             _params == null
                 ? Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(padding: EdgeInsets.symmetric(horizontal: 12)),
-                  const CardHeader(
-                    leading: Icon(Icons.wifi_off, size: 20),
-                    title: 'No printer connected',
-                  ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: ElevatedButton.icon(
-                      onPressed: _connectPrinter,
-                      icon: const Icon(Icons.search_rounded),
-                      label: const Text('Find and connect'),
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                     ),
-                  ),
-                ],
+                    const CardHeader(
+                      leading: Icon(Icons.wifi_off, size: 20),
+                      title: 'No printer connected',
+                    ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton.icon(
+                        onPressed: _connectPrinter,
+                        icon: const Icon(Icons.search_rounded),
+                        label: const Text('Find and connect'),
+                      ),
+                    ),
+                  ],
                 )
                 : _buildConnectionParameters(_params!),
       ),
@@ -162,10 +164,7 @@ class _ConnectionCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(padding: EdgeInsets.symmetric(horizontal: 12)),
-          CardHeader(
-            leading: Icon(icon, size: 20),
-            title: title,
-          ),
+          CardHeader(leading: Icon(icon, size: 20), title: title),
           const Divider(),
           ...fields.map(
             (w) => Padding(
@@ -197,9 +196,7 @@ class _ConnectionCard extends StatelessWidget {
                 onPressed: onRemove,
                 icon: const Icon(Icons.delete_outline),
                 label: const Text('Remove'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red[700],
-                ),
+                style: TextButton.styleFrom(foregroundColor: Colors.red[700]),
               ),
             ],
           ),
