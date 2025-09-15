@@ -48,7 +48,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   bool _isDiscovering = false;
-  List<PrinterConnectionParamsDTO> _discoveredPrinters = [];
+  final List<PrinterConnectionParamsDTO> _discoveredPrinters = [];
 
   @override
   void initState() {

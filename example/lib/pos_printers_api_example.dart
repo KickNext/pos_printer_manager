@@ -348,6 +348,8 @@ class PosPrintersApiExample {
 
 // Пример использования в Flutter приложении
 class ExampleApp extends StatefulWidget {
+  const ExampleApp({super.key});
+
   @override
   _ExampleAppState createState() => _ExampleAppState();
 }
