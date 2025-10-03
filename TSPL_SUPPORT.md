@@ -9,6 +9,7 @@
 ### 1. Enum для выбора языка принтера
 
 Добавлен `LabelPrinterLanguage` enum с двумя вариантами:
+
 - `zpl` - Zebra Programming Language (принтеры Zebra)
 - `tspl` - TSC Printer Language (принтеры TSC)
 
@@ -35,7 +36,7 @@ final settings = LabelPrinterSettings(
 
 ### 3. UI для выбора языка
 
-В настройках label принтера появился виджет с radio buttons для выбора языка (ZPL/TSPL). 
+В настройках label принтера появился виджет с radio buttons для выбора языка (ZPL/TSPL).
 
 Виджет автоматически отображается в детальной настройке принтера и позволяет переключаться между языками.
 
@@ -57,6 +58,7 @@ final status = await manager.getTSPLPrinterStatus(printer);
 ### 5. Автоматическое переключение методов печати
 
 `LabelPrinterHandler` автоматически использует правильный метод печати в зависимости от выбранного языка:
+
 - Если выбран `ZPL` → использует `printZplRawData()` и `getZPLPrinterStatus()`
 - Если выбран `TSPL` → использует `printTsplRawData()` и `getTSPLPrinterStatus()`
 

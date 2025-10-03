@@ -49,7 +49,9 @@ enum PrinterPOSType {
             final categoriesJson = json['categories'];
             final categories =
                 categoriesJson is List
-                    ? categoriesJson.map((e) => CategoryForPrinter.fromJson(e)).toList()
+                    ? categoriesJson
+                        .map((e) => CategoryForPrinter.fromJson(e))
+                        .toList()
                     : <CategoryForPrinter>[];
 
             return KitchenPrinterSettings(
@@ -88,7 +90,9 @@ enum PrinterPOSType {
             final categoriesJson = json['categories'];
             final categories =
                 categoriesJson is List
-                    ? categoriesJson.map((e) => CategoryForPrinter.fromJson(e)).toList()
+                    ? categoriesJson
+                        .map((e) => CategoryForPrinter.fromJson(e))
+                        .toList()
                     : <CategoryForPrinter>[];
 
             return AndroBarPrinterSettings(
