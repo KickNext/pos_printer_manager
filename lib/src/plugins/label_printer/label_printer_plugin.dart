@@ -220,9 +220,9 @@ class _LanguageSelector extends StatelessWidget {
   String _getLanguageDescription(LabelPrinterLanguage lang) {
     switch (lang) {
       case LabelPrinterLanguage.zpl:
-        return 'Zebra Programming Language (Zebra printers)';
+        return 'Zebra Programming Language';
       case LabelPrinterLanguage.tspl:
-        return 'TSC Printer Language (TSC printers)';
+        return 'TSC Printer Language';
     }
   }
 }
