@@ -69,9 +69,10 @@ enum PrinterPOSType {
         PrinterPluginRegistry.registerWithCtor<LabelPrinterSettings>(
           printerPosType: PrinterPOSType.labelPrinter,
           ctor:
-              (params, json) => LabelPrinterSettings(
-                initConnectionParams: params,
-                onSettingsChanged: () async => await manager.saveConfigs(),
+              (params, json) => LabelPrinterSettings.fromJsonData(
+                params,
+                json,
+                () async => await manager.saveConfigs(),
               ),
           createHandler:
               (settings) => LabelPrinterHandler(

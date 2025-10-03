@@ -158,7 +158,7 @@ class PosPrintersApiExample {
 
   // === ZPL LABEL PRINTING ===
 
-  /// Печать HTML этикетки
+  /// Печать HTML этикетки (ZPL)
   Future<void> printLabelHTML(PrinterConnectionParamsDTO printer) async {
     const html = '''
       <html>
@@ -178,7 +178,7 @@ class PosPrintersApiExample {
 
     try {
       await manager.printZplHtml(printer, html, PaperSize.mm80.value);
-      print('HTML этикетка напечатана');
+      print('HTML этикетка напечатана (ZPL)');
     } catch (e) {
       print('Ошибка печати HTML этикетки: $e');
     }
@@ -204,6 +204,79 @@ class PosPrintersApiExample {
       print('Сырые ZPL команды напечатаны');
     } catch (e) {
       print('Ошибка печати ZPL команд: $e');
+    }
+  }
+
+  // === TSPL LABEL PRINTING ===
+
+  /// Печать HTML этикетки (TSPL)
+  Future<void> printTsplLabelHTML(PrinterConnectionParamsDTO printer) async {
+    const html = '''
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial; padding: 10px; }
+          h1 { font-size: 24px; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <h1>Этикетка товара</h1>
+        <p><b>Артикул:</b> 12345</p>
+        <p><b>Название:</b> Тестовый товар</p>
+        <p><b>Цена:</b> 1999.00 руб</p>
+      </body>
+      </html>
+    ''';
+
+    try {
+      await manager.printTsplHtml(printer, html, PaperSize.mm58.value);
+      print('HTML этикетка напечатана (TSPL)');
+    } catch (e) {
+      print('Ошибка печати TSPL HTML этикетки: $e');
+    }
+  }
+
+  /// Печать сырых TSPL команд
+  Future<void> printRawTSPL(PrinterConnectionParamsDTO printer) async {
+    const tsplCommands = '''
+SIZE 57 mm, 32 mm
+GAP 2 mm, 0 mm
+DIRECTION 1
+CLS
+BLOCK 30,30,370,90,"3",0,0,1,0,"Тестовая этикетка"
+TEXT 30,192,"2",0,1,1,"Артикул: 12345"
+TEXT 30,236,"2",0,1,1,"Цена: 1999 руб"
+PRINT 1
+    ''';
+
+    try {
+      await manager.printTsplRawData(
+        printer,
+        Uint8List.fromList(utf8.encode(tsplCommands)),
+        673, // 57mm width at 300 DPI (with DIRECTION 1, height becomes width)
+      );
+      print('Сырые TSPL команды напечатаны');
+    } catch (e) {
+      print('Ошибка печати TSPL команд: $e');
+    }
+  }
+
+  /// Получить статус TSPL принтера
+  Future<void> getTsplPrinterStatus(PrinterConnectionParamsDTO printer) async {
+    try {
+      final status = await manager.getTSPLPrinterStatus(printer);
+      if (status.success) {
+        print('TSPL статус код: ${status.code}');
+        // Расшифровка кодов статуса:
+        // 0x00 - Нормальный
+        // 0x01 - Головка открыта
+        // 0x04 - Нет бумаги
+        // 0x08 - Нет ленты
+      } else {
+        print('Ошибка получения статуса: ${status.errorMessage}');
+      }
+    } catch (e) {
+      print('Принтер не поддерживает TSPL: $e');
     }
   }
 

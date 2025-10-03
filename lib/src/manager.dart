@@ -245,6 +245,33 @@ class PrintersManager with ChangeNotifier {
     return api.printZplRawData(printer, data, width);
   }
 
+  // === TSPL Label Printing ===
+
+  /// Print HTML content on TSPL label printer
+  Future<void> printTsplHtml(
+    PrinterConnectionParamsDTO printer,
+    String html,
+    int width,
+  ) async {
+    return api.printTsplHtml(printer, html, width);
+  }
+
+  /// Print raw TSPL commands
+  Future<void> printTsplRawData(
+    PrinterConnectionParamsDTO printer,
+    Uint8List data,
+    int width,
+  ) async {
+    return api.printTsplRawData(printer, data, width);
+  }
+
+  /// Get TSPL printer status
+  Future<TSPLStatusResult> getTSPLPrinterStatus(
+    PrinterConnectionParamsDTO printer,
+  ) async {
+    return api.getTSPLPrinterStatus(printer);
+  }
+
   // === Network Configuration ===
 
   /// Configure network settings via USB connection

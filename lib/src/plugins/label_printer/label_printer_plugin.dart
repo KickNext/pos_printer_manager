@@ -6,7 +6,19 @@ class LabelPrinterSettings extends PrinterSettings {
   LabelPrinterSettings({
     required super.initConnectionParams,
     required super.onSettingsChanged,
-  });
+    LabelPrinterLanguage? language,
+  }) : _language = language ?? LabelPrinterLanguage.zpl;
+
+  LabelPrinterLanguage _language;
+
+  /// Get current label printer language (ZPL or TSPL)
+  LabelPrinterLanguage get language => _language;
+
+  /// Set label printer language
+  set language(LabelPrinterLanguage value) {
+    _language = value;
+    onSettingsChanged();
+  }
 
   @override
   final IconData icon = Icons.sticky_note_2_rounded;
@@ -21,7 +33,30 @@ class LabelPrinterSettings extends PrinterSettings {
   );
 
   @override
-  Map<String, dynamic> get extraSettingsToJson => {};
+  Map<String, dynamic> get extraSettingsToJson => {
+    'language': _language.name,
+  };
+
+  /// Create settings from JSON
+  factory LabelPrinterSettings.fromJsonData(
+    PrinterConnectionParamsDTO? connectionParams,
+    Map<String, dynamic> json,
+    Future<void> Function() onSettingsChanged,
+  ) {
+    LabelPrinterLanguage language = LabelPrinterLanguage.zpl;
+    if (json['language'] != null) {
+      try {
+        language = LabelPrinterLanguage.values.byName(json['language']);
+      } catch (_) {
+        language = LabelPrinterLanguage.zpl;
+      }
+    }
+    return LabelPrinterSettings(
+      initConnectionParams: connectionParams,
+      onSettingsChanged: onSettingsChanged,
+      language: language,
+    );
+  }
 }
 
 class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
@@ -32,26 +67,35 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
     if (settings.connectionParams == null) {
       return false;
     }
-    final status = await manager.api.getZPLPrinterStatus(
-      settings.connectionParams!,
-    );
-    return status.success;
+    
+    // Use appropriate status method based on language
+    if (settings.language == LabelPrinterLanguage.tspl) {
+      final status = await manager.api.getTSPLPrinterStatus(
+        settings.connectionParams!,
+      );
+      return status.success;
+    } else {
+      final status = await manager.api.getZPLPrinterStatus(
+        settings.connectionParams!,
+      );
+      return status.success;
+    }
   }
 
   @override
   Future<void> testPrint() async {
-    final zpl = buildZplLabel(
-      LabelData(
-        itemName: 'Test item for print label test',
-        unitAbr: 'kg',
-        oldPrice: r'$250010.34',
-        price: r'$250006.34',
-        storeName: 'Test Store Name',
-        date: '01/01/2025',
-        qrText: '0000000000000000',
-      ),
+    // Create test label data
+    final testData = LabelData(
+      itemName: 'Test item for print label test',
+      unitAbr: 'kg',
+      oldPrice: r'$250010.34',
+      price: r'$250006.34',
+      storeName: 'Test Store Name',
+      date: '01/01/2025',
+      qrText: '0000000000000000',
     );
-    final result = await print(LabelPrintJob(zplRawString: zpl));
+    
+    final result = await print(LabelPrintJob(labelData: testData));
     if (!result.success) {
       throw Exception(result.message ?? 'Test print failed');
     }
@@ -68,12 +112,27 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
     if (job is! LabelPrintJob) {
       return PrintResult(success: false, message: 'Invalid job type');
     }
-    final labelHTML = job.zplRawString;
-    debugPrint('''Printing on Label Printer: $labelHTML''');
-    final data = Uint8List.fromList(labelHTML.codeUnits);
+    
+    // Build label commands based on language
+    final String labelCommands;
+    if (settings.language == LabelPrinterLanguage.tspl) {
+      labelCommands = buildTsplLabel(job.labelData);
+    } else {
+      labelCommands = buildZplLabel(job.labelData);
+    }
+    
+    debugPrint('''Printing on Label Printer (${settings.language.displayName}): $labelCommands''');
+    final data = Uint8List.fromList(labelCommands.codeUnits);
 
     try {
-      await manager.api.printZplRawData(settings.connectionParams!, data, 457);
+      // Use appropriate print method based on language
+      if (settings.language == LabelPrinterLanguage.tspl) {
+        // TSPL: 57mm width at 300 DPI = ~673 dots (with DIRECTION 1, height becomes width)
+        await manager.api.printTsplRawData(settings.connectionParams!, data, 673);
+      } else {
+        // ZPL: 57mm width at 203 DPI = 457 dots
+        await manager.api.printZplRawData(settings.connectionParams!, data, 457);
+      }
     } catch (e) {
       debugPrint('Error printing label: $e');
       return PrintResult(success: false, message: e.toString());
@@ -82,11 +141,91 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
   }
 
   @override
-  List<Widget> get customWidgets => [];
+  List<Widget> get customWidgets => [
+    _LanguageSelector(settings: settings),
+  ];
+}
+
+class _LanguageSelector extends StatelessWidget {
+  final LabelPrinterSettings settings;
+
+  const _LanguageSelector({required this.settings});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Label Printer Language',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...LabelPrinterLanguage.values.map((lang) {
+            return InkWell(
+              onTap: () => settings.language = lang,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Radio<LabelPrinterLanguage>(
+                      value: lang,
+                      groupValue: settings.language,
+                      onChanged: (value) {
+                        if (value != null) {
+                          settings.language = value;
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lang.displayName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            _getLanguageDescription(lang),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  String _getLanguageDescription(LabelPrinterLanguage lang) {
+    switch (lang) {
+      case LabelPrinterLanguage.zpl:
+        return 'Zebra Programming Language (Zebra printers)';
+      case LabelPrinterLanguage.tspl:
+        return 'TSC Printer Language (TSC printers)';
+    }
+  }
 }
 
 class LabelPrintJob extends PrintJob {
-  final String zplRawString;
+  final LabelData labelData;
 
-  LabelPrintJob({required this.zplRawString});
+  LabelPrintJob({required this.labelData});
 }
