@@ -214,16 +214,16 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.10+2025091101"
+    version: "0.3.9+2025091603"
   pos_printers:
     dependency: transitive
     description:
       path: "."
-      ref: "475b16d91c8976acc9172402178d5e3b5899eeb3"
-      resolved-ref: "475b16d91c8976acc9172402178d5e3b5899eeb3"
+      ref: ff8ce3ec500c314ce9cbc3ae60074329fb98ed12
+      resolved-ref: ff8ce3ec500c314ce9cbc3ae60074329fb98ed12
       url: "https://github.com/nikitiser/pos_printers.git"
     source: git
-    version: "0.4.0+2025091101"
+    version: "0.5.0+2025100301"
   shared_preferences:
     dependency: transitive
     description:

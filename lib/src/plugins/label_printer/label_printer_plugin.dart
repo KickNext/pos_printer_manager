@@ -13,7 +13,6 @@ class LabelPrinterSettings extends PrinterSettings {
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
-    languages: const [PrinterLanguage.zpl],
     connectionTypes: const [
       DiscoveryConnectionType.usb,
       DiscoveryConnectionType.tcp,

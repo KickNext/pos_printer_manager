@@ -18,7 +18,6 @@ class KitchenPrinterSettings extends PrinterSettings {
 
   @override
   PrinterDiscoveryFilter get discoveryFilter => PrinterDiscoveryFilter(
-    languages: const [PrinterLanguage.esc],
     connectionTypes: const [
       DiscoveryConnectionType.usb,
       DiscoveryConnectionType.tcp,

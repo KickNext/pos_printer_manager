@@ -191,13 +191,6 @@ class PrintersManager with ChangeNotifier {
     return api.getPrinterSN(printer);
   }
 
-  /// Check printer language (ESC/POS or ZPL)
-  Future<CheckPrinterLanguageResponse> checkPrinterLanguage(
-    PrinterConnectionParamsDTO printer,
-  ) async {
-    return api.checkPrinterLanguage(printer);
-  }
-
   /// Get ZPL printer status
   Future<ZPLStatusResult> getZPLPrinterStatus(
     PrinterConnectionParamsDTO printer,

@@ -107,11 +107,6 @@ class _MainScreenState extends State<MainScreen> {
         throw Exception('Принтер недоступен: ${status.errorMessage}');
       }
 
-      // Определяем язык принтера
-      final language = await widget.printerManager.checkPrinterLanguage(
-        printer,
-      );
-
       // Печатаем тестовую страницу
       final testHtml = '''
         <html>
@@ -128,19 +123,13 @@ class _MainScreenState extends State<MainScreen> {
 
       final htmlWithId = testHtml.replaceAll('{{id}}', printer.id);
 
-      if (language.printerLanguage == PrinterLanguage.esc) {
-        await widget.printerManager.printEscHTML(
-          printer,
-          htmlWithId,
-          PaperSize.mm80.value,
-        );
-      } else if (language.printerLanguage == PrinterLanguage.zpl) {
-        await widget.printerManager.printZplHtml(
-          printer,
-          htmlWithId,
-          PaperSize.mm80.value,
-        );
-      }
+      // Используем ESC/POS по умолчанию
+      // Для ZPL принтеров используйте printZplHtml вместо printEscHTML
+      await widget.printerManager.printEscHTML(
+        printer,
+        htmlWithId,
+        PaperSize.mm80.value,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

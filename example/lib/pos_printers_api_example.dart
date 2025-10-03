@@ -43,14 +43,13 @@ class PosPrintersApiExample {
       print('Найден принтер: ${printer.id} (${printer.connectionType})');
     });
 
-    // Поиск только USB ESC/POS принтеров
+    // Поиск только USB принтеров
     final filter = PrinterDiscoveryFilter(
       connectionTypes: [DiscoveryConnectionType.usb],
-      languages: [PrinterLanguage.esc],
     );
     final filteredStream = manager.findPrinters(filter: filter);
     filteredStream.listen((printer) {
-      print('Найден USB ESC/POS принтер: ${printer.id}');
+      print('Найден USB принтер: ${printer.id}');
     });
 
     // Ожидание завершения поиска
@@ -89,10 +88,6 @@ class PosPrintersApiExample {
     if (snResult.success) {
       print('Серийный номер: ${snResult.value}');
     }
-
-    // Тип языка принтера
-    final languageResponse = await manager.checkPrinterLanguage(printer);
-    print('Язык принтера: ${languageResponse.printerLanguage}');
 
     // ZPL статус (только для ZPL принтеров)
     try {
@@ -329,13 +324,11 @@ class PosPrintersApiExample {
     print('=== Открытие денежного ящика ===');
     await openCashDrawer(printer);
 
-    // Если это ZPL принтер
-    final language = await manager.checkPrinterLanguage(printer);
-    if (language.printerLanguage == PrinterLanguage.zpl) {
-      print('=== Печать этикетки ===');
-      await printLabelHTML(printer);
-      await printRawZPL(printer);
-    }
+    // Примечание: для ZPL принтеров можно использовать методы printLabelHTML и printRawZPL
+    // Раскомментируйте, если ваш принтер поддерживает ZPL
+    // print('=== Печать этикетки ===');
+    // await printLabelHTML(printer);
+    // await printRawZPL(printer);
 
     print('=== Пример завершен ===');
   }

@@ -13,7 +13,6 @@
 
 - `getPrinterStatus(printer)` - получение статуса принтера
 - `getPrinterSN(printer)` - получение серийного номера
-- `checkPrinterLanguage(printer)` - определение языка принтера (ESC/POS или ZPL)
 - `getZPLPrinterStatus(printer)` - получение статуса ZPL принтера
 
 ### 3. Методы печати ESC/POS
@@ -68,7 +67,6 @@
 ✅ printZplHtml
 ✅ printZplRawData
 ✅ getZPLPrinterStatus
-✅ checkPrinterLanguage
 ✅ setNetSettings
 ✅ configureNetViaUDP
 ✅ discoveryStream
@@ -90,7 +88,7 @@
 - PrinterConnectionParamsDTO
 - NetworkParams
 - StatusResult, StringResult, ZPLStatusResult
-- PrinterLanguage, DiscoveryConnectionType
+- DiscoveryConnectionType
 - PrinterConnectionEventType, PrinterConnectionEvent
 
 Плагин теперь полностью соответствует описанию в pos-printers.md и предоставляет все заявленные возможности.

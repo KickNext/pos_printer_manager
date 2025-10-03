@@ -6,7 +6,7 @@ A comprehensive Flutter plugin for POS (Point of Sale) and label printers, suppo
 
 - **Multiple Printer Types**: Support for ESC/POS receipt printers and ZPL label printers
 - **Multiple Connection Types**: USB, network (TCP), and SDK-based discovery
-- **HTML Printing**: Convert HTML to printable bitmaps for both receipt and label printers  
+- **HTML Printing**: Convert HTML to printable bitmaps for both receipt and label printers
 - **Raw Data Printing**: Send raw ESC/POS, ZPL, CPCL, and TSPL commands
 - **Printer Discovery**: Automatic discovery of USB and network printers
 - **Connection Management**: Robust connection handling with retry logic and proper cleanup
@@ -72,7 +72,6 @@ final manager = PosPrintersManager();
 - `Future<void> printZplHtml(PrinterConnectionParamsDTO printer, String html, int width)`
 - `Future<void> printZplRawData(PrinterConnectionParamsDTO printer, Uint8List data, int width)`
 - `Future<ZPLStatusResult> getZPLPrinterStatus(PrinterConnectionParamsDTO printer)`
-- `Future<CheckPrinterLanguageResponse> checkPrinterLanguage(PrinterConnectionParamsDTO printer)`
 - `Future<void> setNetSettings(PrinterConnectionParamsDTO printer, NetworkParams netSettings)`
 - `Future<void> configureNetViaUDP(String macAddress, NetworkParams netSettings)`
 - `void dispose()`
@@ -102,6 +101,7 @@ final printer = PrinterConnectionParamsDTO(
 ```
 
 **Properties:**
+
 - `String id` - Unique printer identifier
 - `PosPrinterConnectionType connectionType` - Connection type (usb, network)
 - `UsbParams? usbParams` - USB connection parameters (if USB)
@@ -114,7 +114,7 @@ Network connection parameters.
 ```dart
 final networkParams = NetworkParams(
   ipAddress: '192.168.1.100',
-  mask: '255.255.255.0', 
+  mask: '255.255.255.0',
   gateway: '192.168.1.1',
   macAddress: 'AA:BB:CC:DD:EE:FF',
   dhcp: false,
@@ -156,10 +156,9 @@ await manager.awaitDiscoveryComplete();
 #### Filtered Discovery
 
 ```dart
-// Discover only USB ESC/POS printers
+// Discover only USB printers
 final filter = PrinterDiscoveryFilter(
   connectionTypes: [DiscoveryConnectionType.usb],
-  languages: [PrinterLanguage.esc],
 );
 
 final printerStream = manager.findPrinters(filter: filter);
@@ -194,6 +193,7 @@ manager.connectionEvents.listen((event) {
 Print HTML content converted to bitmap.
 
 **ESC/POS Receipt Printers:**
+
 ```dart
 final html = '''
 <html>
@@ -215,6 +215,7 @@ await manager.printEscHTML(printer, html, PaperSize.mm80.value);
 ```
 
 **ZPL Label Printers:**
+
 ```dart
 final html = '''
 <html>
@@ -240,6 +241,7 @@ await manager.printZplHtml(printer, html, PaperSize.mm80.value);
 Send raw printer commands directly.
 
 **ESC/POS Commands:**
+
 ```dart
 final escCommands = [
   0x1B, 0x40, // Initialize
@@ -250,13 +252,14 @@ final escCommands = [
 ];
 
 await manager.printEscRawData(
-  printer, 
-  Uint8List.fromList(escCommands), 
+  printer,
+  Uint8List.fromList(escCommands),
   PaperSize.mm80.value
 );
 ```
 
 **ZPL Commands:**
+
 ```dart
 final zplCommands = '''
 ^XA
@@ -311,13 +314,6 @@ if (snResult.success) {
 }
 ```
 
-#### Check Printer Language
-
-```dart
-final response = await manager.checkPrinterLanguage(printer);
-print('Language: ${response.printerLanguage}'); // PrinterLanguage.esc or PrinterLanguage.zpl
-```
-
 #### ZPL Printer Status
 
 ```dart
@@ -338,7 +334,7 @@ if (zplStatus.success) {
 final newSettings = NetworkParams(
   ipAddress: '192.168.1.200',
   mask: '255.255.255.0',
-  gateway: '192.168.1.1', 
+  gateway: '192.168.1.1',
   macAddress: null, // Will be detected
   dhcp: false,
 );
@@ -388,7 +384,7 @@ try {
 Future<void> stressTest() async {
   final printers = <PrinterConnectionParamsDTO>[printer1, printer2];
   final futures = <Future<void>>[];
-  
+
   // Send 10 print jobs simultaneously
   for (int i = 0; i < 10; i++) {
     final html = '<html><body><h1>Receipt #$i</h1></body></html>';
@@ -398,7 +394,7 @@ Future<void> stressTest() async {
       PaperSize.mm80.value,
     ));
   }
-  
+
   // Wait for all to complete
   await Future.wait(futures);
   print('All prints completed');
@@ -411,11 +407,11 @@ Future<void> stressTest() async {
 class PrinterService {
   final PosPrintersManager _manager;
   final Map<String, PrinterConnectionParamsDTO> _connectedPrinters = {};
-  
+
   PrinterService() : _manager = PosPrintersManager() {
     _setupEventListeners();
   }
-  
+
   void _setupEventListeners() {
     _manager.connectionEvents.listen((event) {
       switch (event.type) {
@@ -428,7 +424,7 @@ class PrinterService {
       }
     });
   }
-  
+
   Future<void> printToAll(String html) async {
     final futures = _connectedPrinters.values.map((printer) =>
         _manager.printEscHTML(printer, html, PaperSize.mm80.value));
@@ -451,19 +447,18 @@ See the `example/` directory for a full working application that demonstrates:
 ### Enums Reference
 
 #### PosPrinterConnectionType
+
 - `usb` - USB connection
 - `network` - Network TCP/IP connection
 
-#### PrinterLanguage  
-- `esc` - ESC/POS commands (receipt printers)
-- `zpl` - ZPL commands (label printers)
-
 #### DiscoveryConnectionType
+
 - `usb` - Discover USB printers
 - `sdk` - Discover via Xprinter SDK
 - `tcp` - Discover via TCP scan (port 9100)
 
 #### PrinterConnectionEventType
+
 - `attached` - Printer was connected
 - `detached` - Printer was disconnected
 
