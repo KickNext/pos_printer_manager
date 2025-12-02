@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Main page for displaying and managing printers.
+///
+/// Shows a list of configured printers with the ability to add new printers
+/// and navigate to printer details for configuration.
 class PrintersPage extends StatefulWidget {
+  /// Creates a printers page widget.
   const PrintersPage({required this.printerManager, super.key});
 
+  /// The printer manager instance for accessing printers.
   final PrintersManager printerManager;
 
   @override
@@ -13,36 +19,46 @@ class PrintersPage extends StatefulWidget {
 class _PrintersPageState extends State<PrintersPage> {
   @override
   void initState() {
-    widget.printerManager.addListener(update);
     super.initState();
+    widget.printerManager.addListener(_update);
   }
 
-  void update() {
+  /// Rebuilds the UI when printer manager state changes.
+  void _update() {
     setState(() {});
   }
 
-  Future<void> onAddPrinter() async {
-    await showDialog(
+  /// Opens the printer setup wizard dialog.
+  Future<void> _onAddPrinter() async {
+    final newPrinter = await showDialog<PosPrinter>(
       context: context,
-      builder:
-          (context) =>
-              CreatePrinterDialog(printerManager: widget.printerManager),
+      builder: (context) => PrinterSetupWizard(
+        printerManager: widget.printerManager,
+        onComplete: (printer) => Navigator.of(context).pop(printer),
+        onCancel: () => Navigator.of(context).pop(),
+      ),
     );
-    setState(() {});
+
+    // If a printer was created, navigate to its details
+    if (newPrinter != null && mounted) {
+      await _navigateToPrinterDetails(newPrinter);
+    }
   }
 
-  Future<void> toPrinterDetails(PosPrinter printer) async {
+  /// Navigates to printer details screen.
+  Future<void> _navigateToPrinterDetails(PosPrinter printer) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PrinterDetailsScreen(printer: printer),
       ),
     );
-    setState(() {});
+    // Refresh state after returning from details
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
-    widget.printerManager.removeListener(update);
+    widget.printerManager.removeListener(_update);
     super.dispose();
   }
 
@@ -51,21 +67,12 @@ class _PrintersPageState extends State<PrintersPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            if (widget.printerManager.canAddPrinter)
-              IconButton.filledTonal(
-                onPressed: onAddPrinter,
-                icon: const Icon(Icons.add),
-                tooltip: 'Add Printer',
-              ),
-            ...widget.printerManager.printers.map(
-              (p) => PrinterCard(printer: p, onTap: toPrinterDetails),
-            ),
-          ],
+        child: PrinterListOrganism(
+          printerManager: widget.printerManager,
+          onPrinterTap: _navigateToPrinterDetails,
+          onAddPrinter: widget.printerManager.canAddPrinter
+              ? _onAddPrinter
+              : null,
         ),
       ),
     );

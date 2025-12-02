@@ -73,7 +73,7 @@ BLOCK 20,20,250,96,"3",0,1,1,"${d.itemName}"
 $oldPriceBlock
 TEXT 20,160,"4",0,1,1,"${d.price} /${d.unitAbr}"
 TEXT $qrTextX,20,"1",0,1,1,"${d.qrText}"
-QRCODE ${rightColX},35,L,5,A,0,"${d.qrText}"
+QRCODE $rightColX,35,L,5,A,0,"${d.qrText}"
 TEXT 20,220,"2",0,1,1,"${d.storeName}"
 TEXT $rightColX,220,"2",0,1,1,"${d.date}"
 PRINT 1

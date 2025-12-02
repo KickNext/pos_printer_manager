@@ -9,7 +9,7 @@ abstract class PrinterSettings {
   PrinterConnectionParamsDTO? get connectionParams => _connectionParams;
 
   PrinterSettings({
-    required initConnectionParams,
+    required PrinterConnectionParamsDTO? initConnectionParams,
     required this.onSettingsChanged,
   }) {
     _connectionParams = initConnectionParams;

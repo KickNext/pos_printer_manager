@@ -272,6 +272,56 @@ class PrintersManager with ChangeNotifier {
     return api.getTSPLPrinterStatus(printer);
   }
 
+  // === USB Permission Management ===
+
+  /// Запрашивает разрешение на использование USB-устройства у пользователя.
+  ///
+  /// В Android для работы с USB-устройствами необходимо получить разрешение
+  /// от пользователя. Этот метод показывает системный диалог с запросом.
+  ///
+  /// **ВАЖНО**: Этот метод должен быть вызван перед любыми операциями
+  /// с USB-принтером (печать, получение статуса и т.д.), иначе будет
+  /// ошибка "USB permission denied".
+  ///
+  /// [usbParams] - параметры USB-устройства (vendorId, productId, serialNumber)
+  ///
+  /// Возвращает [UsbPermissionResult] с информацией о результате:
+  /// - [granted] - true если разрешение получено
+  /// - [errorMessage] - сообщение об ошибке (если не получено)
+  /// - [deviceInfo] - информация об устройстве
+  Future<UsbPermissionResult> requestUsbPermission(UsbParams usbParams) async {
+    return api.requestUsbPermission(usbParams);
+  }
+
+  /// Проверяет, есть ли уже разрешение на использование USB-устройства.
+  ///
+  /// Этот метод **не показывает** диалог пользователю, только проверяет
+  /// текущее состояние разрешения.
+  ///
+  /// [usbParams] - параметры USB-устройства
+  ///
+  /// Возвращает [UsbPermissionResult] с текущим состоянием разрешения.
+  Future<UsbPermissionResult> hasUsbPermission(UsbParams usbParams) async {
+    return api.hasUsbPermission(usbParams);
+  }
+
+  /// Удобный метод для работы с USB-принтером с автоматическим запросом разрешения.
+  ///
+  /// Проверяет разрешение, запрашивает его при необходимости, и выполняет
+  /// переданную операцию только при успешном получении разрешения.
+  ///
+  /// [printer] - параметры подключения принтера
+  /// [operation] - операция для выполнения после получения разрешения
+  ///
+  /// Выбрасывает [UsbPermissionDeniedException] если пользователь отказал в разрешении.
+  /// Выбрасывает [ArgumentError] если принтер USB, но нет usbParams.
+  Future<T> withUsbPermission<T>(
+    PrinterConnectionParamsDTO printer,
+    Future<T> Function() operation,
+  ) async {
+    return api.withUsbPermission(printer, operation);
+  }
+
   // === Network Configuration ===
 
   /// Configure network settings via USB connection

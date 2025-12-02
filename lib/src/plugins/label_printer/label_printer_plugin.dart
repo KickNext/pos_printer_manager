@@ -169,49 +169,52 @@ class _LanguageSelector extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
-          ...LabelPrinterLanguage.values.map((lang) {
-            return InkWell(
-              onTap: () => settings.language = lang,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Radio<LabelPrinterLanguage>(
-                      value: lang,
-                      groupValue: settings.language,
-                      onChanged: (value) {
-                        if (value != null) {
-                          settings.language = value;
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            lang.displayName,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+          RadioGroup<LabelPrinterLanguage>(
+            groupValue: settings.language,
+            onChanged: (value) {
+              if (value != null) {
+                settings.language = value;
+              }
+            },
+            child: Column(
+              children:
+                  LabelPrinterLanguage.values.map((lang) {
+                    return InkWell(
+                      onTap: () => settings.language = lang,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          children: [
+                            Radio<LabelPrinterLanguage>(value: lang),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    lang.displayName,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    _getLanguageDescription(lang),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            _getLanguageDescription(lang),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+                    );
+                  }).toList(),
+            ),
+          ),
         ],
       ),
     );

@@ -1,7 +1,27 @@
+import 'dart:developer' as developer;
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
+
+/// Логгер для примера API принтеров.
+///
+/// Использует [developer.log] для вывода сообщений, что является
+/// рекомендуемым подходом вместо [print] в production коде.
+class _ExampleLogger {
+  /// Название логгера для фильтрации в DevTools
+  static const String _loggerName = 'PosPrintersApiExample';
+
+  /// Логирует информационное сообщение
+  static void info(String message) {
+    developer.log(message, name: _loggerName, level: 800);
+  }
+
+  /// Логирует сообщение об ошибке
+  static void error(String message, [Object? error]) {
+    developer.log(message, name: _loggerName, level: 1000, error: error);
+  }
+}
 
 /// Пример полного использования API pos_printer_manager
 /// Демонстрирует все возможности плагина согласно README
@@ -40,7 +60,9 @@ class PosPrintersApiExample {
     // Поиск всех принтеров
     final allPrintersStream = manager.findPrinters(filter: null);
     allPrintersStream.listen((printer) {
-      print('Найден принтер: ${printer.id} (${printer.connectionType})');
+      _ExampleLogger.info(
+        'Найден принтер: ${printer.id} (${printer.connectionType})',
+      );
     });
 
     // Поиск только USB принтеров
@@ -49,12 +71,12 @@ class PosPrintersApiExample {
     );
     final filteredStream = manager.findPrinters(filter: filter);
     filteredStream.listen((printer) {
-      print('Найден USB принтер: ${printer.id}');
+      _ExampleLogger.info('Найден USB принтер: ${printer.id}');
     });
 
     // Ожидание завершения поиска
     await manager.awaitDiscoveryComplete();
-    print('Поиск принтеров завершен');
+    _ExampleLogger.info('Поиск принтеров завершен');
   }
 
   /// Мониторинг событий подключения/отключения
@@ -62,10 +84,10 @@ class PosPrintersApiExample {
     manager.connectionEvents.listen((event) {
       switch (event.type) {
         case PrinterConnectionEventType.attached:
-          print('Принтер подключен: ${event.printer?.id}');
+          _ExampleLogger.info('Принтер подключен: ${event.printer?.id}');
           break;
         case PrinterConnectionEventType.detached:
-          print('Принтер отключен: ${event.printer?.id}');
+          _ExampleLogger.info('Принтер отключен: ${event.printer?.id}');
           break;
       }
     });
@@ -78,25 +100,25 @@ class PosPrintersApiExample {
     // Общий статус
     final status = await manager.getPrinterStatus(printer);
     if (status.success) {
-      print('Статус принтера: ${status.status}');
+      _ExampleLogger.info('Статус принтера: ${status.status}');
     } else {
-      print('Ошибка получения статуса: ${status.errorMessage}');
+      _ExampleLogger.error('Ошибка получения статуса: ${status.errorMessage}');
     }
 
     // Серийный номер
     final snResult = await manager.getPrinterSN(printer);
     if (snResult.success) {
-      print('Серийный номер: ${snResult.value}');
+      _ExampleLogger.info('Серийный номер: ${snResult.value}');
     }
 
     // ZPL статус (только для ZPL принтеров)
     try {
       final zplStatus = await manager.getZPLPrinterStatus(printer);
       if (zplStatus.success) {
-        print('ZPL статус код: ${zplStatus.code}');
+        _ExampleLogger.info('ZPL статус код: ${zplStatus.code}');
       }
     } catch (e) {
-      print('Принтер не поддерживает ZPL: $e');
+      _ExampleLogger.error('Принтер не поддерживает ZPL', e);
     }
   }
 
@@ -123,9 +145,9 @@ class PosPrintersApiExample {
 
     try {
       await manager.printEscHTML(printer, html, PaperSize.mm80.value);
-      print('HTML чек напечатан успешно');
+      _ExampleLogger.info('HTML чек напечатан успешно');
     } catch (e) {
-      print('Ошибка печати HTML чека: $e');
+      _ExampleLogger.error('Ошибка печати HTML чека', e);
     }
   }
 
@@ -150,9 +172,9 @@ class PosPrintersApiExample {
         Uint8List.fromList(commands),
         PaperSize.mm80.value,
       );
-      print('Сырые ESC/POS команды напечатаны');
+      _ExampleLogger.info('Сырые ESC/POS команды напечатаны');
     } catch (e) {
-      print('Ошибка печати сырых команд: $e');
+      _ExampleLogger.error('Ошибка печати сырых команд', e);
     }
   }
 
@@ -178,9 +200,9 @@ class PosPrintersApiExample {
 
     try {
       await manager.printZplHtml(printer, html, PaperSize.mm80.value);
-      print('HTML этикетка напечатана (ZPL)');
+      _ExampleLogger.info('HTML этикетка напечатана (ZPL)');
     } catch (e) {
-      print('Ошибка печати HTML этикетки: $e');
+      _ExampleLogger.error('Ошибка печати HTML этикетки', e);
     }
   }
 
@@ -201,9 +223,9 @@ class PosPrintersApiExample {
         Uint8List.fromList(utf8.encode(zplCommands)),
         PaperSize.mm80.value,
       );
-      print('Сырые ZPL команды напечатаны');
+      _ExampleLogger.info('Сырые ZPL команды напечатаны');
     } catch (e) {
-      print('Ошибка печати ZPL команд: $e');
+      _ExampleLogger.error('Ошибка печати ZPL команд', e);
     }
   }
 
@@ -230,9 +252,9 @@ class PosPrintersApiExample {
 
     try {
       await manager.printTsplHtml(printer, html, PaperSize.mm58.value);
-      print('HTML этикетка напечатана (TSPL)');
+      _ExampleLogger.info('HTML этикетка напечатана (TSPL)');
     } catch (e) {
-      print('Ошибка печати TSPL HTML этикетки: $e');
+      _ExampleLogger.error('Ошибка печати TSPL HTML этикетки', e);
     }
   }
 
@@ -255,9 +277,9 @@ PRINT 1
         Uint8List.fromList(utf8.encode(tsplCommands)),
         673, // 57mm width at 300 DPI (with DIRECTION 1, height becomes width)
       );
-      print('Сырые TSPL команды напечатаны');
+      _ExampleLogger.info('Сырые TSPL команды напечатаны');
     } catch (e) {
-      print('Ошибка печати TSPL команд: $e');
+      _ExampleLogger.error('Ошибка печати TSPL команд', e);
     }
   }
 
@@ -266,17 +288,19 @@ PRINT 1
     try {
       final status = await manager.getTSPLPrinterStatus(printer);
       if (status.success) {
-        print('TSPL статус код: ${status.code}');
+        _ExampleLogger.info('TSPL статус код: ${status.code}');
         // Расшифровка кодов статуса:
         // 0x00 - Нормальный
         // 0x01 - Головка открыта
         // 0x04 - Нет бумаги
         // 0x08 - Нет ленты
       } else {
-        print('Ошибка получения статуса: ${status.errorMessage}');
+        _ExampleLogger.error(
+          'Ошибка получения статуса: ${status.errorMessage}',
+        );
       }
     } catch (e) {
-      print('Принтер не поддерживает TSPL: $e');
+      _ExampleLogger.error('Принтер не поддерживает TSPL', e);
     }
   }
 
@@ -286,9 +310,9 @@ PRINT 1
   Future<void> openCashDrawer(PrinterConnectionParamsDTO printer) async {
     try {
       await manager.openCashBox(printer);
-      print('Денежный ящик открыт');
+      _ExampleLogger.info('Денежный ящик открыт');
     } catch (e) {
-      print('Ошибка открытия денежного ящика: $e');
+      _ExampleLogger.error('Ошибка открытия денежного ящика', e);
     }
   }
 
@@ -308,9 +332,9 @@ PRINT 1
 
     try {
       await manager.setNetSettings(usbPrinter, networkParams);
-      print('Сетевые настройки применены через USB');
+      _ExampleLogger.info('Сетевые настройки применены через USB');
     } catch (e) {
-      print('Ошибка конфигурации сети: $e');
+      _ExampleLogger.error('Ошибка конфигурации сети', e);
     }
   }
 
@@ -327,9 +351,9 @@ PRINT 1
 
     try {
       await manager.configureNetViaUDP(macAddress, networkParams);
-      print('Сетевые настройки применены через UDP');
+      _ExampleLogger.info('Сетевые настройки применены через UDP');
     } catch (e) {
-      print('Ошибка UDP конфигурации: $e');
+      _ExampleLogger.error('Ошибка UDP конфигурации', e);
     }
   }
 
@@ -352,9 +376,9 @@ PRINT 1
 
     try {
       await Future.wait(futures);
-      print('Все задания печати выполнены успешно');
+      _ExampleLogger.info('Все задания печати выполнены успешно');
     } catch (e) {
-      print('Ошибка в стресс-тесте: $e');
+      _ExampleLogger.error('Ошибка в стресс-тесте', e);
     }
   }
 
@@ -368,7 +392,7 @@ PRINT 1
     monitorConnectionEvents();
 
     // Поиск принтеров
-    print('=== Поиск принтеров ===');
+    _ExampleLogger.info('=== Поиск принтеров ===');
     await discoverPrinters();
 
     // Используем первый найденный принтер
@@ -381,29 +405,29 @@ PRINT 1
     }
 
     if (printer == null) {
-      print('Принтеры не найдены');
+      _ExampleLogger.info('Принтеры не найдены');
       return;
     }
 
-    print('=== Проверка статуса ===');
+    _ExampleLogger.info('=== Проверка статуса ===');
     await checkPrinterStatus(printer);
 
-    print('=== Печать чека ===');
+    _ExampleLogger.info('=== Печать чека ===');
     await printReceiptHTML(printer);
 
-    print('=== Печать сырых команд ===');
+    _ExampleLogger.info('=== Печать сырых команд ===');
     await printRawESC(printer);
 
-    print('=== Открытие денежного ящика ===');
+    _ExampleLogger.info('=== Открытие денежного ящика ===');
     await openCashDrawer(printer);
 
     // Примечание: для ZPL принтеров можно использовать методы printLabelHTML и printRawZPL
     // Раскомментируйте, если ваш принтер поддерживает ZPL
-    // print('=== Печать этикетки ===');
+    // _ExampleLogger.info('=== Печать этикетки ===');
     // await printLabelHTML(printer);
     // await printRawZPL(printer);
 
-    print('=== Пример завершен ===');
+    _ExampleLogger.info('=== Пример завершен ===');
   }
 
   /// Освобождение ресурсов
@@ -417,10 +441,13 @@ class ExampleApp extends StatefulWidget {
   const ExampleApp({super.key});
 
   @override
-  _ExampleAppState createState() => _ExampleAppState();
+  ExampleAppState createState() => ExampleAppState();
 }
 
-class _ExampleAppState extends State<ExampleApp> {
+/// Состояние для примера приложения POS принтеров.
+///
+/// Демонстрирует инициализацию и использование API принтеров.
+class ExampleAppState extends State<ExampleApp> {
   final _example = PosPrintersApiExample();
 
   @override
@@ -433,7 +460,7 @@ class _ExampleAppState extends State<ExampleApp> {
     try {
       await _example.completeExample();
     } catch (e) {
-      print('Ошибка в примере: $e');
+      _ExampleLogger.error('Ошибка в примере', e);
     }
   }
 

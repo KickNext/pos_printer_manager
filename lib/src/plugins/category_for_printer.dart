@@ -25,4 +25,4 @@ class CategoryForPrinter {
 }
 
 Color colorFromJson(int color) => Color(color);
-int colorToJson(Color color) => color.value;
+int colorToJson(Color color) => color.toARGB32();

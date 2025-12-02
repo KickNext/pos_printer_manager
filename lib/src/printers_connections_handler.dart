@@ -28,6 +28,8 @@ class PrintersConnectionsHandler {
             for (var printer in _savedPrinters) {
               if (printer.handler.settings.connectionParams?.id == event.id) {
                 printer.updateStatus(true);
+                // Check USB permission when device is re-attached
+                printer.checkUsbPermission();
               }
             }
           }
