@@ -149,13 +149,13 @@ lib/
         └── organisms/
 ```
 
-## Типы принтеров
+## Типы принтеров  
 
 | Тип        | Описание             | Класс задания      |
 | ---------- | -------------------- | ------------------ |
-| `receipt`  | Чековые принтеры     | `ReceiptPrintJob`  |
+| `receipt`  | Чековые принтеры     | `ReceiptPrintJob`  |    
 | `kitchen`  | Кухонные принтеры    | `KitchenPrintJob`  |
-| `label`    | Этикеточные принтеры | `LabelPrintJob`    |
+| `label`    | Этикеточные принтеры | `LabelPrintJob`    |  
 | `androBar` | Принтеры AndroBar    | `AndroBarPrintJob` |
 
 ## Result Type
