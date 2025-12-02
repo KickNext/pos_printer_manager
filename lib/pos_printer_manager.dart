@@ -127,8 +127,3 @@ export 'src/ui/printer_detail_screen.dart';
 
 // Dependencies
 export 'package:pos_printers/pos_printers.dart';
-
-// test
-void badlyFormattedFunction() {
-  print('hello');
-}
