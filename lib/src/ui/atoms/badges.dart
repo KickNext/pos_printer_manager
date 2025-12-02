@@ -339,8 +339,6 @@ class PrinterTypeBadge extends StatelessWidget {
   /// Custom label (used when printerType is null).
   final String? _customLabel;
 
-  /// Custom icon (used when printerType is null).
-  final IconData? _customIcon;
 
   /// Optional background color.
   final Color? backgroundColor;
@@ -351,8 +349,7 @@ class PrinterTypeBadge extends StatelessWidget {
     required PrinterPOSType printerType,
     this.backgroundColor,
   }) : _printerType = printerType,
-       _customLabel = null,
-       _customIcon = null;
+       _customLabel = null;
 
   /// Creates a printer type badge with custom label and icon.
   const PrinterTypeBadge.custom({
@@ -361,8 +358,7 @@ class PrinterTypeBadge extends StatelessWidget {
     required IconData icon,
     this.backgroundColor,
   }) : _printerType = null,
-       _customLabel = label,
-       _customIcon = icon;
+       _customLabel = label;
 
   /// Gets the display label for the printer type.
   String get _label {
