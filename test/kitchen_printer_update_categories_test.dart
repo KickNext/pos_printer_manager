@@ -2,12 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Тестовая реализация репозитория в памяти.
 class _InMemoryRepo implements PrinterConfigRepository {
-  @override
-  Future<List<PrinterConfig>> loadConfigs() async => [];
+  final List<PrinterConfig> _configs = [];
 
   @override
-  Future<void> saveConfigs(List<PrinterConfig> configs) async {}
+  Future<List<PrinterConfig>> loadConfigs() async => List.from(_configs);
+
+  @override
+  Future<void> saveConfigs(List<PrinterConfig> configs) async {
+    _configs
+      ..clear()
+      ..addAll(configs);
+  }
+
+  @override
+  Future<PrinterConfig?> findById(String id) async {
+    return _configs.where((c) => c.id == id).firstOrNull;
+  }
+
+  @override
+  Future<void> upsert(PrinterConfig config) async {
+    final index = _configs.indexWhere((c) => c.id == config.id);
+    if (index >= 0) {
+      _configs[index] = config;
+    } else {
+      _configs.add(config);
+    }
+  }
+
+  @override
+  Future<bool> deleteById(String id) async {
+    final initialLength = _configs.length;
+    _configs.removeWhere((c) => c.id == id);
+    return _configs.length < initialLength;
+  }
+
+  @override
+  Future<bool> exists(String id) async {
+    return _configs.any((c) => c.id == id);
+  }
+
+  @override
+  Future<int> count() async => _configs.length;
+
+  @override
+  Future<void> clear() async => _configs.clear();
 }
 
 class _Harness extends StatefulWidget {

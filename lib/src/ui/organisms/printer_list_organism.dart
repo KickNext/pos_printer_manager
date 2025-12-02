@@ -270,7 +270,7 @@ class PrinterListOrganism extends StatelessWidget {
   Widget build(BuildContext context) {
     final printers = printerManager.printers;
 
-    if (printers.isEmpty && !printerManager.canAddPrinter) {
+    if (printers.isEmpty && !printerManager.canAddPrinterOfType()) {
       return const EmptyState(
         icon: PrinterIcons.unknown,
         title: 'No Printers Available',
@@ -299,7 +299,7 @@ class PrinterListOrganism extends StatelessWidget {
       runSpacing: 16,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (printerManager.canAddPrinter && onAddPrinter != null)
+        if (printerManager.canAddPrinterOfType() && onAddPrinter != null)
           _AddPrinterButton(onPressed: onAddPrinter!),
         ...printers.map(
           (printer) => PrinterListItem(

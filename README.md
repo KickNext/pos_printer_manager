@@ -1,267 +1,215 @@
-# pos_printer_manager
+# POS Printer Manager
 
-**Flutter-пакет для управления POS-принтерами**
+Библиотека управления POS-принтерами для Flutter.
 
----
+Предоставляет комплексное решение для работы с различными типами POS-принтеров: чековые, кухонные, этикеточные и AndroBar.
 
-## Содержание
+## Возможности
 
-1. [Обзор](#обзор)
-2. [Ключевые возможности](#ключевые-возможности)
-3. [Структура](#структура)
-4. [Установка](#установка)
-5. [Использование](#использование)
-6. [Дальнейшие доработки](#дальнейшие-доработки)
+- **Управление принтерами** — добавление, настройка, удаление принтеров
+- **Поиск устройств** — автоматическое обнаружение принтеров в сети
+- **Печать** — поддержка разных типов заданий (чеки, этикетки, кухонные талоны)
+- **UI компоненты** — готовые виджеты для управления принтерами (Atomic Design)
+- **Clean Architecture** — чистая архитектура с Use Cases и Repository
+- **Type-safe** — строгая типизация с sealed classes и Result type
 
----
+## Установка
 
-## 1. Обзор
-
-**pos_printer_manager** — это Flutter-пакет, предоставляющий высокоуровневый API для управления списком POS-принтеров (чековых, кухонных, этикеточных и т.д.) в Android-приложениях. Он служит оберткой над низкоуровневыми плагинами или SDK для взаимодействия с конкретными моделями принтеров.
-
-**Цели пакета:**
-
-- Управлять списком логических принтеров (создание, удаление, обновление конфигурации).
-- Сохранять конфигурацию принтеров между запусками приложения.
-- Автоматически подключаться к настроенным физическим принтерам (USB, Network).
-- Предоставлять единый интерфейс для печати на разных типах принтеров.
-- Обеспечивать плагинную архитектуру для легкого добавления поддержки новых типов принтеров.
-- Централизованно обрабатывать и логировать ошибки соединения и печати.
-
----
-
-## 2. Ключевые возможности
-
-- **Управление конфигурацией:** Добавление, удаление и обновление логических принтеров с их настройками.
-- **Персистентность:** Сохранение конфигураций принтеров с использованием `SharedPreferences`.
-- **Автоматическое подключение:** Попытка восстановить соединение с сохраненными принтерами при инициализации. Обработка подключения/отключения USB-устройств.
-- **Плагинная архитектура:** Легкое добавление поддержки новых типов принтеров путем регистрации соответствующих обработчиков протоколов и настроек.
-- **Единый API печати:** Абстрактный метод `print` в `PrinterManager`, который делегирует печать конкретному обработчику в зависимости от типа принтера.
-- **Мониторинг состояния:** Потоки для отслеживания изменений в списке принтеров (`printersConfigStream`) и их статусе подключения (`printersStateStream`).
-- **Обработка ошибок:** Глобальный перехватчик ошибок для централизованной обработки.
-
----
-
-## 3. Структура (основные компоненты)
-
-```
-lib/
-├── pos_printer_manager.dart       // Главный экспорт пакета
-└── src/
-    ├── manager.dart               // PrinterManager: ядро пакета (CRUD, потоки, печать, автоконнект)
-    ├── config/
-    │   └── config.dart            // PrinterConfig, PrinterSettings, UsbIdentifier, NetworkEndpoint
-    ├── registry/
-    │   └── registry.dart          // PrinterPluginRegistry: регистрация типов принтеров
-    ├── protocol/
-    │   ├── protocol.dart          // PrinterProtocolHandler (интерфейс), PrintJob, PrintResult
-    │   └── handler.dart           // (Может быть объединено с protocol.dart)
-    ├── repository/
-    │   ├── repository.dart        // Абстракция репозитория
-    │   └── shared_prefs_repo.dart // Реализация репозитория на SharedPreferences
-    └── plugins/                   // Реализации для конкретных типов принтеров
-        ├── printer_settings.dart  // Базовый интерфейс PrinterSettings
-        ├── receipt_printer/
-        │   └── receipt_printer_plugin.dart // Настройки, обработчик и регистрация для чекового принтера
-        ├── kitchen_printer/
-        │   └── kitchen_printer_plugin.dart // Для кухонного принтера
-        └── label_printer/
-            └── label_printer_plugin.dart   // Для принтера этикеток
-```
-
----
-
-## 4. Установка
-
-Поскольку пакет еще не опубликован на pub.dev, добавьте его из Git в ваш `pubspec.yaml`:
+Добавьте зависимость в `pubspec.yaml`:
 
 ```yaml
 dependencies:
   pos_printer_manager:
     git:
-      url: <URL_ВАШЕГО_РЕПОЗИТОРИЯ> # Замените на реальный URL
-      ref: main # Или нужная ветка/тег
-  shared_preferences: ^2.0.0 # Пример зависимости для репозитория
-  # Другие зависимости, если нужны (например, для USB, сети)
+      url: https://github.com/your-repo/pos_printer_manager.git
 ```
 
-Затем выполните `flutter pub get`.
-
----
-
-## 5. Использование
+## Быстрый старт
 
 ### Инициализация
 
 ```dart
 import 'package:pos_printer_manager/pos_printer_manager.dart';
-// Импортируйте файлы регистрации ваших плагинов
-import 'package:pos_printer_manager/src/plugins/receipt_printer/receipt_printer_plugin.dart';
-import 'package:pos_printer_manager/src/plugins/kitchen_printer/kitchen_printer_plugin.dart';
-import 'package:pos_printer_manager/src/plugins/label_printer/label_printer_plugin.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+// Создание репозитория для хранения конфигураций
+final repository = SharedPrefsPrinterConfigRepository();
 
-  // 1. Создаем репозиторий (например, на SharedPreferences)
-  final printerRepository = SharedPrefsPrinterRepository();
-  await printerRepository.init(); // Важно для SharedPreferences
+// Создание менеджера принтеров
+final manager = PrinterManager(repository: repository);
 
-  // 2. Создаем реестр плагинов
-  final registry = PrinterPluginRegistry();
-
-  // 3. Регистрируем типы принтеров
-  registerReceiptPrinter(registry);
-  registerKitchenPrinter(registry);
-  registerLabelPrinter(registry);
-
-  // 4. Создаем и инициализируем менеджер
-  final manager = PrinterManager(
-    registry: registry,
-    repository: printerRepository,
-    onError: (error, stackTrace) {
-      print('PrinterManager Error: $error');
-      // Здесь ваша логика обработки ошибок
-    },
-  );
-  await manager.init(); // Загрузка конфигов и попытка автоподключения
-
-  runApp(MyApp(printerManager: manager));
-}
+// Инициализация
+await manager.init();
 ```
 
-### Основные операции
+### Добавление принтера
 
 ```dart
-// Получить текущий список конфигураций
-List<PrinterConfig> configs = manager.getPrinters();
-
-// Подписаться на изменения конфигураций
-manager.printersConfigStream.listen((configs) {
-  // Обновить UI со списком принтеров
-});
-
-// Подписаться на изменения статусов подключения
-manager.printersStateStream.listen((states) {
-  // states - это Map<String, PrinterConnectivityState>
-  // Обновить UI статусов принтеров
-});
-
-// Добавить новый принтер (пример для чекового)
-final newConfig = await manager.addPrinter(
-  type: PrinterType.Receipt, // Используйте Enum вашего типа
-  name: 'Касса 1',
-  // Начальные настройки можно не указывать или указать пустые
+final result = await manager.addPrinter(
+  AddPrinterParams(
+    name: 'Kitchen Printer',
+    type: PrinterType.kitchen,
+    address: '192.168.1.100',
+    port: 9100,
+  ),
 );
 
-// Обновить конфигурацию (например, привязать физический принтер)
-PrinterConfig updatedConfig = newConfig.copyWith(
-  // Здесь указываются параметры для подключения:
-  // usbId: UsbIdentifier(...),
-  // endpoint: NetworkEndpoint(...),
-  // rawSettings: {...} // Специфичные настройки типа
+result.fold(
+  onSuccess: (printer) => print('Принтер добавлен: ${printer.id}'),
+  onFailure: (error) => print('Ошибка: ${error.message}'),
 );
-await manager.updatePrinterConfig(updatedConfig);
+```
 
-// Удалить принтер
-await manager.removePrinter(newConfig.id);
+### Поиск принтеров
 
-// Напечатать задание (пример)
-class MyReceiptJob implements PrintJob {
-  final String content;
-  MyReceiptJob(this.content);
-}
+```dart
+final finder = PrintersFinder();
 
-try {
-  PrintResult result = await manager.print(newConfig.id, MyReceiptJob('Тестовая печать'));
-  if (result.isSuccess) {
-    print('Печать успешна');
-  } else {
-    print('Ошибка печати: ${result.errorMessage}');
+// Подписка на обнаруженные принтеры
+finder.foundPrinters.listen((printers) {
+  for (final printer in printers) {
+    print('Найден: ${printer.address}:${printer.port}');
   }
-} catch (e) {
-  print('Исключение при печати: $e');
-}
-
-// Попробовать переподключиться к принтеру
-await manager.retryConnection(newConfig.id);
-
-// Не забудьте освободить ресурсы менеджера
-// manager.dispose(); // В dispose вашего виджета/приложения
-```
-
-### Прямой доступ к POS Printers API
-
-Для прямой работы с принтерами можно использовать низкоуровневый API:
-
-```dart
-import 'package:pos_printer_manager/pos_printer_manager.dart';
-
-// Прямое использование PosPrintersManager (как описано в pos-printers.md)
-final posManager = PosPrintersManager();
-
-// Поиск принтеров
-final printerStream = posManager.findPrinters(filter: null);
-printerStream.listen((printer) {
-  print('Найден принтер: ${printer.id}');
 });
 
-// Печать HTML на чековом принтере 80мм
-await posManager.printEscHTML(
-  printer,
-  '<html><body><h1>Чек</h1><p>Сумма: 150 руб.</p></body></html>',
-  PaperSize.mm80.value
-);
+// Запуск поиска
+await finder.findPrinters();
 
-// Печать HTML на этикеточном принтере
-await posManager.printZplHtml(
-  printer,
-  '<html><body><h1>Этикетка</h1><p>Код: ABC123</p></body></html>',
-  PaperSize.mm80.value
-);
-
-// Получение статуса принтера
-final status = await posManager.getPrinterStatus(printer);
-if (status.success) {
-  print('Статус принтера: ${status.status}');
-}
-
-// Конфигурация сети принтера через USB
-final networkParams = NetworkParams(
-  ipAddress: '192.168.1.100',
-  mask: '255.255.255.0',
-  gateway: '192.168.1.1',
-  dhcp: false,
-);
-await posManager.setNetSettings(usbPrinter, networkParams);
-
-// Освобождение ресурсов
-posManager.dispose();
+// Не забудьте освободить ресурсы
+finder.dispose();
 ```
 
-### Доступ через PrintersManager
+### Печать
 
 ```dart
-// Через высокоуровневый менеджер также доступны все методы pos_printers
-final manager = PrintersManager();
-await manager.init(getCategoriesFunction: categoriesFuture);
+// Чековый принтер
+final receiptJob = ReceiptPrintJob(
+  content: 'Содержимое чека',
+  cut: true,
+);
+await handler.print(receiptJob);
 
-// Все методы PosPrintersManager доступны напрямую:
-final discoveryStream = manager.findPrinters(filter: null);
-await manager.printEscHTML(printer, html, PaperSize.mm80.value);
-await manager.openCashBox(printer);
-// и т.д.
+// Этикеточный принтер
+final labelJob = LabelPrintJob(
+  label: LabelData(
+    width: 40.0,
+    height: 30.0,
+    content: 'Этикетка',
+  ),
+);
+await handler.print(labelJob);
+
+// Кухонный принтер
+final kitchenJob = KitchenPrintJob(
+  orderNumber: '42',
+  items: ['Пицца', 'Кола'],
+);
+await handler.print(kitchenJob);
 ```
 
----
+## Архитектура
 
-## 6. Дальнейшие доработки
+Библиотека построена на принципах Clean Architecture:
 
-- Реализация очереди печати (`PrintJob`) с повторными попытками.
-- Получение детализированных статусов принтера (нет бумаги, крышка открыта и т.д.) от `PrinterProtocolHandler`.
-- Использование экспоненциального backoff при переподключении к сетевым принтерам.
-- Механизм миграции схемы настроек при обновлении версии пакета.
-- Добавление Unit-тестов.
-- Расширение и улучшение демо-приложения в `example/`.
+```
+lib/
+├── pos_printer_manager.dart  # Главный экспорт
+└── src/
+    ├── core/                 # Базовые утилиты
+    │   ├── result.dart       # Result<T> для обработки ошибок
+    │   ├── logger.dart       # LoggerMixin для логирования
+    │   └── id_generator.dart # UUID генератор
+    │
+    ├── domain/               # Бизнес-логика
+    │   └── use_cases/        # Use Cases (AddPrinter, UpdatePrinter, etc.)
+    │
+    ├── models/               # Модели данных
+    │   ├── printer_config.dart
+    │   ├── pos_printer.dart
+    │   └── printer_type.dart
+    │
+    ├── plugins/              # Плагины принтеров
+    │   ├── receipt_printer/
+    │   ├── kitchen_printer/
+    │   ├── label_printer/
+    │   └── andro_bar_printer/
+    │
+    ├── protocol/             # Протокол печати
+    │   ├── print_job.dart    # Sealed class заданий
+    │   └── handler.dart      # Обработчик печати
+    │
+    ├── repository/           # Хранение данных
+    │   ├── repository.dart   # Абстракция
+    │   └── shared_prefs_repo.dart
+    │
+    ├── registry/             # Реестр плагинов
+    │
+    └── ui/                   # UI компоненты (Atomic Design)
+        ├── atoms/
+        ├── molecules/
+        └── organisms/
+```
 
----
+## Типы принтеров
+
+| Тип | Описание | Класс задания |
+|-----|----------|---------------|
+| `receipt` | Чековые принтеры | `ReceiptPrintJob` |
+| `kitchen` | Кухонные принтеры | `KitchenPrintJob` |
+| `label` | Этикеточные принтеры | `LabelPrintJob` |
+| `androBar` | Принтеры AndroBar | `AndroBarPrintJob` |
+
+## Result Type
+
+Все асинхронные операции возвращают `Result<T>`:
+
+```dart
+final result = await manager.updatePrinter(params);
+
+// Вариант 1: через fold
+result.fold(
+  onSuccess: (printer) => handleSuccess(printer),
+  onFailure: (error) => handleError(error),
+);
+
+// Вариант 2: через свойства
+if (result.isSuccess) {
+  final printer = result.value;
+} else {
+  final error = result.error;
+  // error имеет тип AppError с полями:
+  // - message: String
+  // - code: String
+  // - originalError: Object?
+  // - stackTrace: StackTrace?
+}
+
+// Вариант 3: получить значение или null
+final printer = result.valueOrNull;
+```
+
+## UI Компоненты
+
+Библиотека предоставляет готовые виджеты:
+
+```dart
+// Страница управления принтерами
+PrintersPage(manager: manager)
+
+// Детальный экран принтера
+PrinterDetailScreen(printer: printer, manager: manager)
+```
+
+## Тестирование
+
+```bash
+flutter test
+```
+
+## Требования
+
+- Flutter SDK: >=3.38.3
+- Dart SDK: ^3.10.1
+
+## Лицензия
+
+MIT License

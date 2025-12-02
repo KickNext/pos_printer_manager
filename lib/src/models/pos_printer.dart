@@ -46,28 +46,46 @@ class PrinterError {
 /// Класс, представляющий POS-принтер с его конфигурацией и состоянием.
 ///
 /// Управляет подключением, статусом, USB-разрешениями и печатью.
-class PosPrinter {
+class PosPrinter with LoggerMixin {
+  @override
+  String get loggerName => 'PosPrinter';
   PosPrinter({
-    required this.config,
+    required PrinterConfig config,
     required this.saveConfig,
     required this.notify,
-  }) {
+  }) : _config = config {
     _status = PrinterConnectionStatus.unknown;
     // Определяем начальный статус USB разрешения на основе типа подключения
-    _usbPermissionStatus =
-        _isUsbPrinter
-            ? UsbPermissionStatus.unknown
-            : UsbPermissionStatus.notRequired;
+    _usbPermissionStatus = _isUsbPrinter
+        ? UsbPermissionStatus.unknown
+        : UsbPermissionStatus.notRequired;
   }
 
   /// Уникальный идентификатор принтера.
-  String get id => config.id;
+  String get id => _config.id;
+
+  /// Внутренняя переменная конфигурации (immutable, но заменяемая).
+  PrinterConfig _config;
 
   /// Конфигурация принтера.
-  final PrinterConfig config;
+  ///
+  /// Возвращает копию конфигурации для предотвращения внешних изменений.
+  PrinterConfig get config => _config;
+
+  /// Обновляет конфигурацию принтера.
+  ///
+  /// [newConfig] — новая конфигурация (должна иметь тот же ID).
+  void updateConfig(PrinterConfig newConfig) {
+    assert(newConfig.id == _config.id, 'Cannot change printer ID');
+    logger.debug(
+      'Config updated',
+      data: {'printerId': id, 'name': newConfig.name},
+    );
+    _config = newConfig;
+  }
 
   /// Тип принтера (чековый, этикеточный, кухонный и т.д.).
-  PrinterPOSType get type => config.printerPosType;
+  PrinterPOSType get type => _config.printerPosType;
 
   PrinterConnectionStatus _status = PrinterConnectionStatus.unknown;
   PrinterError? _lastError;
@@ -131,10 +149,9 @@ class PosPrinter {
     }
 
     final result = await handler.manager.hasUsbPermission(usbParams);
-    _usbPermissionStatus =
-        result.granted
-            ? UsbPermissionStatus.granted
-            : UsbPermissionStatus.denied;
+    _usbPermissionStatus = result.granted
+        ? UsbPermissionStatus.granted
+        : UsbPermissionStatus.denied;
     notify();
     return result;
   }
@@ -164,10 +181,9 @@ class PosPrinter {
     }
 
     final result = await handler.manager.requestUsbPermission(usbParams);
-    _usbPermissionStatus =
-        result.granted
-            ? UsbPermissionStatus.granted
-            : UsbPermissionStatus.denied;
+    _usbPermissionStatus = result.granted
+        ? UsbPermissionStatus.granted
+        : UsbPermissionStatus.denied;
     notify();
     return result;
   }
@@ -195,6 +211,11 @@ class PosPrinter {
   ///
   /// Автоматически запрашивает USB разрешение если требуется.
   Future<PrintResult> tryPrint(PrintJob job) async {
+    logger.info(
+      'Starting print job',
+      data: {'printerId': id, 'jobType': job.runtimeType.toString()},
+    );
+
     try {
       // Для USB-принтеров автоматически оборачиваем в withUsbPermission
       if (_isUsbPrinter && handler.settings.connectionParams != null) {
@@ -205,8 +226,16 @@ class PosPrinter {
             if (result.success) {
               _updateStatus(PrinterConnectionStatus.connected);
               _usbPermissionStatus = UsbPermissionStatus.granted;
+              logger.info(
+                'Print completed successfully',
+                data: {'printerId': id},
+              );
             } else {
               _updateError(result.message ?? 'Print failed');
+              logger.warning(
+                'Print failed',
+                data: {'printerId': id, 'error': result.message},
+              );
             }
             return result;
           },
@@ -215,23 +244,32 @@ class PosPrinter {
         final result = await handler.print(job);
         if (result.success) {
           _updateStatus(PrinterConnectionStatus.connected);
+          logger.info('Print completed successfully', data: {'printerId': id});
         } else {
           _updateError(result.message ?? 'Print failed');
+          logger.warning(
+            'Print failed',
+            data: {'printerId': id, 'error': result.message},
+          );
         }
         return result;
       }
     } on UsbPermissionDeniedException catch (e) {
       _usbPermissionStatus = UsbPermissionStatus.denied;
       _updateError('USB permission denied: ${e.message}');
+      logger.warning('USB permission denied', data: {'printerId': id});
       return PrintResult(success: false, message: e.toString());
-    } catch (e) {
+    } catch (e, st) {
       _updateError(e.toString());
+      logger.error('Print exception', error: e, stackTrace: st);
       return PrintResult(success: false, message: e.toString());
     }
   }
 
   /// Тестовая печать для проверки подключения.
   Future<void> testConnection() async {
+    logger.info('Testing connection', data: {'printerId': id});
+
     try {
       // Для USB-принтеров автоматически оборачиваем в withUsbPermission
       if (_isUsbPrinter && handler.settings.connectionParams != null) {
@@ -241,17 +279,24 @@ class PosPrinter {
             await handler.testPrint();
             _updateStatus(PrinterConnectionStatus.connected);
             _usbPermissionStatus = UsbPermissionStatus.granted;
+            logger.info('Connection test passed', data: {'printerId': id});
           },
         );
       } else {
         await handler.testPrint();
         _updateStatus(PrinterConnectionStatus.connected);
+        logger.info('Connection test passed', data: {'printerId': id});
       }
     } on UsbPermissionDeniedException catch (e) {
       _usbPermissionStatus = UsbPermissionStatus.denied;
       _updateError('USB permission denied: ${e.message}');
-    } catch (e) {
+      logger.warning(
+        'USB permission denied during test',
+        data: {'printerId': id},
+      );
+    } catch (e, st) {
       _updateError(e.toString());
+      logger.error('Connection test failed', error: e, stackTrace: st);
     }
   }
 
@@ -263,6 +308,10 @@ class PosPrinter {
   // === Status Management ===
 
   void _updateStatus(PrinterConnectionStatus status) {
+    logger.debug(
+      'Status updated',
+      data: {'printerId': id, 'status': status.name},
+    );
     _status = status;
     if (status == PrinterConnectionStatus.connected) {
       _lastError = null;
@@ -271,6 +320,7 @@ class PosPrinter {
   }
 
   void _updateError(String message, {String? details}) {
+    logger.warning('Error occurred', data: {'printerId': id, 'error': message});
     _status = PrinterConnectionStatus.error;
     _lastError = PrinterError(
       message: message,
@@ -296,8 +346,12 @@ class PosPrinter {
     );
   }
 
+  /// Обновляет имя принтера.
+  ///
+  /// Создаёт новую immutable конфигурацию с изменённым именем.
   void updateName(String name) {
-    config.name = name;
+    _config = _config.copyWith(name: name);
+    logger.debug('Name updated', data: {'printerId': id, 'name': name});
     unawaited(saveConfig());
   }
 }

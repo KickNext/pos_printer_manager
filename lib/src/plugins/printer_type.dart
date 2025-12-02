@@ -30,29 +30,29 @@ enum PrinterPOSType {
       case PrinterPOSType.receiptPrinter:
         PrinterPluginRegistry.registerWithCtor<ReceiptPrinterSettings>(
           printerPosType: PrinterPOSType.receiptPrinter,
-          ctor:
-              (params, json) => ReceiptPrinterSettings(
-                initConnectionParams: params,
-                onSettingsChanged: () async => await manager.saveConfigs(),
-              ),
-          createHandler:
-              (settings) => ReceiptPrinterHandler(
-                settings: settings as ReceiptPrinterSettings,
-                manager: manager,
-              ),
+          allowOverwrite:
+              true, // Позволяем перезапись для повторной инициализации
+          ctor: (params, json) => ReceiptPrinterSettings(
+            initConnectionParams: params,
+            onSettingsChanged: () async => await manager.saveConfigs(),
+          ),
+          createHandler: (settings) => ReceiptPrinterHandler(
+            settings: settings as ReceiptPrinterSettings,
+            manager: manager,
+          ),
         );
         break;
       case PrinterPOSType.kitchenPrinter:
         PrinterPluginRegistry.registerWithCtor<KitchenPrinterSettings>(
           printerPosType: PrinterPOSType.kitchenPrinter,
+          allowOverwrite: true,
           ctor: (params, json) {
             final categoriesJson = json['categories'];
-            final categories =
-                categoriesJson is List
-                    ? categoriesJson
-                        .map((e) => CategoryForPrinter.fromJson(e))
-                        .toList()
-                    : <CategoryForPrinter>[];
+            final categories = categoriesJson is List
+                ? categoriesJson
+                      .map((e) => CategoryForPrinter.fromJson(e))
+                      .toList()
+                : <CategoryForPrinter>[];
 
             return KitchenPrinterSettings(
               initConnectionParams: params,
@@ -60,40 +60,38 @@ enum PrinterPOSType {
               categories: categories,
             );
           },
-          createHandler:
-              (settings) => KitchenPrinterHandler(
-                settings: settings as KitchenPrinterSettings,
-                manager: manager,
-              ),
+          createHandler: (settings) => KitchenPrinterHandler(
+            settings: settings as KitchenPrinterSettings,
+            manager: manager,
+          ),
         );
         break;
       case PrinterPOSType.labelPrinter:
         PrinterPluginRegistry.registerWithCtor<LabelPrinterSettings>(
           printerPosType: PrinterPOSType.labelPrinter,
-          ctor:
-              (params, json) => LabelPrinterSettings.fromJsonData(
-                params,
-                json,
-                () async => await manager.saveConfigs(),
-              ),
-          createHandler:
-              (settings) => LabelPrinterHandler(
-                settings: settings as LabelPrinterSettings,
-                manager: manager,
-              ),
+          allowOverwrite: true,
+          ctor: (params, json) => LabelPrinterSettings.fromJsonData(
+            params,
+            json,
+            () async => await manager.saveConfigs(),
+          ),
+          createHandler: (settings) => LabelPrinterHandler(
+            settings: settings as LabelPrinterSettings,
+            manager: manager,
+          ),
         );
         break;
       case PrinterPOSType.androBar:
         PrinterPluginRegistry.registerWithCtor<AndroBarPrinterSettings>(
           printerPosType: PrinterPOSType.androBar,
+          allowOverwrite: true,
           ctor: (params, json) {
             final categoriesJson = json['categories'];
-            final categories =
-                categoriesJson is List
-                    ? categoriesJson
-                        .map((e) => CategoryForPrinter.fromJson(e))
-                        .toList()
-                    : <CategoryForPrinter>[];
+            final categories = categoriesJson is List
+                ? categoriesJson
+                      .map((e) => CategoryForPrinter.fromJson(e))
+                      .toList()
+                : <CategoryForPrinter>[];
 
             return AndroBarPrinterSettings(
               initConnectionParams: params,
@@ -101,11 +99,10 @@ enum PrinterPOSType {
               categories: categories,
             );
           },
-          createHandler:
-              (settings) => AndroBarPrinterHandler(
-                settings: settings as AndroBarPrinterSettings,
-                manager: manager,
-              ),
+          createHandler: (settings) => AndroBarPrinterHandler(
+            settings: settings as AndroBarPrinterSettings,
+            manager: manager,
+          ),
         );
         break;
     }

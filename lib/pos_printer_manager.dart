@@ -1,4 +1,93 @@
-// Auto-generated exports
+/// Библиотека управления POS-принтерами для Flutter.
+///
+/// Предоставляет комплексное решение для работы с различными типами
+/// POS-принтеров: чековые, кухонные, этикеточные и AndroBar.
+///
+/// ## Основные возможности:
+///
+/// - **Управление принтерами** — добавление, настройка, удаление
+/// - **Поиск устройств** — автоматическое обнаружение принтеров в сети
+/// - **Печать** — поддержка разных типов заданий (чеки, этикетки, кухонные талоны)
+/// - **UI компоненты** — готовые виджеты для управления принтерами
+///
+/// ## Быстрый старт:
+///
+/// ```dart
+/// import 'package:pos_printer_manager/pos_printer_manager.dart';
+///
+/// // Инициализация менеджера
+/// final manager = PrinterManager(
+///   repository: SharedPrefsPrinterConfigRepository(),
+/// );
+/// await manager.init();
+///
+/// // Добавление принтера
+/// final result = await manager.addPrinter(
+///   AddPrinterParams(
+///     name: 'Kitchen Printer',
+///     type: PrinterType.kitchen,
+///     address: '192.168.1.100',
+///     port: 9100,
+///   ),
+/// );
+///
+/// // Обработка результата
+/// result.fold(
+///   onSuccess: (printer) => print('Принтер добавлен: ${printer.id}'),
+///   onFailure: (error) => print('Ошибка: ${error.message}'),
+/// );
+/// ```
+///
+/// ## Архитектура:
+///
+/// Библиотека построена на принципах Clean Architecture:
+///
+/// - **Core** — базовые утилиты (Result, Logger, IdGenerator)
+/// - **Domain** — Use Cases (AddPrinter, UpdatePrinter, DeletePrinter)
+/// - **Models** — модели данных (PrinterConfig, PosPrinter)
+/// - **Plugins** — плагины для разных типов принтеров
+/// - **Repository** — абстракция хранения данных
+/// - **UI** — Flutter виджеты (Atomic Design)
+///
+/// ## Паттерн Result:
+///
+/// Все асинхронные операции возвращают `Result<T>` для явной обработки ошибок:
+///
+/// ```dart
+/// final result = await manager.updatePrinter(params);
+///
+/// // Через fold
+/// result.fold(
+///   onSuccess: (printer) => handleSuccess(printer),
+///   onFailure: (error) => handleError(error),
+/// );
+///
+/// // Или через свойства
+/// if (result.isSuccess) {
+///   final printer = result.value;
+/// } else {
+///   final error = result.error;
+/// }
+/// ```
+///
+/// ## Типы принтеров:
+///
+/// - [PrinterType.receipt] — чековые принтеры для POS-систем
+/// - [PrinterType.kitchen] — кухонные принтеры для ресторанов
+/// - [PrinterType.label] — этикеточные принтеры (TSPL, ZPL)
+/// - [PrinterType.androBar] — принтеры для баров (AndroBar)
+///
+/// См. также:
+/// - [PrinterManager] — основной класс для управления принтерами
+/// - [PrintersFinder] — поиск принтеров в сети
+/// - [PrinterPluginRegistry] — реестр плагинов принтеров
+library;
+
+// Core utilities
+export 'src/core/core.dart';
+
+// Domain layer - Use Cases
+export 'src/domain/domain.dart';
 
 // Core manager and models
 export 'src/manager.dart';

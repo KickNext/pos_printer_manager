@@ -70,7 +70,7 @@ class _PrintersPageState extends State<PrintersPage> {
         child: PrinterListOrganism(
           printerManager: widget.printerManager,
           onPrinterTap: _navigateToPrinterDetails,
-          onAddPrinter: widget.printerManager.canAddPrinter
+          onAddPrinter: widget.printerManager.canAddPrinterOfType()
               ? _onAddPrinter
               : null,
         ),

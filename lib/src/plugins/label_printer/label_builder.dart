@@ -1,25 +1,46 @@
-class LabelData {
-  final String itemName;
-  final String unitAbr;
-  final String? oldPrice;
-  final String price;
-  final String storeName;
-  final String date;
-  final String qrText;
+/// Функции генерации команд ZPL и TSPL для этикеточных принтеров.
+///
+/// Этот модуль содержит билдеры для генерации команд печати этикеток
+/// в форматах ZPL (Zebra Programming Language) и TSPL (TSC Printer Language).
+///
+/// ## Пример использования:
+///
+/// ```dart
+/// final labelData = LabelData(
+///   itemName: 'Product Name',
+///   unitAbr: 'kg',
+///   price: '\$10.99',
+///   storeName: 'My Store',
+///   date: '2025-01-01',
+///   qrText: '1234567890123',
+/// );
+///
+/// // Для ZPL принтера
+/// final zplCommands = buildZplLabel(labelData);
+///
+/// // Для TSPL принтера
+/// final tsplCommands = buildTsplLabel(labelData);
+/// ```
+library;
 
-  const LabelData({
-    required this.itemName,
-    required this.unitAbr,
-    required this.oldPrice,
-    required this.price,
-    required this.storeName,
-    required this.date,
-    required this.qrText,
-  });
-}
+import 'package:pos_printer_manager/src/protocol/print_job.dart';
 
-/// Основная функция-строитель для ZPL.
-/// Возвращает готовую строку ^XA…^XZ
+// LabelData теперь определён в protocol/print_job.dart
+// и экспортируется через pos_printer_manager.dart
+
+/// Строит ZPL-команды для печати этикетки.
+///
+/// [d] — данные для этикетки.
+/// Возвращает готовую строку команд ZPL (^XA…^XZ).
+///
+/// ## Формат этикетки:
+///
+/// - Ширина: 457 точек (2.25" при 203 dpi)
+/// - Название товара: до 3 строк, шрифт CF0,32
+/// - Старая цена (если есть): зачёркнутая
+/// - Текущая цена с единицей измерения
+/// - QR-код в правом верхнем углу
+/// - Название магазина и дата внизу
 String buildZplLabel(LabelData d) {
   return '''
 ^XA
@@ -47,9 +68,23 @@ ${d.oldPrice != null ? '''
 ''';
 }
 
+/// Строит TSPL-команды для печати этикетки.
+///
+/// [d] — данные для этикетки.
+/// Возвращает готовую строку команд TSPL.
+///
+/// ## Формат этикетки:
+///
+/// - Размер: 57 x 32 мм при 203 dpi
+/// - GAP: 2 мм
+/// - Название товара: до 3 строк
+/// - Старая цена (если есть): зачёркнутая
+/// - Текущая цена с единицей измерения
+/// - QR-код в правом верхнем углу
+/// - Название магазина и дата внизу
 String buildTsplLabel(LabelData d) {
   // Размер этикетки: 2.25" x 1.25" (≈ 57 x 32 мм) при 203 dpi.
-  // Координаты и размеры далее указаны в точках (dots).
+  // Координаты и размеры указаны в точках (dots).
   // Правый «столбец» — зона шириной 150 точек от правого края.
   const int labelWidthDots = 457; // 2.25" * 203 dpi ≈ 457
   const int rightColWidth = 150;
