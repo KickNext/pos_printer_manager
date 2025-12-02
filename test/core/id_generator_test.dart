@@ -17,7 +17,7 @@ void main() {
 
       test('генерирует уникальные идентификаторы', () {
         final ids = <String>{};
-        
+
         // Генерируем 1000 ID и проверяем уникальность
         for (var i = 0; i < 1000; i++) {
           ids.add(IdGenerator.generate());
@@ -28,7 +28,7 @@ void main() {
 
       test('генерирует ID в правильном формате', () {
         final id = IdGenerator.generate();
-        
+
         // UUID v4 имеет формат: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
         expect(id.length, equals(36));
         expect(id.split('-').length, equals(5));
@@ -97,19 +97,19 @@ void main() {
     group('shorten', () {
       test('возвращает первые 8 символов UUID', () {
         const uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
-        
+
         expect(IdGenerator.shorten(uuid), equals('f47ac10b'));
       });
 
       test('возвращает строку как есть если короче 8 символов', () {
         const shortId = 'short';
-        
+
         expect(IdGenerator.shorten(shortId), equals('short'));
       });
 
       test('обрабатывает строку без дефиса', () {
         const noDashId = 'abcdefghijklmnop';
-        
+
         expect(IdGenerator.shorten(noDashId), equals('abcdefgh'));
       });
     });

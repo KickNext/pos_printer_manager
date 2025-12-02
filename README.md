@@ -151,12 +151,12 @@ lib/
 
 ## Типы принтеров
 
-| Тип | Описание | Класс задания |
-|-----|----------|---------------|
-| `receipt` | Чековые принтеры | `ReceiptPrintJob` |
-| `kitchen` | Кухонные принтеры | `KitchenPrintJob` |
-| `label` | Этикеточные принтеры | `LabelPrintJob` |
-| `androBar` | Принтеры AndroBar | `AndroBarPrintJob` |
+| Тип        | Описание             | Класс задания      |
+| ---------- | -------------------- | ------------------ |
+| `receipt`  | Чековые принтеры     | `ReceiptPrintJob`  |
+| `kitchen`  | Кухонные принтеры    | `KitchenPrintJob`  |
+| `label`    | Этикеточные принтеры | `LabelPrintJob`    |
+| `androBar` | Принтеры AndroBar    | `AndroBarPrintJob` |
 
 ## Result Type
 

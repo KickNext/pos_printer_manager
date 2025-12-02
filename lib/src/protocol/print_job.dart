@@ -75,7 +75,8 @@ final class ReceiptPrintJob extends PrintJob {
   const ReceiptPrintJob({required this.receiptHTML});
 
   @override
-  String get description => 'ReceiptPrintJob(htmlLength: ${receiptHTML.length})';
+  String get description =>
+      'ReceiptPrintJob(htmlLength: ${receiptHTML.length})';
 
   @override
   bool operator ==(Object other) =>
@@ -228,9 +229,8 @@ class LabelData {
           qrText == other.qrText;
 
   @override
-  int get hashCode => Object.hash(
-    itemName, unitAbr, oldPrice, price, storeName, date, qrText,
-  );
+  int get hashCode =>
+      Object.hash(itemName, unitAbr, oldPrice, price, storeName, date, qrText);
 
   @override
   String toString() => 'LabelData(item: $itemName, price: $price)';

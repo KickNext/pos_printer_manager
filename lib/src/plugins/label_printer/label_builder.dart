@@ -91,13 +91,12 @@ String buildTsplLabel(LabelData d) {
   final int rightColX = labelWidthDots - rightColWidth; // 307
   final int qrTextX = 280; // Сдвигаем QR текст чуть левее
 
-  final oldPriceBlock =
-      (d.oldPrice != null && d.oldPrice.toString().isNotEmpty)
-          ? '''
+  final oldPriceBlock = (d.oldPrice != null && d.oldPrice.toString().isNotEmpty)
+      ? '''
 TEXT 20,130,"2",0,1,1,"${d.oldPrice}"
 BAR 20,136,200,3
 '''
-          : '';
+      : '';
 
   return '''
 SIZE 57 mm, 32 mm

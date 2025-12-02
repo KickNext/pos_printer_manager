@@ -32,10 +32,7 @@ void main() {
         id: id ?? IdGenerator.generate(),
         name: name,
         printerPosType: printerPosType,
-        rawSettings: rawSettings ?? {
-          'address': '192.168.1.100',
-          'port': 9100,
-        },
+        rawSettings: rawSettings ?? {'address': '192.168.1.100', 'port': 9100},
       );
     }
 
@@ -61,7 +58,10 @@ void main() {
         final configs = await repository.loadConfigs();
 
         expect(configs.length, equals(2));
-        expect(configs.map((c) => c.name), containsAll(['Printer 1', 'Printer 2']));
+        expect(
+          configs.map((c) => c.name),
+          containsAll(['Printer 1', 'Printer 2']),
+        );
       });
     });
 
@@ -201,10 +201,7 @@ void main() {
 
     group('clear', () {
       test('удаляет все конфигурации', () async {
-        await repository.saveConfigs([
-          createConfig(),
-          createConfig(),
-        ]);
+        await repository.saveConfigs([createConfig(), createConfig()]);
 
         await repository.clear();
 
@@ -252,7 +249,9 @@ void main() {
       test('множественные операции сохраняют целостность', () async {
         // Добавляем несколько конфигураций
         for (var i = 0; i < 5; i++) {
-          await repository.upsert(createConfig(id: 'printer-$i', name: 'Printer $i'));
+          await repository.upsert(
+            createConfig(id: 'printer-$i', name: 'Printer $i'),
+          );
         }
 
         // Удаляем некоторые
@@ -260,12 +259,14 @@ void main() {
         await repository.deleteById('printer-3');
 
         // Обновляем одну
-        await repository.upsert(PrinterConfig(
-          id: 'printer-2',
-          name: 'Updated Printer 2',
-          printerPosType: PrinterPOSType.kitchenPrinter,
-          rawSettings: {'address': '10.0.0.1', 'port': 9100},
-        ));
+        await repository.upsert(
+          PrinterConfig(
+            id: 'printer-2',
+            name: 'Updated Printer 2',
+            printerPosType: PrinterPOSType.kitchenPrinter,
+            rawSettings: {'address': '10.0.0.1', 'port': 9100},
+          ),
+        );
 
         // Проверяем результат
         expect(await repository.count(), equals(3));

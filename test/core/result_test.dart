@@ -373,14 +373,20 @@ void main() {
       expect(exception.message, equals('Test'));
     });
 
-    test('toPrinterException создает PrinterConnectionException для connection', () {
-      const error = AppError.connection('Connection failed');
+    test(
+      'toPrinterException создает PrinterConnectionException для connection',
+      () {
+        const error = AppError.connection('Connection failed');
 
-      final exception = error.toPrinterException(printerId: 'printer-1');
+        final exception = error.toPrinterException(printerId: 'printer-1');
 
-      expect(exception, isA<PrinterConnectionException>());
-      expect((exception as PrinterConnectionException).printerId, equals('printer-1'));
-    });
+        expect(exception, isA<PrinterConnectionException>());
+        expect(
+          (exception as PrinterConnectionException).printerId,
+          equals('printer-1'),
+        );
+      },
+    );
 
     test('toPrinterException создает PrintingException для printing', () {
       const error = AppError.printing('Print failed');
@@ -390,14 +396,20 @@ void main() {
       expect(exception, isA<PrintingException>());
     });
 
-    test('toPrinterException создает PrinterNotFoundException для notFound', () {
-      const error = AppError.notFound('Printer not found');
+    test(
+      'toPrinterException создает PrinterNotFoundException для notFound',
+      () {
+        const error = AppError.notFound('Printer not found');
 
-      final exception = error.toPrinterException(printerId: 'printer-123');
+        final exception = error.toPrinterException(printerId: 'printer-123');
 
-      expect(exception, isA<PrinterNotFoundException>());
-      expect((exception as PrinterNotFoundException).printerId, equals('printer-123'));
-    });
+        expect(exception, isA<PrinterNotFoundException>());
+        expect(
+          (exception as PrinterNotFoundException).printerId,
+          equals('printer-123'),
+        );
+      },
+    );
 
     // ignore: deprecated_member_use_from_same_package
     test('toException создает AppException (deprecated)', () {

@@ -70,11 +70,14 @@ class PrintersConnectionsHandler with LoggerMixin {
   void _handleConnectionEvent(PrinterConnectionEvent event) {
     if (_isDisposed) return;
 
-    logger.debug('Connection event received', data: {
-      'type': event.type.name,
-      'printerId': event.id,
-      'hasPrinter': event.printer != null,
-    });
+    logger.debug(
+      'Connection event received',
+      data: {
+        'type': event.type.name,
+        'printerId': event.id,
+        'hasPrinter': event.printer != null,
+      },
+    );
 
     switch (event.type) {
       case PrinterConnectionEventType.attached:
@@ -97,10 +100,10 @@ class PrintersConnectionsHandler with LoggerMixin {
     final savedPrinter = _findSavedPrinter(printer.id);
 
     if (savedPrinter != null) {
-      logger.info('Saved printer attached', data: {
-        'printerId': savedPrinter.id,
-        'name': savedPrinter.config.name,
-      });
+      logger.info(
+        'Saved printer attached',
+        data: {'printerId': savedPrinter.id, 'name': savedPrinter.config.name},
+      );
 
       // Обновляем статус на "подключен"
       savedPrinter.updateStatus(true);
@@ -126,10 +129,10 @@ class PrintersConnectionsHandler with LoggerMixin {
     final savedPrinter = _findSavedPrinter(printer.id);
 
     if (savedPrinter != null) {
-      logger.info('Saved printer detached', data: {
-        'printerId': savedPrinter.id,
-        'name': savedPrinter.config.name,
-      });
+      logger.info(
+        'Saved printer detached',
+        data: {'printerId': savedPrinter.id, 'name': savedPrinter.config.name},
+      );
 
       // Обновляем статус на "отключен" (ошибка)
       savedPrinter.updateStatus(false);
@@ -152,10 +155,13 @@ class PrintersConnectionsHandler with LoggerMixin {
     Future.microtask(() async {
       try {
         await printer.checkUsbPermission();
-        logger.debug('USB permission checked', data: {
-          'printerId': printer.id,
-          'status': printer.usbPermissionStatus.name,
-        });
+        logger.debug(
+          'USB permission checked',
+          data: {
+            'printerId': printer.id,
+            'status': printer.usbPermissionStatus.name,
+          },
+        );
       } catch (e, st) {
         logger.warning(
           'Failed to check USB permission',

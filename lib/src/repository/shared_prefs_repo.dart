@@ -129,10 +129,10 @@ class SharedPrefsPrinterConfigRepository
 
   @override
   Future<void> upsert(PrinterConfig config) async {
-    logger.debug('Upserting printer config', data: {
-      'id': config.id,
-      'name': config.name,
-    });
+    logger.debug(
+      'Upserting printer config',
+      data: {'id': config.id, 'name': config.name},
+    );
 
     final configs = await loadConfigs();
     final index = configs.indexWhere((c) => c.id == config.id);

@@ -84,9 +84,10 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
       return;
     }
 
-    logger.info('Starting printer discovery', data: {
-      'filter': printer.handler.settings.discoveryFilter.toString(),
-    });
+    logger.info(
+      'Starting printer discovery',
+      data: {'filter': printer.handler.settings.discoveryFilter.toString()},
+    );
 
     _isSearching = true;
     _foundPrinters.clear();
@@ -111,7 +112,11 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
       // Ожидаем завершения процесса обнаружения
       _api.awaitDiscoveryComplete().catchError((e, st) {
         if (_isSearching && !_isDisposed) {
-          logger.warning('Discovery completion error', error: e, stackTrace: st);
+          logger.warning(
+            'Discovery completion error',
+            error: e,
+            stackTrace: st,
+          );
           _isSearching = false;
           notifyListeners();
         }
@@ -127,17 +132,18 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
   void _onPrinterDiscovered(PrinterConnectionParamsDTO discoveredPrinter) {
     if (_isDisposed) return;
 
-    final exists = _foundPrinters.any(
-      (p) => samePrinter(p, discoveredPrinter),
-    );
+    final exists = _foundPrinters.any((p) => samePrinter(p, discoveredPrinter));
 
     if (!exists) {
       _foundPrinters.add(discoveredPrinter);
-      logger.debug('Printer discovered', data: {
-        'id': discoveredPrinter.id,
-        'type': discoveredPrinter.connectionType.name,
-        'total': _foundPrinters.length,
-      });
+      logger.debug(
+        'Printer discovered',
+        data: {
+          'id': discoveredPrinter.id,
+          'type': discoveredPrinter.connectionType.name,
+          'total': _foundPrinters.length,
+        },
+      );
       notifyListeners();
     }
   }
@@ -146,9 +152,7 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
   void _onSearchComplete() {
     if (_isDisposed) return;
 
-    logger.info('Discovery completed', data: {
-      'found': _foundPrinters.length,
-    });
+    logger.info('Discovery completed', data: {'found': _foundPrinters.length});
 
     _isSearching = false;
     _searchSubscription = null;
@@ -186,7 +190,7 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
   void removePrinter(PrinterConnectionParamsDTO printer) {
     final initialLength = _foundPrinters.length;
     _foundPrinters.removeWhere((p) => samePrinter(p, printer));
-    
+
     if (_foundPrinters.length < initialLength) {
       logger.debug('Removed printer from found list', data: {'id': printer.id});
       notifyListeners();
@@ -198,9 +202,7 @@ class PrintersFinder extends ChangeNotifier with LoggerMixin {
   /// [printer] — принтер для добавления.
   /// Дубликаты игнорируются.
   void addPrinter(PrinterConnectionParamsDTO printer) {
-    final exists = _foundPrinters.any(
-      (p) => samePrinter(p, printer),
-    );
+    final exists = _foundPrinters.any((p) => samePrinter(p, printer));
 
     if (!exists) {
       _foundPrinters.add(printer);
