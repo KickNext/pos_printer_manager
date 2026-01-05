@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// Organism component for displaying printer information header with quick actions.
 ///
 /// Объединяет информацию о принтере, статус и быстрые действия в одной карточке.
@@ -54,9 +57,13 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final config = widget.printer.config;
+    final l = _L.of(context);
 
     // Determine current status from PrinterConnectionStatus
-    final (statusType, statusText) = _getStatusInfo(widget.printer.status);
+    final (statusType, statusText) = _getStatusInfo(
+      widget.printer.status,
+      l: l,
+    );
     final hasError = widget.printer.lastError != null || _lastError != null;
 
     return Card(
@@ -111,7 +118,7 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
                   IconButton(
                     icon: const Icon(PrinterIcons.rename),
                     onPressed: widget.onRename,
-                    tooltip: 'Rename Printer',
+                    tooltip: _L.of(context).renamePrinter,
                   ),
               ],
             ),
@@ -173,34 +180,44 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
               children: [
                 // Test Print button
                 if (_canTestPrint)
-                  ActionButton(
-                    label: _isTestPrinting ? 'Printing...' : 'Test Print',
-                    icon: PrinterIcons.testPrint,
-                    onPressed: _isTestPrinting ? null : _handleTestPrint,
-                    isLoading: _isTestPrinting,
-                    variant: ActionButtonVariant.primary,
-                    size: ActionButtonSize.small,
+                  Builder(
+                    builder: (context) {
+                      final l = _L.of(context);
+                      return ActionButton(
+                        label: _isTestPrinting ? l.printing : l.testPrint,
+                        icon: PrinterIcons.testPrint,
+                        onPressed: _isTestPrinting ? null : _handleTestPrint,
+                        isLoading: _isTestPrinting,
+                        variant: ActionButtonVariant.primary,
+                        size: ActionButtonSize.small,
+                      );
+                    },
                   ),
 
                 // Diagnostics button - проводит полную диагностику и показывает проблемы
-                ActionButton(
-                  label: _isRunningDiagnostics
-                      ? 'Diagnosing...'
-                      : 'Diagnostics',
-                  icon: PrinterIcons.sectionDiagnostics,
-                  onPressed: _isRunningDiagnostics
-                      ? null
-                      : _runDiagnosticsAndShowDialog,
-                  isLoading: _isRunningDiagnostics,
-                  variant: ActionButtonVariant.secondary,
-                  size: ActionButtonSize.small,
-                  tooltip: 'Run full diagnostics and show problems if any',
+                Builder(
+                  builder: (context) {
+                    final l = _L.of(context);
+                    return ActionButton(
+                      label: _isRunningDiagnostics
+                          ? l.diagnosing
+                          : l.diagnostics,
+                      icon: PrinterIcons.sectionDiagnostics,
+                      onPressed: _isRunningDiagnostics
+                          ? null
+                          : _runDiagnosticsAndShowDialog,
+                      isLoading: _isRunningDiagnostics,
+                      variant: ActionButtonVariant.secondary,
+                      size: ActionButtonSize.small,
+                      tooltip: l.runDiagnosticsTooltip,
+                    );
+                  },
                 ),
 
                 // Retry button (only shown on error)
                 if (hasError)
                   ActionButton(
-                    label: 'Clear Error',
+                    label: _L.of(context).clearError,
                     icon: PrinterIcons.refresh,
                     onPressed: _isTestPrinting ? null : _clearError,
                     variant: ActionButtonVariant.tertiary,
@@ -225,14 +242,17 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
   }
 
   /// Gets the status type and text for the current connection status.
-  (StatusType, String) _getStatusInfo(PrinterConnectionStatus status) {
+  (StatusType, String) _getStatusInfo(
+    PrinterConnectionStatus status, {
+    required PrinterManagerL10n l,
+  }) {
     switch (status) {
       case PrinterConnectionStatus.connected:
-        return (StatusType.success, 'Ready to Print');
+        return (StatusType.success, l.readyToPrint);
       case PrinterConnectionStatus.error:
-        return (StatusType.error, 'Connection Error');
+        return (StatusType.error, l.connectionError);
       case PrinterConnectionStatus.unknown:
-        return (StatusType.inactive, 'Not Connected');
+        return (StatusType.inactive, l.notConnected);
     }
   }
 
@@ -277,6 +297,7 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
       _isRunningDiagnostics = true;
     });
 
+    final l = _L.of(context);
     final diagnostics = <_DiagnosticResult>[];
     bool hasProblems = false;
 
@@ -286,22 +307,21 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
       if (connectionParams == null) {
         diagnostics.add(
           _DiagnosticResult(
-            title: 'Connection Configuration',
+            title: l.connectionConfiguration,
             status: _DiagnosticStatus.error,
-            description:
-                'No connection configured. Please set up USB or Network connection first.',
-            suggestion:
-                'Use the "Find Printers" button to configure connection.',
+            description: l.noConnectionConfigured,
+            suggestion: l.useFindPrintersButton,
           ),
         );
         hasProblems = true;
       } else {
         diagnostics.add(
           _DiagnosticResult(
-            title: 'Connection Configuration',
+            title: l.connectionConfiguration,
             status: _DiagnosticStatus.success,
-            description:
-                'Connection parameters are configured (${connectionParams.connectionType.name}).',
+            description: l.connectionParamsConfigured(
+              connectionParams.connectionType.name,
+            ),
           ),
         );
 
@@ -312,21 +332,20 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
             if (permissionResult.granted) {
               diagnostics.add(
                 _DiagnosticResult(
-                  title: 'USB Permission',
+                  title: l.usbPermissionCheck,
                   status: _DiagnosticStatus.success,
-                  description: 'USB permission granted.',
+                  description: l.usbPermissionGrantedShort,
                 ),
               );
             } else {
               diagnostics.add(
                 _DiagnosticResult(
-                  title: 'USB Permission',
+                  title: l.usbPermissionCheck,
                   status: _DiagnosticStatus.error,
                   description:
                       permissionResult.errorMessage ??
-                      'USB permission not granted.',
-                  suggestion:
-                      'Grant USB permission by clicking "Grant USB Permission" button.',
+                      l.usbPermissionNotGranted,
+                  suggestion: l.grantUsbPermissionSuggestion,
                 ),
               );
               hasProblems = true;
@@ -334,10 +353,10 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
           } catch (e) {
             diagnostics.add(
               _DiagnosticResult(
-                title: 'USB Permission',
+                title: l.usbPermissionCheck,
                 status: _DiagnosticStatus.warning,
-                description: 'Could not check USB permission: $e',
-                suggestion: 'Try reconnecting the USB device.',
+                description: l.couldNotCheckUsbPermission(e.toString()),
+                suggestion: l.tryReconnectingUsb,
               ),
             );
             hasProblems = true;
@@ -345,9 +364,9 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
         } else {
           diagnostics.add(
             _DiagnosticResult(
-              title: 'USB Permission',
+              title: l.usbPermissionCheck,
               status: _DiagnosticStatus.notApplicable,
-              description: 'Not required for network printers.',
+              description: l.notRequiredForNetworkPrinters,
             ),
           );
         }
@@ -357,18 +376,18 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
           await widget.printer.testConnection();
           diagnostics.add(
             _DiagnosticResult(
-              title: 'Printer Connectivity',
+              title: l.printerConnectivity,
               status: _DiagnosticStatus.success,
-              description: 'Printer responded successfully to test command.',
+              description: l.printerRespondedSuccessfully,
             ),
           );
         } catch (e) {
           diagnostics.add(
             _DiagnosticResult(
-              title: 'Printer Connectivity',
+              title: l.printerConnectivity,
               status: _DiagnosticStatus.error,
-              description: 'Printer test failed: $e',
-              suggestion: _getSuggestionForError(e.toString()),
+              description: l.printerTestFailed(e.toString()),
+              suggestion: _getSuggestionForError(e.toString(), l),
             ),
           );
           hasProblems = true;
@@ -396,29 +415,29 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
   }
 
   /// Возвращает рекомендацию по исправлению ошибки на основе текста ошибки.
-  String _getSuggestionForError(String error) {
+  String _getSuggestionForError(String error, PrinterManagerL10n l) {
     final lowerError = error.toLowerCase();
 
     if (lowerError.contains('permission') || lowerError.contains('access')) {
-      return 'Grant USB permission and try again.';
+      return l.suggestionGrantUsbPermission;
     }
     if (lowerError.contains('timeout') || lowerError.contains('timed out')) {
-      return 'Check that the printer is powered on and connected. Try reconnecting.';
+      return l.suggestionCheckPowerAndConnection;
     }
     if (lowerError.contains('not found') ||
         lowerError.contains('device not available')) {
-      return 'Verify the printer is connected and visible to the device.';
+      return l.suggestionVerifyPrinterConnected;
     }
     if (lowerError.contains('network') ||
         lowerError.contains('socket') ||
         lowerError.contains('connection refused')) {
-      return 'Check network connection and printer IP address.';
+      return l.suggestionCheckNetworkAndIp;
     }
     if (lowerError.contains('paper') || lowerError.contains('out of paper')) {
-      return 'Load paper into the printer.';
+      return l.suggestionLoadPaper;
     }
 
-    return 'Check printer connection and configuration.';
+    return l.suggestionCheckConnection;
   }
 }
 
@@ -433,6 +452,7 @@ class _TroubleshootingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,7 +466,7 @@ class _TroubleshootingSection extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'Troubleshooting Tips',
+              l.troubleshootingTips,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.primary,
@@ -455,47 +475,29 @@ class _TroubleshootingSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        ..._getTipsForPrinterType().map(
-          (tip) => _TroubleshootingTip(icon: tip.$1, text: tip.$2),
-        ),
+        ..._getTipsForPrinterType(
+          l,
+        ).map((tip) => _TroubleshootingTip(icon: tip.$1, text: tip.$2)),
       ],
     );
   }
 
   /// Возвращает советы в зависимости от типа принтера.
-  List<(IconData, String)> _getTipsForPrinterType() {
+  List<(IconData, String)> _getTipsForPrinterType(PrinterManagerL10n l) {
     final baseTips = <(IconData, String)>[
-      (
-        Icons.power_settings_new_rounded,
-        'Check that the printer is powered on',
-      ),
-      (
-        PrinterIcons.connectionUsb,
-        'For USB: Ensure cable is securely connected',
-      ),
-      (
-        PrinterIcons.connectionNetwork,
-        'For Network: Verify WiFi/Ethernet connection',
-      ),
+      (Icons.power_settings_new_rounded, l.tipCheckPowerOn),
+      (PrinterIcons.connectionUsb, l.tipUsbCable),
+      (PrinterIcons.connectionNetwork, l.tipNetworkConnection),
     ];
 
     switch (printerType) {
       case PrinterPOSType.receiptPrinter:
       case PrinterPOSType.kitchenPrinter:
-        return [
-          ...baseTips,
-          (Icons.receipt_rounded, 'Check that paper is loaded correctly'),
-        ];
+        return [...baseTips, (Icons.receipt_rounded, l.tipCheckPaper)];
       case PrinterPOSType.labelPrinter:
-        return [
-          ...baseTips,
-          (Icons.inventory_2_rounded, 'Ensure labels are loaded properly'),
-        ];
+        return [...baseTips, (Icons.inventory_2_rounded, l.tipCheckLabels)];
       case PrinterPOSType.androBar:
-        return [
-          ...baseTips,
-          (Icons.wifi_rounded, 'Check network connectivity to AndroBar device'),
-        ];
+        return [...baseTips, (Icons.wifi_rounded, l.tipCheckAndroBarNetwork)];
     }
   }
 }
@@ -553,6 +555,7 @@ class DangerZoneCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
 
     return Card(
       color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
@@ -572,7 +575,7 @@ class DangerZoneCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Danger Zone',
+                  l.dangerZone,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.error,
@@ -584,8 +587,7 @@ class DangerZoneCard extends StatelessWidget {
             const SizedBox(height: 12),
 
             Text(
-              'Removing this printer will delete all its configuration. '
-              'You can add it again later, but you will need to reconfigure it.',
+              l.dangerZoneDescription,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -597,7 +599,7 @@ class DangerZoneCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ActionButton(
-                label: 'Remove Printer',
+                label: l.removePrinter,
                 icon: PrinterIcons.remove,
                 onPressed: onRemove,
                 variant: ActionButtonVariant.destructive,
@@ -675,6 +677,7 @@ class _DiagnosticsResultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
 
     return AlertDialog(
       title: Row(
@@ -694,7 +697,9 @@ class _DiagnosticsResultDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasProblems ? 'Problems Found' : 'All Checks Passed',
+                  hasProblems
+                      ? l.diagnosticsProblemsFound
+                      : l.diagnosticsAllPassed,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -729,8 +734,8 @@ class _DiagnosticsResultDialog extends StatelessWidget {
               ),
               child: Text(
                 hasProblems
-                    ? 'Some diagnostic checks failed. Review the issues below and follow the suggestions to resolve them.'
-                    : 'All diagnostic checks passed successfully. Your printer is configured correctly.',
+                    ? l.diagnosticsSomeFailed
+                    : l.diagnosticsAllPassedDescription,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: hasProblems
                       ? theme.colorScheme.error
@@ -751,7 +756,7 @@ class _DiagnosticsResultDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
+          child: Text(l.close),
         ),
       ],
     );

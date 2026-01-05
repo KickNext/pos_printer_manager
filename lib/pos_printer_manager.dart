@@ -125,5 +125,8 @@ export 'src/ui/organisms/organisms.dart';
 export 'src/ui/printers_page.dart';
 export 'src/ui/printer_detail_screen.dart';
 
+// Localization
+export 'generated/l10n.dart';
+
 // Dependencies
 export 'package:pos_printers/pos_printers.dart';

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// Permission status types for display.
 enum PermissionStatus {
   /// Permission granted
@@ -79,16 +82,16 @@ class PermissionBadge extends StatelessWidget {
   }
 
   /// Gets the default label for current status.
-  String get _defaultLabel {
+  String _getDefaultLabel(PrinterManagerL10n l) {
     switch (status) {
       case PermissionStatus.granted:
-        return 'Permission Granted';
+        return l.permissionGranted;
       case PermissionStatus.denied:
-        return 'Permission Denied';
+        return l.permissionDenied;
       case PermissionStatus.notRequested:
-        return 'Permission Required';
+        return l.permissionRequired;
       case PermissionStatus.notRequired:
-        return 'No Permission Needed';
+        return l.noPermissionNeeded;
     }
   }
 
@@ -118,7 +121,8 @@ class PermissionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayLabel = label ?? _defaultLabel;
+    final l = _L.of(context);
+    final displayLabel = label ?? _getDefaultLabel(l);
 
     if (!showLabel) {
       return Tooltip(
@@ -203,16 +207,16 @@ class ConnectionTypeBadge extends StatelessWidget {
   }
 
   /// Gets the label for connection type.
-  String get _label {
+  String _getLabel(PrinterManagerL10n l) {
     switch (connectionType) {
       case ConnectionType.usb:
-        return 'USB';
+        return l.usb;
       case ConnectionType.network:
-        return 'Network';
+        return l.network;
       case ConnectionType.bluetooth:
-        return 'Bluetooth';
+        return l.bluetooth;
       case ConnectionType.unknown:
-        return 'Unknown';
+        return l.unknown;
     }
   }
 
@@ -256,9 +260,12 @@ class ConnectionTypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = _L.of(context);
+    final label = _getLabel(l);
+
     if (!showLabel) {
       return Tooltip(
-        message: _label,
+        message: label,
         child: Icon(_icon, size: _iconSize, color: _color),
       );
     }
@@ -276,7 +283,7 @@ class ConnectionTypeBadge extends StatelessWidget {
           Icon(_icon, size: _iconSize, color: _color),
           const SizedBox(width: 4),
           Text(
-            _label,
+            label,
             style: TextStyle(
               fontSize: _fontSize,
               color: _color,
@@ -339,7 +346,6 @@ class PrinterTypeBadge extends StatelessWidget {
   /// Custom label (used when printerType is null).
   final String? _customLabel;
 
-
   /// Optional background color.
   final Color? backgroundColor;
 
@@ -361,23 +367,24 @@ class PrinterTypeBadge extends StatelessWidget {
        _customLabel = label;
 
   /// Gets the display label for the printer type.
-  String get _label {
+  String _getLabel(PrinterManagerL10n l) {
     if (_customLabel != null) return _customLabel;
     switch (_printerType!) {
       case PrinterPOSType.receiptPrinter:
-        return 'Receipt Printer';
+        return l.receiptPrinter;
       case PrinterPOSType.kitchenPrinter:
-        return 'Kitchen Printer';
+        return l.kitchenPrinter;
       case PrinterPOSType.labelPrinter:
-        return 'Label Printer';
+        return l.labelPrinter;
       case PrinterPOSType.androBar:
-        return 'AndroBar';
+        return l.androBar;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
     final bgColor = backgroundColor ?? theme.colorScheme.primaryContainer;
     final fgColor = theme.colorScheme.onPrimaryContainer;
 
@@ -388,7 +395,7 @@ class PrinterTypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(
-        _label,
+        _getLabel(l),
         style: TextStyle(
           fontSize: 12,
           color: fgColor,

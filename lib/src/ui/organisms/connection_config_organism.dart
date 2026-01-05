@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// An organism component for printer connection configuration.
 ///
 /// Provides a complete interface for configuring printer connection
@@ -112,12 +115,14 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
 
   @override
   Widget build(BuildContext context) {
+    final l = _L.of(context);
+
     if (_params == null) {
       return _NoConnectionCard(onFindPrinters: _showPrinterFinder);
     }
 
     final params = _params!;
-    final fields = _buildConnectionFields(params);
+    final fields = _buildConnectionFields(params, l);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -125,8 +130,8 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
         _ConnectionInfoCard(
           connectionType: _connectionType,
           title: _connectionType == ConnectionType.usb
-              ? 'USB Connection'
-              : 'Network Connection',
+              ? l.usbConnection
+              : l.networkConnection,
           fields: fields,
           onEdit: _showPrinterFinder,
           onRemove: _disconnectPrinter,
@@ -154,27 +159,28 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
   /// Builds connection field list based on connection type.
   List<(String, String?)> _buildConnectionFields(
     PrinterConnectionParamsDTO params,
+    PrinterManagerL10n l,
   ) {
     List<(String, String?)> fields = [];
     switch (params.connectionType) {
       case PosPrinterConnectionType.usb:
         final usb = params.usbParams;
         fields = [
-          ('Manufacturer', usb?.manufacturer),
-          ('Product Name', usb?.productName),
-          ('Serial Number', usb?.serialNumber),
-          ('Vendor ID', usb?.vendorId.toString()),
-          ('Product ID', usb?.productId.toString()),
+          (l.manufacturer, usb?.manufacturer),
+          (l.productName, usb?.productName),
+          (l.serialNumber, usb?.serialNumber),
+          (l.vendorId, usb?.vendorId.toString()),
+          (l.productId, usb?.productId.toString()),
         ];
         break;
       case PosPrinterConnectionType.network:
         final net = params.networkParams;
         fields = [
-          ('IP Address', net?.ipAddress),
-          ('Subnet Mask', net?.mask),
-          ('Gateway', net?.gateway),
-          ('MAC Address', net?.macAddress),
-          ('DHCP', (net?.dhcp ?? false) ? 'Enabled' : 'Disabled'),
+          (l.ipAddress, net?.ipAddress),
+          (l.subnetMask, net?.mask),
+          (l.gateway, net?.gateway),
+          (l.macAddress, net?.macAddress),
+          (l.dhcp, (net?.dhcp ?? false) ? l.enabled : l.disabled),
         ];
         break;
     }
@@ -204,15 +210,15 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
   }
 
   Future<void> _disconnectPrinter() async {
+    final l = _L.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         content: ConfirmationDialogMolecule(
           icon: Icons.link_off,
-          title: 'Disconnect Printer?',
-          message:
-              'This will remove the current connection settings. You can reconnect later.',
-          confirmLabel: 'Disconnect',
+          title: l.disconnectPrinterQuestion,
+          message: l.disconnectPrinterConfirmation,
+          confirmLabel: l.disconnect,
           onConfirm: () => Navigator.pop(ctx, true),
           onCancel: () => Navigator.pop(ctx, false),
         ),
@@ -249,10 +255,11 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
 
     if (!mounted) return;
 
+    final l = _L.of(context);
     if (!result.granted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.errorMessage ?? 'USB permission denied'),
+          content: Text(result.errorMessage ?? l.usbPermissionDeniedError),
           backgroundColor: Colors.red,
         ),
       );
@@ -260,7 +267,9 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'USB permission granted${result.deviceInfo != null ? ': ${result.deviceInfo}' : ''}',
+            result.deviceInfo != null
+                ? l.usbPermissionGrantedWithDevice(result.deviceInfo!)
+                : l.usbPermissionGrantedSuccess,
           ),
           backgroundColor: Colors.green,
         ),
@@ -279,6 +288,8 @@ class _NoConnectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -299,14 +310,14 @@ class _NoConnectionCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No Connection',
+              l.noConnection,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'No printer is connected. Search for available printers to configure the connection.',
+              l.noConnectionDescription,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -316,7 +327,7 @@ class _NoConnectionCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ActionButton(
-                label: 'Find Printers',
+                label: l.findPrinters,
                 icon: PrinterIcons.search,
                 onPressed: onFindPrinters,
                 variant: ActionButtonVariant.primary,

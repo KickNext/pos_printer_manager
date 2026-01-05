@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pos_printer_manager/pos_printer_manager.dart';
+
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
 
 /// An empty state atom component.
 ///
@@ -215,7 +219,7 @@ class ErrorState extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(_L.of(context).retry),
               ),
             ],
           ],

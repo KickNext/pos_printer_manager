@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// A molecule component displaying printer connection status.
 ///
 /// Combines status indicator, status text, and action buttons
@@ -86,28 +89,33 @@ class PrinterStatusMolecule extends StatelessWidget {
         // Actions
         if (onTestPrint != null || onRefresh != null) ...[
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              if (onTestPrint != null)
-                ActionButton(
-                  label: isLoading ? 'Printing…' : 'Test Print',
-                  icon: PrinterIcons.testPrint,
-                  onPressed: isLoading ? null : onTestPrint,
-                  isLoading: isLoading,
-                  variant: ActionButtonVariant.primary,
-                  size: ActionButtonSize.small,
-                ),
-              if (onRefresh != null && status == StatusType.error)
-                ActionButton(
-                  label: 'Retry',
-                  icon: PrinterIcons.retry,
-                  onPressed: isLoading ? null : onRefresh,
-                  variant: ActionButtonVariant.secondary,
-                  size: ActionButtonSize.small,
-                ),
-            ],
+          Builder(
+            builder: (context) {
+              final l = _L.of(context);
+              return Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  if (onTestPrint != null)
+                    ActionButton(
+                      label: isLoading ? l.printing : l.testPrint,
+                      icon: PrinterIcons.testPrint,
+                      onPressed: isLoading ? null : onTestPrint,
+                      isLoading: isLoading,
+                      variant: ActionButtonVariant.primary,
+                      size: ActionButtonSize.small,
+                    ),
+                  if (onRefresh != null && status == StatusType.error)
+                    ActionButton(
+                      label: l.retry,
+                      icon: PrinterIcons.retry,
+                      onPressed: isLoading ? null : onRefresh,
+                      variant: ActionButtonVariant.secondary,
+                      size: ActionButtonSize.small,
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ],
@@ -149,16 +157,17 @@ class UsbPermissionMolecule extends StatelessWidget {
     this.deviceName,
   });
 
-  String get _statusMessage {
+  /// Gets the status message for current permission status.
+  String _getStatusMessage(PrinterManagerL10n l) {
     switch (status) {
       case PermissionStatus.granted:
-        return 'USB permission granted. Printer is ready to use.';
+        return l.usbPermissionGrantedMessage;
       case PermissionStatus.denied:
-        return 'USB permission was denied. Please grant permission to use this printer.';
+        return l.usbPermissionDeniedMessage;
       case PermissionStatus.notRequested:
-        return 'USB permission is required to communicate with this printer.';
+        return l.usbPermissionRequiredMessage;
       case PermissionStatus.notRequired:
-        return 'No USB permission required for network printers.';
+        return l.usbPermissionNotRequiredMessage;
     }
   }
 
@@ -182,13 +191,15 @@ class UsbPermissionMolecule extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final l = _L.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         // Permission status banner
         InfoBanner(
-          message: _statusMessage,
+          message: _getStatusMessage(l),
           icon: PrinterIcons.permissionUsb,
           type: _bannerType,
         ),
@@ -200,7 +211,7 @@ class UsbPermissionMolecule extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ActionButton(
-              label: isRequesting ? 'Requesting…' : 'Grant USB Permission',
+              label: isRequesting ? l.requesting : l.grantUsbPermission,
               icon: PrinterIcons.permissionRequest,
               onPressed: isRequesting ? null : onRequestPermission,
               isLoading: isRequesting,
@@ -320,37 +331,42 @@ class ConnectionInfoMolecule extends StatelessWidget {
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            alignment: WrapAlignment.end,
-            children: [
-              if (onNetworkSettings != null)
-                ActionButton(
-                  label: 'Network Settings',
-                  icon: PrinterIcons.networkSettings,
-                  onPressed: onNetworkSettings,
-                  variant: ActionButtonVariant.secondary,
-                  size: ActionButtonSize.small,
-                  tooltip: 'Configure IP, subnet mask, gateway',
-                ),
-              if (onEdit != null)
-                ActionButton(
-                  label: 'Change',
-                  icon: PrinterIcons.edit,
-                  onPressed: onEdit,
-                  variant: ActionButtonVariant.tertiary,
-                  size: ActionButtonSize.small,
-                ),
-              if (onRemove != null)
-                ActionButton(
-                  label: 'Disconnect',
-                  icon: PrinterIcons.disconnect,
-                  onPressed: onRemove,
-                  variant: ActionButtonVariant.destructive,
-                  size: ActionButtonSize.small,
-                ),
-            ],
+          Builder(
+            builder: (context) {
+              final l = _L.of(context);
+              return Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                alignment: WrapAlignment.end,
+                children: [
+                  if (onNetworkSettings != null)
+                    ActionButton(
+                      label: l.networkSettings,
+                      icon: PrinterIcons.networkSettings,
+                      onPressed: onNetworkSettings,
+                      variant: ActionButtonVariant.secondary,
+                      size: ActionButtonSize.small,
+                      tooltip: l.networkSettingsTooltip,
+                    ),
+                  if (onEdit != null)
+                    ActionButton(
+                      label: l.change,
+                      icon: PrinterIcons.edit,
+                      onPressed: onEdit,
+                      variant: ActionButtonVariant.tertiary,
+                      size: ActionButtonSize.small,
+                    ),
+                  if (onRemove != null)
+                    ActionButton(
+                      label: l.disconnect,
+                      icon: PrinterIcons.disconnect,
+                      onPressed: onRemove,
+                      variant: ActionButtonVariant.destructive,
+                      size: ActionButtonSize.small,
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ],
@@ -572,7 +588,7 @@ class DiscoveredPrinterMolecule extends StatelessWidget {
               else
                 FilledButton.tonal(
                   onPressed: onConnect,
-                  child: const Text('Connect'),
+                  child: Text(_L.of(context).connect),
                 ),
             ],
           ),
@@ -683,7 +699,7 @@ class ConfiguredPrinterMolecule extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     printer.handler.settings.connectionParams?.displayName ??
-                        'Not connected',
+                        _L.of(context).notConnected,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                       fontFamily: 'monospace',

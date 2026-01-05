@@ -1,0 +1,619 @@
+{
+  "@@locale": "es_PR",
+  "printerDetails": "Detalles de la Impresora",
+  "@printerDetails": {
+    "description": "Title for printer details screen"
+  },
+  "renamePrinter": "Renombrar Impresora",
+  "@renamePrinter": {
+    "description": "Dialog title for renaming printer"
+  },
+  "printerName": "Nombre de la Impresora",
+  "@printerName": {
+    "description": "Label for printer name input field"
+  },
+  "pleaseEnterName": "Por favor, ingrese un nombre",
+  "@pleaseEnterName": {
+    "description": "Validation error when name is empty"
+  },
+  "save": "Guardar",
+  "@save": {
+    "description": "Save button label"
+  },
+  "cancel": "Cancelar",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "close": "Cerrar",
+  "@close": {
+    "description": "Close button label"
+  },
+  "back": "Atrás",
+  "@back": {
+    "description": "Back button label"
+  },
+  "next": "Siguiente",
+  "@next": {
+    "description": "Next button label"
+  },
+  "create": "Crear",
+  "@create": {
+    "description": "Create button label"
+  },
+  "confirm": "Confirmar",
+  "@confirm": {
+    "description": "Confirm button label"
+  },
+  "remove": "Eliminar",
+  "@remove": {
+    "description": "Remove button label"
+  },
+  "removePrinter": "Eliminar Impresora",
+  "@removePrinter": {
+    "description": "Remove printer action label"
+  },
+  "removePrinterQuestion": "¿Eliminar Impresora?",
+  "@removePrinterQuestion": {
+    "description": "Remove printer confirmation dialog title"
+  },
+  "removePrinterConfirmation": "Esto eliminará la impresora y toda su configuración. Puede agregarla nuevamente más tarde.",
+  "@removePrinterConfirmation": {
+    "description": "Remove printer confirmation dialog message"
+  },
+  "disconnect": "Desconectar",
+  "@disconnect": {
+    "description": "Disconnect button label"
+  },
+  "disconnectPrinterQuestion": "¿Desconectar Impresora?",
+  "@disconnectPrinterQuestion": {
+    "description": "Disconnect printer confirmation dialog title"
+  },
+  "disconnectPrinterConfirmation": "Esto eliminará la configuración de conexión actual. Puede reconectarse más tarde.",
+  "@disconnectPrinterConfirmation": {
+    "description": "Disconnect printer confirmation dialog message"
+  },
+  "connect": "Conectar",
+  "@connect": {
+    "description": "Connect button label"
+  },
+  "change": "Cambiar",
+  "@change": {
+    "description": "Change button label"
+  },
+  "retry": "Reintentar",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "refresh": "Actualizar",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "testPrint": "Prueba de Impresión",
+  "@testPrint": {
+    "description": "Test print button label"
+  },
+  "printing": "Imprimiendo...",
+  "@printing": {
+    "description": "Status shown while printing"
+  },
+  "diagnostics": "Diagnósticos",
+  "@diagnostics": {
+    "description": "Diagnostics button label"
+  },
+  "diagnosing": "Diagnosticando...",
+  "@diagnosing": {
+    "description": "Status shown while running diagnostics"
+  },
+  "clearError": "Limpiar Error",
+  "@clearError": {
+    "description": "Clear error button label"
+  },
+  "readyToPrint": "Lista para Imprimir",
+  "@readyToPrint": {
+    "description": "Status when printer is connected and ready"
+  },
+  "connectionError": "Error de Conexión",
+  "@connectionError": {
+    "description": "Status when there is a connection error"
+  },
+  "notConnected": "No Conectada",
+  "@notConnected": {
+    "description": "Status when printer is not connected"
+  },
+  "troubleshootingTips": "Consejos de Solución de Problemas",
+  "@troubleshootingTips": {
+    "description": "Section header for troubleshooting tips"
+  },
+  "tipCheckPowerOn": "Verifique que la impresora esté encendida",
+  "@tipCheckPowerOn": {
+    "description": "Troubleshooting tip about power"
+  },
+  "tipUsbCable": "Para USB: Asegúrese de que el cable esté bien conectado",
+  "@tipUsbCable": {
+    "description": "Troubleshooting tip about USB cable"
+  },
+  "tipNetworkConnection": "Para Red: Verifique la conexión WiFi/Ethernet",
+  "@tipNetworkConnection": {
+    "description": "Troubleshooting tip about network"
+  },
+  "tipCheckPaper": "Verifique que el papel esté cargado correctamente",
+  "@tipCheckPaper": {
+    "description": "Troubleshooting tip about paper for receipt/kitchen printers"
+  },
+  "tipCheckLabels": "Asegúrese de que las etiquetas estén cargadas correctamente",
+  "@tipCheckLabels": {
+    "description": "Troubleshooting tip about labels for label printers"
+  },
+  "tipCheckAndroBarNetwork": "Verifique la conectividad de red al dispositivo AndroBar",
+  "@tipCheckAndroBarNetwork": {
+    "description": "Troubleshooting tip for AndroBar"
+  },
+  "dangerZone": "Zona de Peligro",
+  "@dangerZone": {
+    "description": "Section header for dangerous actions"
+  },
+  "dangerZoneDescription": "Eliminar esta impresora borrará toda su configuración. Puede agregarla nuevamente más tarde, pero deberá reconfigurarla.",
+  "@dangerZoneDescription": {
+    "description": "Warning message in danger zone section"
+  },
+  "additionalSettings": "Configuraciones Adicionales",
+  "@additionalSettings": {
+    "description": "Section header for plugin-specific settings"
+  },
+  "addPrinter": "Agregar Impresora",
+  "@addPrinter": {
+    "description": "Add printer button/dialog title"
+  },
+  "selectPrinterType": "Seleccione el tipo de impresora",
+  "@selectPrinterType": {
+    "description": "Step title for printer type selection"
+  },
+  "selectPrinterTypeDescription": "Elija el tipo de impresora que desea agregar.",
+  "@selectPrinterTypeDescription": {
+    "description": "Description for printer type selection step"
+  },
+  "nameYourPrinter": "Nombre su impresora",
+  "@nameYourPrinter": {
+    "description": "Step title for naming printer"
+  },
+  "nameYourPrinterDescription": "Dele a su impresora un nombre descriptivo para identificarla fácilmente.",
+  "@nameYourPrinterDescription": {
+    "description": "Description for printer naming step"
+  },
+  "printerNameHint": "ej., Display de Cocina, Impresora del Bar",
+  "@printerNameHint": {
+    "description": "Hint text for printer name input"
+  },
+  "printerDefaultName": "Impresora {number}",
+  "@printerDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "configureConnectionLater": "Puede configurar la conexión después de crearla",
+  "@configureConnectionLater": {
+    "description": "Info text shown after selecting printer type"
+  },
+  "pleaseSelectPrinterType": "Por favor, seleccione un tipo de impresora",
+  "@pleaseSelectPrinterType": {
+    "description": "Validation error when no printer type selected"
+  },
+  "failedToCreatePrinter": "Error al crear la impresora: {error}",
+  "@failedToCreatePrinter": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "stepType": "Tipo",
+  "@stepType": {
+    "description": "Wizard step label for type selection"
+  },
+  "stepName": "Nombre",
+  "@stepName": {
+    "description": "Wizard step label for naming"
+  },
+  "readyToConnect": "Lista para Conectar",
+  "@readyToConnect": {
+    "description": "Title when printer is created and ready to connect"
+  },
+  "readyToConnectDescription": "Su impresora ha sido creada. Ahora puede configurar la conexión.",
+  "@readyToConnectDescription": {
+    "description": "Description after printer is created"
+  },
+  "receiptPrinter": "Impresora de Recibos",
+  "@receiptPrinter": {
+    "description": "Printer type name"
+  },
+  "receiptPrinterDescription": "Para recibos y facturas",
+  "@receiptPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "kitchenPrinter": "Impresora de Cocina",
+  "@kitchenPrinter": {
+    "description": "Printer type name"
+  },
+  "kitchenPrinterDescription": "Para órdenes de cocina",
+  "@kitchenPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "labelPrinter": "Impresora de Etiquetas",
+  "@labelPrinter": {
+    "description": "Printer type name"
+  },
+  "labelPrinterDescription": "Para etiquetas de productos",
+  "@labelPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "androBar": "AndroBar",
+  "@androBar": {
+    "description": "Printer type name"
+  },
+  "androBarDescription": "Sistema de pantalla del bar",
+  "@androBarDescription": {
+    "description": "Printer type description"
+  },
+  "findPrinters": "Buscar Impresoras",
+  "@findPrinters": {
+    "description": "Button to search for printers"
+  },
+  "searchingForPrinters": "Buscando impresoras...",
+  "@searchingForPrinters": {
+    "description": "Status while searching for printers"
+  },
+  "foundPrinters": "Se encontraron {count} impresora(s)",
+  "@foundPrinters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scanningNetworkAndUsb": "Escaneando red y USB...",
+  "@scanningNetworkAndUsb": {
+    "description": "Status while scanning for printers"
+  },
+  "noPrintersFound": "No Se Encontraron Impresoras",
+  "@noPrintersFound": {
+    "description": "Empty state title when no printers found"
+  },
+  "noPrintersFoundDescription": "Asegúrese de que su impresora esté encendida y conectada a la misma red o por USB.",
+  "@noPrintersFoundDescription": {
+    "description": "Empty state description when no printers found"
+  },
+  "searchAgain": "Buscar de Nuevo",
+  "@searchAgain": {
+    "description": "Button to search for printers again"
+  },
+  "noPrintersAvailable": "No Hay Impresoras Disponibles",
+  "@noPrintersAvailable": {
+    "description": "Empty state title when max printers reached"
+  },
+  "maxPrintersReached": "Se alcanzó el número máximo de impresoras.",
+  "@maxPrintersReached": {
+    "description": "Empty state description when max printers reached"
+  },
+  "noPrintersConfigured": "No Hay Impresoras Configuradas",
+  "@noPrintersConfigured": {
+    "description": "Empty state title when no printers configured"
+  },
+  "addPrinterToStart": "Agregue una impresora para comenzar.",
+  "@addPrinterToStart": {
+    "description": "Empty state description when no printers configured"
+  },
+  "noConnection": "Sin Conexión",
+  "@noConnection": {
+    "description": "Title when no printer connection configured"
+  },
+  "noConnectionDescription": "No hay impresora conectada. Busque impresoras disponibles para configurar la conexión.",
+  "@noConnectionDescription": {
+    "description": "Description when no printer connection configured"
+  },
+  "usbConnection": "Conexión USB",
+  "@usbConnection": {
+    "description": "Connection type label for USB"
+  },
+  "networkConnection": "Conexión de Red",
+  "@networkConnection": {
+    "description": "Connection type label for Network"
+  },
+  "usb": "USB",
+  "@usb": {
+    "description": "USB connection type badge label"
+  },
+  "network": "Red",
+  "@network": {
+    "description": "Network connection type badge label"
+  },
+  "bluetooth": "Bluetooth",
+  "@bluetooth": {
+    "description": "Bluetooth connection type badge label"
+  },
+  "unknown": "Desconocido",
+  "@unknown": {
+    "description": "Unknown connection type badge label"
+  },
+  "manufacturer": "Fabricante",
+  "@manufacturer": {
+    "description": "USB device info field"
+  },
+  "productName": "Nombre del Producto",
+  "@productName": {
+    "description": "USB device info field"
+  },
+  "serialNumber": "Número de Serie",
+  "@serialNumber": {
+    "description": "USB device info field"
+  },
+  "vendorId": "ID de Proveedor",
+  "@vendorId": {
+    "description": "USB device info field"
+  },
+  "productId": "ID de Producto",
+  "@productId": {
+    "description": "USB device info field"
+  },
+  "ipAddress": "Dirección IP",
+  "@ipAddress": {
+    "description": "Network device info field"
+  },
+  "subnetMask": "Máscara de Subred",
+  "@subnetMask": {
+    "description": "Network device info field"
+  },
+  "gateway": "Puerta de Enlace",
+  "@gateway": {
+    "description": "Network device info field"
+  },
+  "macAddress": "Dirección MAC",
+  "@macAddress": {
+    "description": "Network device info field"
+  },
+  "dhcp": "DHCP",
+  "@dhcp": {
+    "description": "Network device info field"
+  },
+  "enabled": "Habilitado",
+  "@enabled": {
+    "description": "Status label for enabled state"
+  },
+  "disabled": "Deshabilitado",
+  "@disabled": {
+    "description": "Status label for disabled state"
+  },
+  "networkSettings": "Configuración de Red",
+  "@networkSettings": {
+    "description": "Network settings dialog/button title"
+  },
+  "ipAddressRequired": "Se requiere dirección IP",
+  "@ipAddressRequired": {
+    "description": "Validation error for empty IP address"
+  },
+  "ipAddressHint": "192.168.1.100",
+  "@ipAddressHint": {
+    "description": "Hint text for IP address input"
+  },
+  "subnetMaskHint": "255.255.255.0",
+  "@subnetMaskHint": {
+    "description": "Hint text for subnet mask input"
+  },
+  "gatewayHint": "192.168.1.1",
+  "@gatewayHint": {
+    "description": "Hint text for gateway input"
+  },
+  "saveSettings": "Guardar Configuración",
+  "@saveSettings": {
+    "description": "Save settings button label"
+  },
+  "networkSettingsUpdated": "Configuración de red actualizada exitosamente",
+  "@networkSettingsUpdated": {
+    "description": "Success message after saving network settings"
+  },
+  "macAddressRequired": "Se requiere dirección MAC para la configuración de red",
+  "@macAddressRequired": {
+    "description": "Error when MAC address is missing for network config"
+  },
+  "usbPermission": "Permiso USB",
+  "@usbPermission": {
+    "description": "USB permission section title"
+  },
+  "grantUsbPermission": "Otorgar Permiso USB",
+  "@grantUsbPermission": {
+    "description": "Button to request USB permission"
+  },
+  "requesting": "Solicitando...",
+  "@requesting": {
+    "description": "Status while requesting permission"
+  },
+  "permissionGranted": "Permiso Otorgado",
+  "@permissionGranted": {
+    "description": "Status when permission is granted"
+  },
+  "permissionDenied": "Permiso Denegado",
+  "@permissionDenied": {
+    "description": "Status when permission is denied"
+  },
+  "permissionRequired": "Se Requiere Permiso",
+  "@permissionRequired": {
+    "description": "Status when permission is required"
+  },
+  "noPermissionNeeded": "No Se Necesita Permiso",
+  "@noPermissionNeeded": {
+    "description": "Status when no permission is needed"
+  },
+  "usbPermissionGrantedMessage": "Permiso USB otorgado. La impresora está lista para usar.",
+  "@usbPermissionGrantedMessage": {
+    "description": "Message when USB permission is granted"
+  },
+  "usbPermissionDeniedMessage": "El permiso USB fue denegado. Por favor, otorgue el permiso para usar esta impresora.",
+  "@usbPermissionDeniedMessage": {
+    "description": "Message when USB permission is denied"
+  },
+  "usbPermissionRequiredMessage": "Se requiere permiso USB para comunicarse con esta impresora.",
+  "@usbPermissionRequiredMessage": {
+    "description": "Message when USB permission is required"
+  },
+  "noUsbPermissionNeededMessage": "No se requiere permiso USB para impresoras de red.",
+  "@noUsbPermissionNeededMessage": {
+    "description": "Message when no USB permission is needed"
+  },
+  "usbPermissionDeniedError": "Permiso USB denegado",
+  "@usbPermissionDeniedError": {
+    "description": "Error message when USB permission is denied"
+  },
+  "usbPermissionGrantedSuccess": "Permiso USB otorgado",
+  "@usbPermissionGrantedSuccess": {
+    "description": "Success message when USB permission is granted"
+  },
+  "usbPermissionGrantedWithDevice": "Permiso USB otorgado: {deviceInfo}",
+  "@usbPermissionGrantedWithDevice": {
+    "placeholders": {
+      "deviceInfo": {
+        "type": "String"
+      }
+    }
+  },
+  "diagnosticsProblemsFound": "Se Encontraron Problemas",
+  "@diagnosticsProblemsFound": {
+    "description": "Diagnostics dialog title when problems found"
+  },
+  "diagnosticsAllPassed": "Todas las Pruebas Pasaron",
+  "@diagnosticsAllPassed": {
+    "description": "Diagnostics dialog title when all checks pass"
+  },
+  "diagnosticsProblemsDescription": "Algunas pruebas de diagnóstico fallaron. Revise los problemas a continuación y siga las sugerencias para resolverlos.",
+  "@diagnosticsProblemsDescription": {
+    "description": "Description when diagnostics found problems"
+  },
+  "diagnosticsSuccessDescription": "Todas las pruebas de diagnóstico pasaron exitosamente. Su impresora está configurada correctamente.",
+  "@diagnosticsSuccessDescription": {
+    "description": "Description when all diagnostics pass"
+  },
+  "connectionConfiguration": "Configuración de Conexión",
+  "@connectionConfiguration": {
+    "description": "Diagnostic check title"
+  },
+  "noConnectionConfigured": "No hay conexión configurada. Por favor, configure la conexión USB o de red primero.",
+  "@noConnectionConfigured": {
+    "description": "Diagnostic error when no connection configured"
+  },
+  "useFinderToConnect": "Use el botón \"Buscar Impresoras\" para configurar la conexión.",
+  "@useFinderToConnect": {
+    "description": "Suggestion to use printer finder"
+  },
+  "connectionParamsConfigured": "Los parámetros de conexión están configurados ({connectionType}).",
+  "@connectionParamsConfigured": {
+    "placeholders": {
+      "connectionType": {
+        "type": "String"
+      }
+    }
+  },
+  "usbPermissionCheck": "Permiso USB",
+  "@usbPermissionCheck": {
+    "description": "Diagnostic check title for USB permission"
+  },
+  "usbPermissionGrantedDiag": "Permiso USB otorgado.",
+  "@usbPermissionGrantedDiag": {
+    "description": "Diagnostic success for USB permission"
+  },
+  "usbPermissionNotGranted": "Permiso USB no otorgado.",
+  "@usbPermissionNotGranted": {
+    "description": "Diagnostic error for USB permission"
+  },
+  "grantUsbPermissionSuggestion": "Otorgue el permiso USB haciendo clic en el botón \"Otorgar Permiso USB\".",
+  "@grantUsbPermissionSuggestion": {
+    "description": "Suggestion to grant USB permission"
+  },
+  "couldNotCheckUsbPermission": "No se pudo verificar el permiso USB: {error}",
+  "@couldNotCheckUsbPermission": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tryReconnectingUsb": "Intente reconectar el dispositivo USB.",
+  "@tryReconnectingUsb": {
+    "description": "Suggestion to reconnect USB"
+  },
+  "notRequiredForNetworkPrinters": "No requerido para impresoras de red.",
+  "@notRequiredForNetworkPrinters": {
+    "description": "Info that USB permission not required for network"
+  },
+  "printerConnectivity": "Conectividad de Impresora",
+  "@printerConnectivity": {
+    "description": "Diagnostic check title for connectivity"
+  },
+  "printerRespondedSuccessfully": "La impresora respondió exitosamente al comando de prueba.",
+  "@printerRespondedSuccessfully": {
+    "description": "Diagnostic success for connectivity"
+  },
+  "printerTestFailed": "La prueba de impresora falló: {error}",
+  "@printerTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestionGrantPermission": "Otorgue el permiso USB e intente nuevamente.",
+  "@suggestionGrantPermission": {
+    "description": "Suggestion for permission error"
+  },
+  "suggestionCheckPowerAndConnection": "Verifique que la impresora esté encendida y conectada. Intente reconectar.",
+  "@suggestionCheckPowerAndConnection": {
+    "description": "Suggestion for timeout error"
+  },
+  "suggestionVerifyPrinterConnected": "Verifique que la impresora esté conectada y visible para el dispositivo.",
+  "@suggestionVerifyPrinterConnected": {
+    "description": "Suggestion for not found error"
+  },
+  "suggestionCheckNetworkAndIp": "Verifique la conexión de red y la dirección IP de la impresora.",
+  "@suggestionCheckNetworkAndIp": {
+    "description": "Suggestion for network error"
+  },
+  "suggestionLoadPaper": "Cargue papel en la impresora.",
+  "@suggestionLoadPaper": {
+    "description": "Suggestion for paper error"
+  },
+  "suggestionCheckConnection": "Verifique la conexión y configuración de la impresora.",
+  "@suggestionCheckConnection": {
+    "description": "Generic suggestion for errors"
+  },
+  "runDiagnosticsTooltip": "Ejecutar diagnósticos completos y mostrar problemas si los hay",
+  "@runDiagnosticsTooltip": {
+    "description": "Tooltip for diagnostics button"
+  },
+  "diagnosticsSomeFailed": "Algunas pruebas de diagnóstico fallaron. Revise los problemas a continuación y siga las sugerencias para resolverlos.",
+  "@diagnosticsSomeFailed": {
+    "description": "Summary when some diagnostic checks failed"
+  },
+  "diagnosticsAllPassedDescription": "Todas las pruebas de diagnóstico pasaron exitosamente. Su impresora está configurada correctamente.",
+  "@diagnosticsAllPassedDescription": {
+    "description": "Summary when all diagnostic checks passed"
+  },
+  "useFindPrintersButton": "Use el botón \"Buscar Impresoras\" para configurar la conexión.",
+  "@useFindPrintersButton": {
+    "description": "Suggestion to use Find Printers button"
+  },
+  "usbPermissionGrantedShort": "Permiso USB otorgado.",
+  "@usbPermissionGrantedShort": {
+    "description": "Short message when USB permission is granted"
+  },
+  "networkSettingsTooltip": "Configurar IP, máscara de subred, puerta de enlace",
+  "@networkSettingsTooltip": {
+    "description": "Tooltip for network settings button"
+  },
+  "usbPermissionNotRequiredMessage": "No se requiere permiso USB para impresoras de red.",
+  "@usbPermissionNotRequiredMessage": {
+    "description": "Message when USB permission is not required"
+  },
+  "suggestionGrantUsbPermission": "Otorgue el permiso USB e intente nuevamente.",
+  "@suggestionGrantUsbPermission": {
+    "description": "Suggestion to grant USB permission"
+  }
+}

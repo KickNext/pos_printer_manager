@@ -1,0 +1,619 @@
+{
+  "@@locale": "ru_RU",
+  "printerDetails": "Информация о принтере",
+  "@printerDetails": {
+    "description": "Title for printer details screen"
+  },
+  "renamePrinter": "Переименовать принтер",
+  "@renamePrinter": {
+    "description": "Dialog title for renaming printer"
+  },
+  "printerName": "Название принтера",
+  "@printerName": {
+    "description": "Label for printer name input field"
+  },
+  "pleaseEnterName": "Пожалуйста, введите название",
+  "@pleaseEnterName": {
+    "description": "Validation error when name is empty"
+  },
+  "save": "Сохранить",
+  "@save": {
+    "description": "Save button label"
+  },
+  "cancel": "Отмена",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "close": "Закрыть",
+  "@close": {
+    "description": "Close button label"
+  },
+  "back": "Назад",
+  "@back": {
+    "description": "Back button label"
+  },
+  "next": "Далее",
+  "@next": {
+    "description": "Next button label"
+  },
+  "create": "Создать",
+  "@create": {
+    "description": "Create button label"
+  },
+  "confirm": "Подтвердить",
+  "@confirm": {
+    "description": "Confirm button label"
+  },
+  "remove": "Удалить",
+  "@remove": {
+    "description": "Remove button label"
+  },
+  "removePrinter": "Удалить принтер",
+  "@removePrinter": {
+    "description": "Remove printer action label"
+  },
+  "removePrinterQuestion": "Удалить принтер?",
+  "@removePrinterQuestion": {
+    "description": "Remove printer confirmation dialog title"
+  },
+  "removePrinterConfirmation": "Это удалит принтер и все его настройки. Вы сможете добавить его снова позже.",
+  "@removePrinterConfirmation": {
+    "description": "Remove printer confirmation dialog message"
+  },
+  "disconnect": "Отключить",
+  "@disconnect": {
+    "description": "Disconnect button label"
+  },
+  "disconnectPrinterQuestion": "Отключить принтер?",
+  "@disconnectPrinterQuestion": {
+    "description": "Disconnect printer confirmation dialog title"
+  },
+  "disconnectPrinterConfirmation": "Это удалит текущие настройки подключения. Вы сможете подключиться снова позже.",
+  "@disconnectPrinterConfirmation": {
+    "description": "Disconnect printer confirmation dialog message"
+  },
+  "connect": "Подключить",
+  "@connect": {
+    "description": "Connect button label"
+  },
+  "change": "Изменить",
+  "@change": {
+    "description": "Change button label"
+  },
+  "retry": "Повторить",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "refresh": "Обновить",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "testPrint": "Тестовая печать",
+  "@testPrint": {
+    "description": "Test print button label"
+  },
+  "printing": "Печать...",
+  "@printing": {
+    "description": "Status shown while printing"
+  },
+  "diagnostics": "Диагностика",
+  "@diagnostics": {
+    "description": "Diagnostics button label"
+  },
+  "diagnosing": "Диагностика...",
+  "@diagnosing": {
+    "description": "Status shown while running diagnostics"
+  },
+  "clearError": "Очистить ошибку",
+  "@clearError": {
+    "description": "Clear error button label"
+  },
+  "readyToPrint": "Готов к печати",
+  "@readyToPrint": {
+    "description": "Status when printer is connected and ready"
+  },
+  "connectionError": "Ошибка подключения",
+  "@connectionError": {
+    "description": "Status when there is a connection error"
+  },
+  "notConnected": "Не подключен",
+  "@notConnected": {
+    "description": "Status when printer is not connected"
+  },
+  "troubleshootingTips": "Советы по устранению неполадок",
+  "@troubleshootingTips": {
+    "description": "Section header for troubleshooting tips"
+  },
+  "tipCheckPowerOn": "Убедитесь, что принтер включен",
+  "@tipCheckPowerOn": {
+    "description": "Troubleshooting tip about power"
+  },
+  "tipUsbCable": "Для USB: Убедитесь, что кабель надёжно подключен",
+  "@tipUsbCable": {
+    "description": "Troubleshooting tip about USB cable"
+  },
+  "tipNetworkConnection": "Для сети: Проверьте подключение WiFi/Ethernet",
+  "@tipNetworkConnection": {
+    "description": "Troubleshooting tip about network"
+  },
+  "tipCheckPaper": "Убедитесь, что бумага загружена правильно",
+  "@tipCheckPaper": {
+    "description": "Troubleshooting tip about paper for receipt/kitchen printers"
+  },
+  "tipCheckLabels": "Убедитесь, что этикетки загружены правильно",
+  "@tipCheckLabels": {
+    "description": "Troubleshooting tip about labels for label printers"
+  },
+  "tipCheckAndroBarNetwork": "Проверьте сетевое подключение к устройству AndroBar",
+  "@tipCheckAndroBarNetwork": {
+    "description": "Troubleshooting tip for AndroBar"
+  },
+  "dangerZone": "Опасная зона",
+  "@dangerZone": {
+    "description": "Section header for dangerous actions"
+  },
+  "dangerZoneDescription": "Удаление этого принтера удалит все его настройки. Вы сможете добавить его снова позже, но вам потребуется заново настроить его.",
+  "@dangerZoneDescription": {
+    "description": "Warning message in danger zone section"
+  },
+  "additionalSettings": "Дополнительные настройки",
+  "@additionalSettings": {
+    "description": "Section header for plugin-specific settings"
+  },
+  "addPrinter": "Добавить принтер",
+  "@addPrinter": {
+    "description": "Add printer button/dialog title"
+  },
+  "selectPrinterType": "Выберите тип принтера",
+  "@selectPrinterType": {
+    "description": "Step title for printer type selection"
+  },
+  "selectPrinterTypeDescription": "Выберите тип принтера, который хотите добавить.",
+  "@selectPrinterTypeDescription": {
+    "description": "Description for printer type selection step"
+  },
+  "nameYourPrinter": "Назовите принтер",
+  "@nameYourPrinter": {
+    "description": "Step title for naming printer"
+  },
+  "nameYourPrinterDescription": "Дайте принтеру понятное название для лёгкой идентификации.",
+  "@nameYourPrinterDescription": {
+    "description": "Description for printer naming step"
+  },
+  "printerNameHint": "напр., Кухонный дисплей, Принтер бара",
+  "@printerNameHint": {
+    "description": "Hint text for printer name input"
+  },
+  "printerDefaultName": "Принтер {number}",
+  "@printerDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "configureConnectionLater": "Вы сможете настроить подключение после создания",
+  "@configureConnectionLater": {
+    "description": "Info text shown after selecting printer type"
+  },
+  "pleaseSelectPrinterType": "Пожалуйста, выберите тип принтера",
+  "@pleaseSelectPrinterType": {
+    "description": "Validation error when no printer type selected"
+  },
+  "failedToCreatePrinter": "Не удалось создать принтер: {error}",
+  "@failedToCreatePrinter": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "stepType": "Тип",
+  "@stepType": {
+    "description": "Wizard step label for type selection"
+  },
+  "stepName": "Название",
+  "@stepName": {
+    "description": "Wizard step label for naming"
+  },
+  "readyToConnect": "Готов к подключению",
+  "@readyToConnect": {
+    "description": "Title when printer is created and ready to connect"
+  },
+  "readyToConnectDescription": "Принтер создан. Теперь вы можете настроить подключение.",
+  "@readyToConnectDescription": {
+    "description": "Description after printer is created"
+  },
+  "receiptPrinter": "Чековый принтер",
+  "@receiptPrinter": {
+    "description": "Printer type name"
+  },
+  "receiptPrinterDescription": "Для чеков и счетов",
+  "@receiptPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "kitchenPrinter": "Кухонный принтер",
+  "@kitchenPrinter": {
+    "description": "Printer type name"
+  },
+  "kitchenPrinterDescription": "Для кухонных заказов",
+  "@kitchenPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "labelPrinter": "Принтер этикеток",
+  "@labelPrinter": {
+    "description": "Printer type name"
+  },
+  "labelPrinterDescription": "Для этикеток товаров",
+  "@labelPrinterDescription": {
+    "description": "Printer type description"
+  },
+  "androBar": "AndroBar",
+  "@androBar": {
+    "description": "Printer type name"
+  },
+  "androBarDescription": "Система отображения бара",
+  "@androBarDescription": {
+    "description": "Printer type description"
+  },
+  "findPrinters": "Найти принтеры",
+  "@findPrinters": {
+    "description": "Button to search for printers"
+  },
+  "searchingForPrinters": "Поиск принтеров...",
+  "@searchingForPrinters": {
+    "description": "Status while searching for printers"
+  },
+  "foundPrinters": "Найдено принтеров: {count}",
+  "@foundPrinters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scanningNetworkAndUsb": "Сканирование сети и USB...",
+  "@scanningNetworkAndUsb": {
+    "description": "Status while scanning for printers"
+  },
+  "noPrintersFound": "Принтеры не найдены",
+  "@noPrintersFound": {
+    "description": "Empty state title when no printers found"
+  },
+  "noPrintersFoundDescription": "Убедитесь, что принтер включен и подключен к той же сети или через USB.",
+  "@noPrintersFoundDescription": {
+    "description": "Empty state description when no printers found"
+  },
+  "searchAgain": "Искать снова",
+  "@searchAgain": {
+    "description": "Button to search for printers again"
+  },
+  "noPrintersAvailable": "Нет доступных принтеров",
+  "@noPrintersAvailable": {
+    "description": "Empty state title when max printers reached"
+  },
+  "maxPrintersReached": "Достигнуто максимальное количество принтеров.",
+  "@maxPrintersReached": {
+    "description": "Empty state description when max printers reached"
+  },
+  "noPrintersConfigured": "Принтеры не настроены",
+  "@noPrintersConfigured": {
+    "description": "Empty state title when no printers configured"
+  },
+  "addPrinterToStart": "Добавьте принтер для начала работы.",
+  "@addPrinterToStart": {
+    "description": "Empty state description when no printers configured"
+  },
+  "noConnection": "Нет подключения",
+  "@noConnection": {
+    "description": "Title when no printer connection configured"
+  },
+  "noConnectionDescription": "Принтер не подключен. Найдите доступные принтеры для настройки подключения.",
+  "@noConnectionDescription": {
+    "description": "Description when no printer connection configured"
+  },
+  "usbConnection": "USB подключение",
+  "@usbConnection": {
+    "description": "Connection type label for USB"
+  },
+  "networkConnection": "Сетевое подключение",
+  "@networkConnection": {
+    "description": "Connection type label for Network"
+  },
+  "usb": "USB",
+  "@usb": {
+    "description": "USB connection type badge label"
+  },
+  "network": "Сеть",
+  "@network": {
+    "description": "Network connection type badge label"
+  },
+  "bluetooth": "Bluetooth",
+  "@bluetooth": {
+    "description": "Bluetooth connection type badge label"
+  },
+  "unknown": "Неизвестно",
+  "@unknown": {
+    "description": "Unknown connection type badge label"
+  },
+  "manufacturer": "Производитель",
+  "@manufacturer": {
+    "description": "USB device info field"
+  },
+  "productName": "Название продукта",
+  "@productName": {
+    "description": "USB device info field"
+  },
+  "serialNumber": "Серийный номер",
+  "@serialNumber": {
+    "description": "USB device info field"
+  },
+  "vendorId": "Vendor ID",
+  "@vendorId": {
+    "description": "USB device info field"
+  },
+  "productId": "Product ID",
+  "@productId": {
+    "description": "USB device info field"
+  },
+  "ipAddress": "IP-адрес",
+  "@ipAddress": {
+    "description": "Network device info field"
+  },
+  "subnetMask": "Маска подсети",
+  "@subnetMask": {
+    "description": "Network device info field"
+  },
+  "gateway": "Шлюз",
+  "@gateway": {
+    "description": "Network device info field"
+  },
+  "macAddress": "MAC-адрес",
+  "@macAddress": {
+    "description": "Network device info field"
+  },
+  "dhcp": "DHCP",
+  "@dhcp": {
+    "description": "Network device info field"
+  },
+  "enabled": "Включено",
+  "@enabled": {
+    "description": "Status label for enabled state"
+  },
+  "disabled": "Отключено",
+  "@disabled": {
+    "description": "Status label for disabled state"
+  },
+  "networkSettings": "Сетевые настройки",
+  "@networkSettings": {
+    "description": "Network settings dialog/button title"
+  },
+  "ipAddressRequired": "IP-адрес обязателен",
+  "@ipAddressRequired": {
+    "description": "Validation error for empty IP address"
+  },
+  "ipAddressHint": "192.168.1.100",
+  "@ipAddressHint": {
+    "description": "Hint text for IP address input"
+  },
+  "subnetMaskHint": "255.255.255.0",
+  "@subnetMaskHint": {
+    "description": "Hint text for subnet mask input"
+  },
+  "gatewayHint": "192.168.1.1",
+  "@gatewayHint": {
+    "description": "Hint text for gateway input"
+  },
+  "saveSettings": "Сохранить настройки",
+  "@saveSettings": {
+    "description": "Save settings button label"
+  },
+  "networkSettingsUpdated": "Сетевые настройки успешно обновлены",
+  "@networkSettingsUpdated": {
+    "description": "Success message after saving network settings"
+  },
+  "macAddressRequired": "MAC-адрес требуется для сетевой настройки",
+  "@macAddressRequired": {
+    "description": "Error when MAC address is missing for network config"
+  },
+  "usbPermission": "USB разрешение",
+  "@usbPermission": {
+    "description": "USB permission section title"
+  },
+  "grantUsbPermission": "Предоставить USB разрешение",
+  "@grantUsbPermission": {
+    "description": "Button to request USB permission"
+  },
+  "requesting": "Запрос...",
+  "@requesting": {
+    "description": "Status while requesting permission"
+  },
+  "permissionGranted": "Разрешение получено",
+  "@permissionGranted": {
+    "description": "Status when permission is granted"
+  },
+  "permissionDenied": "Разрешение отклонено",
+  "@permissionDenied": {
+    "description": "Status when permission is denied"
+  },
+  "permissionRequired": "Требуется разрешение",
+  "@permissionRequired": {
+    "description": "Status when permission is required"
+  },
+  "noPermissionNeeded": "Разрешение не требуется",
+  "@noPermissionNeeded": {
+    "description": "Status when no permission is needed"
+  },
+  "usbPermissionGrantedMessage": "USB разрешение получено. Принтер готов к использованию.",
+  "@usbPermissionGrantedMessage": {
+    "description": "Message when USB permission is granted"
+  },
+  "usbPermissionDeniedMessage": "USB разрешение было отклонено. Предоставьте разрешение для использования принтера.",
+  "@usbPermissionDeniedMessage": {
+    "description": "Message when USB permission is denied"
+  },
+  "usbPermissionRequiredMessage": "USB разрешение требуется для связи с этим принтером.",
+  "@usbPermissionRequiredMessage": {
+    "description": "Message when USB permission is required"
+  },
+  "noUsbPermissionNeededMessage": "USB разрешение не требуется для сетевых принтеров.",
+  "@noUsbPermissionNeededMessage": {
+    "description": "Message when no USB permission is needed"
+  },
+  "usbPermissionDeniedError": "USB разрешение отклонено",
+  "@usbPermissionDeniedError": {
+    "description": "Error message when USB permission is denied"
+  },
+  "usbPermissionGrantedSuccess": "USB разрешение получено",
+  "@usbPermissionGrantedSuccess": {
+    "description": "Success message when USB permission is granted"
+  },
+  "usbPermissionGrantedWithDevice": "USB разрешение получено: {deviceInfo}",
+  "@usbPermissionGrantedWithDevice": {
+    "placeholders": {
+      "deviceInfo": {
+        "type": "String"
+      }
+    }
+  },
+  "diagnosticsProblemsFound": "Обнаружены проблемы",
+  "@diagnosticsProblemsFound": {
+    "description": "Diagnostics dialog title when problems found"
+  },
+  "diagnosticsAllPassed": "Все проверки пройдены",
+  "@diagnosticsAllPassed": {
+    "description": "Diagnostics dialog title when all checks pass"
+  },
+  "diagnosticsProblemsDescription": "Некоторые диагностические проверки не пройдены. Изучите проблемы ниже и следуйте рекомендациям для их устранения.",
+  "@diagnosticsProblemsDescription": {
+    "description": "Description when diagnostics found problems"
+  },
+  "diagnosticsSuccessDescription": "Все диагностические проверки пройдены успешно. Принтер настроен правильно.",
+  "@diagnosticsSuccessDescription": {
+    "description": "Description when all diagnostics pass"
+  },
+  "connectionConfiguration": "Настройка подключения",
+  "@connectionConfiguration": {
+    "description": "Diagnostic check title"
+  },
+  "noConnectionConfigured": "Подключение не настроено. Сначала настройте USB или сетевое подключение.",
+  "@noConnectionConfigured": {
+    "description": "Diagnostic error when no connection configured"
+  },
+  "useFinderToConnect": "Используйте кнопку \"Найти принтеры\" для настройки подключения.",
+  "@useFinderToConnect": {
+    "description": "Suggestion to use printer finder"
+  },
+  "connectionParamsConfigured": "Параметры подключения настроены ({connectionType}).",
+  "@connectionParamsConfigured": {
+    "placeholders": {
+      "connectionType": {
+        "type": "String"
+      }
+    }
+  },
+  "usbPermissionCheck": "USB разрешение",
+  "@usbPermissionCheck": {
+    "description": "Diagnostic check title for USB permission"
+  },
+  "usbPermissionGrantedDiag": "USB разрешение получено.",
+  "@usbPermissionGrantedDiag": {
+    "description": "Diagnostic success for USB permission"
+  },
+  "usbPermissionNotGranted": "USB разрешение не получено.",
+  "@usbPermissionNotGranted": {
+    "description": "Diagnostic error for USB permission"
+  },
+  "grantUsbPermissionSuggestion": "Предоставьте USB разрешение, нажав кнопку \"Предоставить USB разрешение\".",
+  "@grantUsbPermissionSuggestion": {
+    "description": "Suggestion to grant USB permission"
+  },
+  "couldNotCheckUsbPermission": "Не удалось проверить USB разрешение: {error}",
+  "@couldNotCheckUsbPermission": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tryReconnectingUsb": "Попробуйте переподключить USB устройство.",
+  "@tryReconnectingUsb": {
+    "description": "Suggestion to reconnect USB"
+  },
+  "notRequiredForNetworkPrinters": "Не требуется для сетевых принтеров.",
+  "@notRequiredForNetworkPrinters": {
+    "description": "Info that USB permission not required for network"
+  },
+  "printerConnectivity": "Связь с принтером",
+  "@printerConnectivity": {
+    "description": "Diagnostic check title for connectivity"
+  },
+  "printerRespondedSuccessfully": "Принтер успешно ответил на тестовую команду.",
+  "@printerRespondedSuccessfully": {
+    "description": "Diagnostic success for connectivity"
+  },
+  "printerTestFailed": "Тест принтера не пройден: {error}",
+  "@printerTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestionGrantPermission": "Предоставьте USB разрешение и повторите попытку.",
+  "@suggestionGrantPermission": {
+    "description": "Suggestion for permission error"
+  },
+  "suggestionCheckPowerAndConnection": "Убедитесь, что принтер включен и подключен. Попробуйте переподключить.",
+  "@suggestionCheckPowerAndConnection": {
+    "description": "Suggestion for timeout error"
+  },
+  "suggestionVerifyPrinterConnected": "Убедитесь, что принтер подключен и виден устройству.",
+  "@suggestionVerifyPrinterConnected": {
+    "description": "Suggestion for not found error"
+  },
+  "suggestionCheckNetworkAndIp": "Проверьте сетевое подключение и IP-адрес принтера.",
+  "@suggestionCheckNetworkAndIp": {
+    "description": "Suggestion for network error"
+  },
+  "suggestionLoadPaper": "Загрузите бумагу в принтер.",
+  "@suggestionLoadPaper": {
+    "description": "Suggestion for paper error"
+  },
+  "suggestionCheckConnection": "Проверьте подключение и настройки принтера.",
+  "@suggestionCheckConnection": {
+    "description": "Generic suggestion for errors"
+  },
+  "runDiagnosticsTooltip": "Запустить полную диагностику и показать проблемы, если они есть",
+  "@runDiagnosticsTooltip": {
+    "description": "Tooltip for diagnostics button"
+  },
+  "diagnosticsSomeFailed": "Некоторые диагностические проверки не пройдены. Изучите проблемы ниже и следуйте рекомендациям для их устранения.",
+  "@diagnosticsSomeFailed": {
+    "description": "Summary when some diagnostic checks failed"
+  },
+  "diagnosticsAllPassedDescription": "Все диагностические проверки пройдены успешно. Принтер настроен правильно.",
+  "@diagnosticsAllPassedDescription": {
+    "description": "Summary when all diagnostic checks passed"
+  },
+  "useFindPrintersButton": "Используйте кнопку \"Найти принтеры\" для настройки подключения.",
+  "@useFindPrintersButton": {
+    "description": "Suggestion to use Find Printers button"
+  },
+  "usbPermissionGrantedShort": "USB разрешение получено.",
+  "@usbPermissionGrantedShort": {
+    "description": "Short message when USB permission is granted"
+  },
+  "networkSettingsTooltip": "Настроить IP, маску подсети, шлюз",
+  "@networkSettingsTooltip": {
+    "description": "Tooltip for network settings button"
+  },
+  "usbPermissionNotRequiredMessage": "USB разрешение не требуется для сетевых принтеров.",
+  "@usbPermissionNotRequiredMessage": {
+    "description": "Message when USB permission is not required"
+  },
+  "suggestionGrantUsbPermission": "Предоставьте USB разрешение и повторите попытку.",
+  "@suggestionGrantUsbPermission": {
+    "description": "Suggestion to grant USB permission"
+  }
+}

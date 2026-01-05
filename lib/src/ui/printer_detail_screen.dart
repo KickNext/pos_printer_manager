@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// Screen for viewing and configuring a single printer.
 ///
 /// Provides a comprehensive interface for:
@@ -42,8 +45,9 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = _L.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Printer Details')),
+      appBar: AppBar(title: Text(l.printerDetails)),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
@@ -133,24 +137,25 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
 
   /// Shows the rename dialog.
   Future<void> _showRenameDialog() async {
+    final l = _L.of(context);
     final controller = TextEditingController(text: widget.printer.config.name);
     final formKey = GlobalKey<FormState>();
 
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Rename Printer'),
+        title: Text(l.renamePrinter),
         content: Form(
           key: formKey,
           child: ValidatedInputMolecule(
-            label: 'Printer Name',
+            label: l.printerName,
             controller: controller,
             required: true,
             maxLength: 50,
             prefixIcon: Icons.label,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter a name';
+                return l.pleaseEnterName;
               }
               return null;
             },
@@ -159,7 +164,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(l.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -167,7 +172,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                 Navigator.of(context).pop(controller.text.trim());
               }
             },
-            child: const Text('Save'),
+            child: Text(l.save),
           ),
         ],
       ),
@@ -183,16 +188,16 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
 
   /// Shows confirmation dialog and removes printer if confirmed.
   Future<void> _confirmAndRemove() async {
+    final l = _L.of(context);
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         content: ConfirmationDialogMolecule(
           icon: Icons.delete_forever,
           iconColor: Theme.of(context).colorScheme.error,
-          title: 'Remove Printer?',
-          message:
-              'This will remove the printer and all its configuration. You can add it again later.',
-          confirmLabel: 'Remove',
+          title: l.removePrinterQuestion,
+          message: l.removePrinterConfirmation,
+          confirmLabel: l.remove,
           onConfirm: () => Navigator.pop(ctx, true),
           onCancel: () => Navigator.pop(ctx, false),
           isDestructive: true,
@@ -221,6 +226,7 @@ class _PluginSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = _L.of(context);
     final pluginWidgets = printer.handler.customWidgets;
     if (pluginWidgets.isEmpty) {
       return const SizedBox.shrink();
@@ -232,9 +238,9 @@ class _PluginSettingsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(
+            SectionHeader(
               icon: PrinterIcons.sectionAdditional,
-              title: 'Additional Settings',
+              title: l.additionalSettings,
             ),
             const SizedBox(height: 16),
             Wrap(spacing: 12, runSpacing: 12, children: pluginWidgets),

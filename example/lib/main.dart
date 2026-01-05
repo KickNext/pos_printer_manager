@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
 Future<void> main() async {
@@ -33,6 +34,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      // Локализация
+      localizationsDelegates: const [
+        PrinterManagerL10n.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: PrinterManagerL10n.delegate.supportedLocales,
       home: Scaffold(
         appBar: AppBar(title: const Text('Printers Manager Demo')),
         body: PrintersPage(printerManager: printerManager),

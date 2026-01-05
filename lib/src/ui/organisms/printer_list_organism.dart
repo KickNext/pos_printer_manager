@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// An organism component for printer discovery.
 ///
 /// Provides a complete interface for finding and selecting printers
@@ -106,6 +109,7 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
     final isSmallScreen = mediaQuery.size.width < 600;
+    final l = _L.of(context);
 
     return Dialog(
       insetPadding: const EdgeInsets.all(16),
@@ -127,7 +131,7 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Find Printers',
+                          l.findPrinters,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -135,8 +139,8 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
                         const SizedBox(height: 4),
                         Text(
                           _isSearching
-                              ? 'Searching for printers...'
-                              : 'Found ${_foundPrinters.length} printer(s)',
+                              ? l.searchingForPrinters
+                              : l.foundPrinters(_foundPrinters.length),
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -147,7 +151,7 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
                   IconButton(
                     onPressed: widget.onCancel,
                     icon: const Icon(Icons.close),
-                    tooltip: 'Close',
+                    tooltip: l.close,
                   ),
                 ],
               ),
@@ -166,7 +170,7 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
               const SizedBox(height: 16),
 
               // Printers list
-              Expanded(child: _buildPrintersList()),
+              Expanded(child: _buildPrintersList(l)),
 
               const SizedBox(height: 24),
 
@@ -174,15 +178,12 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: widget.onCancel,
-                    child: const Text('Cancel'),
-                  ),
+                  TextButton(onPressed: widget.onCancel, child: Text(l.cancel)),
                   const SizedBox(width: 8),
                   FilledButton.icon(
                     onPressed: _isSearching ? null : _startSearch,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Refresh'),
+                    label: Text(l.refresh),
                   ),
                 ],
               ),
@@ -193,26 +194,22 @@ class _PrinterDiscoveryOrganismState extends State<PrinterDiscoveryOrganism> {
     );
   }
 
-  Widget _buildPrintersList() {
+  Widget _buildPrintersList(PrinterManagerL10n l) {
     if (_foundPrinters.isEmpty) {
       if (_isSearching) {
-        return const Center(
+        return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              Text('Scanning network and USB...'),
-            ],
+            children: [SizedBox(height: 16), Text(l.scanningNetworkAndUsb)],
           ),
         );
       }
       return EmptyState(
         icon: PrinterIcons.unknown,
-        title: 'No Printers Found',
-        message:
-            'Make sure your printer is powered on and connected to the same network or via USB.',
+        title: l.noPrintersFound,
+        message: l.noPrintersFoundDescription,
         action: ActionButton(
-          label: 'Search Again',
+          label: l.searchAgain,
           icon: PrinterIcons.refresh,
           onPressed: _startSearch,
           variant: ActionButtonVariant.secondary,
@@ -269,23 +266,24 @@ class PrinterListOrganism extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final printers = printerManager.printers;
+    final l = _L.of(context);
 
     if (printers.isEmpty && !printerManager.canAddPrinterOfType()) {
-      return const EmptyState(
+      return EmptyState(
         icon: PrinterIcons.unknown,
-        title: 'No Printers Available',
-        message: 'Maximum number of printers reached.',
+        title: l.noPrintersAvailable,
+        message: l.maxPrintersReached,
       );
     }
 
     if (printers.isEmpty) {
       return EmptyState(
         icon: PrinterIcons.unknown,
-        title: 'No Printers Configured',
-        message: 'Add a printer to get started.',
+        title: l.noPrintersConfigured,
+        message: l.addPrinterToStart,
         action: onAddPrinter != null
             ? ActionButton(
-                label: 'Add Printer',
+                label: l.addPrinter,
                 icon: PrinterIcons.add,
                 onPressed: onAddPrinter,
                 variant: ActionButtonVariant.primary,
@@ -319,8 +317,10 @@ class _AddPrinterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = _L.of(context);
+
     return Tooltip(
-      message: 'Add Printer',
+      message: l.addPrinter,
       child: IconButton.filledTonal(
         onPressed: onPressed,
         icon: const Icon(PrinterIcons.add),
@@ -412,7 +412,7 @@ class PrinterListItem extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     printer.handler.settings.connectionParams?.displayName ??
-                        'Not connected',
+                        _L.of(context).notConnected,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                     ),

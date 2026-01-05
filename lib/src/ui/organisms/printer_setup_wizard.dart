@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
+/// Короткий алиас для доступа к локализации принтер-менеджера.
+typedef _L = PrinterManagerL10n;
+
 /// Wizard step definitions for printer setup.
 enum PrinterSetupStep {
   /// Step 1: Select printer type
@@ -61,9 +64,17 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
   @override
   void initState() {
     super.initState();
-    // Generate default name
-    final count = widget.printerManager.printers.length + 1;
-    _nameController.text = 'Printer $count';
+    // Default name will be set in didChangeDependencies when context is available
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Generate default name with localization
+    if (_nameController.text.isEmpty) {
+      final count = widget.printerManager.printers.length + 1;
+      _nameController.text = _L.of(context).printerDefaultName(count);
+    }
   }
 
   @override
@@ -74,15 +85,15 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
 
   /// Available printer types with availability check.
   /// Использует централизованную систему иконок PrinterIcons.
-  List<PrinterTypeOption> get _availableTypes {
+  List<PrinterTypeOption> _getAvailableTypes(PrinterManagerL10n l) {
     final printers = widget.printerManager.printers;
 
     return [
       PrinterTypeOption(
         id: PrinterPOSType.receiptPrinter.name,
-        name: 'Receipt Printer',
+        name: l.receiptPrinter,
         icon: PrinterIcons.receiptPrinter,
-        description: 'For receipts and bills',
+        description: l.receiptPrinterDescription,
         enabled:
             widget.printerManager.maxReceiptPrinters >
             printers
@@ -91,9 +102,9 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
       ),
       PrinterTypeOption(
         id: PrinterPOSType.kitchenPrinter.name,
-        name: 'Kitchen Printer',
+        name: l.kitchenPrinter,
         icon: PrinterIcons.kitchenPrinter,
-        description: 'For kitchen orders',
+        description: l.kitchenPrinterDescription,
         enabled:
             widget.printerManager.maxKitchenPrinters >
             printers
@@ -102,18 +113,18 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
       ),
       PrinterTypeOption(
         id: PrinterPOSType.labelPrinter.name,
-        name: 'Label Printer',
+        name: l.labelPrinter,
         icon: PrinterIcons.labelPrinter,
-        description: 'For product labels',
+        description: l.labelPrinterDescription,
         enabled:
             widget.printerManager.maxLabelPrinters >
             printers.where((p) => p.type == PrinterPOSType.labelPrinter).length,
       ),
       PrinterTypeOption(
         id: PrinterPOSType.androBar.name,
-        name: 'AndroBar',
+        name: l.androBar,
         icon: PrinterIcons.androBar,
-        description: 'Bar display system',
+        description: l.androBarDescription,
         enabled:
             widget.printerManager.maxAndroBarPrinters >
             printers.where((p) => p.type == PrinterPOSType.androBar).length,
@@ -122,16 +133,16 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
   }
 
   /// Validates current step and returns error message if invalid.
-  String? _validateCurrentStep() {
+  String? _validateCurrentStep(PrinterManagerL10n l) {
     switch (_currentStep) {
       case PrinterSetupStep.selectType:
         if (_selectedType == null) {
-          return 'Please select a printer type';
+          return l.pleaseSelectPrinterType;
         }
         break;
       case PrinterSetupStep.enterName:
         if (_nameController.text.trim().isEmpty) {
-          return 'Please enter a printer name';
+          return l.pleaseEnterName;
         }
         break;
       case PrinterSetupStep.connect:
@@ -143,7 +154,8 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
 
   /// Advances to the next step or completes setup.
   Future<void> _nextStep() async {
-    final error = _validateCurrentStep();
+    final l = _L.of(context);
+    final error = _validateCurrentStep(l);
     if (error != null) {
       setState(() => _errorMessage = error);
       return;
@@ -186,6 +198,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
   /// Creates the printer and advances to connection step.
   Future<void> _createPrinter() async {
     if (_selectedType == null) return;
+    final l = _L.of(context);
 
     setState(() {
       _isCreating = true;
@@ -207,7 +220,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
         widget.onCancel?.call();
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Failed to create printer: $e');
+      setState(() => _errorMessage = l.failedToCreatePrinter(e.toString()));
     } finally {
       if (mounted) {
         setState(() => _isCreating = false);
@@ -218,6 +231,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = _L.of(context);
 
     return Dialog(
       child: ConstrainedBox(
@@ -233,7 +247,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Add Printer',
+                      l.addPrinter,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -242,7 +256,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
                   IconButton(
                     onPressed: widget.onCancel,
                     icon: const Icon(Icons.close),
-                    tooltip: 'Cancel',
+                    tooltip: l.cancel,
                   ),
                 ],
               ),
@@ -251,7 +265,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
 
               // Step indicator
               WizardStepperMolecule(
-                steps: const ['Type', 'Name'],
+                steps: [l.stepType, l.stepName],
                 currentStep: _currentStep.index,
               ),
 
@@ -259,7 +273,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
 
               // Content
               Flexible(
-                child: SingleChildScrollView(child: _buildStepContent()),
+                child: SingleChildScrollView(child: _buildStepContent(l)),
               ),
 
               // Error message
@@ -276,8 +290,8 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
                 children: [
                   ActionButton(
                     label: _currentStep == PrinterSetupStep.selectType
-                        ? 'Cancel'
-                        : 'Back',
+                        ? l.cancel
+                        : l.back,
                     icon: _currentStep == PrinterSetupStep.selectType
                         ? PrinterIcons.wizardClose
                         : PrinterIcons.wizardBack,
@@ -286,8 +300,8 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
                   ),
                   ActionButton(
                     label: _currentStep == PrinterSetupStep.enterName
-                        ? 'Create'
-                        : 'Next',
+                        ? l.create
+                        : l.next,
                     icon: _currentStep == PrinterSetupStep.enterName
                         ? PrinterIcons.wizardComplete
                         : PrinterIcons.wizardNext,
@@ -304,28 +318,28 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
     );
   }
 
-  Widget _buildStepContent() {
+  Widget _buildStepContent(PrinterManagerL10n l) {
     switch (_currentStep) {
       case PrinterSetupStep.selectType:
-        return _buildTypeSelectionStep();
+        return _buildTypeSelectionStep(l);
       case PrinterSetupStep.enterName:
-        return _buildNameEntryStep();
+        return _buildNameEntryStep(l);
       case PrinterSetupStep.connect:
-        return _buildConnectStep();
+        return _buildConnectStep(l);
     }
   }
 
-  Widget _buildTypeSelectionStep() {
+  Widget _buildTypeSelectionStep(PrinterManagerL10n l) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Select printer type',
+          l.selectPrinterType,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         Text(
-          'Choose the type of printer you want to add.',
+          l.selectPrinterTypeDescription,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -339,32 +353,29 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
               _errorMessage = null;
             });
           },
-          availableTypes: _availableTypes,
+          availableTypes: _getAvailableTypes(l),
         ),
       ],
     );
   }
 
-  Widget _buildNameEntryStep() {
+  Widget _buildNameEntryStep(PrinterManagerL10n l) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Name your printer',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(l.nameYourPrinter, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         Text(
-          'Give your printer a descriptive name to identify it easily.',
+          l.nameYourPrinterDescription,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 24),
         ValidatedInputMolecule(
-          label: 'Printer Name',
+          label: l.printerName,
           controller: _nameController,
-          hint: 'e.g., Kitchen Display, Bar Printer',
+          hint: l.printerNameHint,
           prefixIcon: Icons.print,
           required: true,
           maxLength: 50,
@@ -401,7 +412,7 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        'You can configure connection after creation',
+                        l.configureConnectionLater,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -416,12 +427,11 @@ class _PrinterSetupWizardState extends State<PrinterSetupWizard> {
     );
   }
 
-  Widget _buildConnectStep() {
-    return const EmptyState(
+  Widget _buildConnectStep(PrinterManagerL10n l) {
+    return EmptyState(
       icon: Icons.search,
-      title: 'Ready to Connect',
-      message:
-          'Your printer has been created. You can now configure the connection.',
+      title: l.readyToConnect,
+      message: l.readyToConnectDescription,
     );
   }
 

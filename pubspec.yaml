@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   shared_preferences: ^2.5.3
   uuid: ^4.5.2
 
@@ -23,3 +26,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   shared_preferences_platform_interface: ^2.4.1
+  intl_utils: ^2.8.0
+
+flutter:
+  generate: true
+
+flutter_intl:
+  enabled: true
+  class_name: PrinterManagerL10n
+  main_locale: en_US
