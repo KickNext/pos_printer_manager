@@ -1523,6 +1523,198 @@ class PrinterManagerL10n {
       args: [],
     );
   }
+
+  /// `Enable DHCP`
+  String get enableDhcp {
+    return Intl.message(
+      'Enable DHCP',
+      name: 'enableDhcp',
+      desc: 'Label for DHCP toggle switch',
+      args: [],
+    );
+  }
+
+  /// `Automatically obtain IP address from network`
+  String get enableDhcpDescription {
+    return Intl.message(
+      'Automatically obtain IP address from network',
+      name: 'enableDhcpDescription',
+      desc: 'Description for DHCP toggle explaining what it does',
+      args: [],
+    );
+  }
+
+  /// `Static IP Configuration`
+  String get staticIpSettings {
+    return Intl.message(
+      'Static IP Configuration',
+      name: 'staticIpSettings',
+      desc: 'Section header for manual IP configuration when DHCP is disabled',
+      args: [],
+    );
+  }
+
+  /// `DHCP is enabled. The printer will automatically obtain network settings from your router.`
+  String get dhcpEnabled {
+    return Intl.message(
+      'DHCP is enabled. The printer will automatically obtain network settings from your router.',
+      name: 'dhcpEnabled',
+      desc: 'Information message when DHCP is enabled',
+      args: [],
+    );
+  }
+
+  /// `MAC address is required to configure DHCP via network`
+  String get dhcpRequiresMac {
+    return Intl.message(
+      'MAC address is required to configure DHCP via network',
+      name: 'dhcpRequiresMac',
+      desc: 'Error message when MAC address is missing for DHCP configuration',
+      args: [],
+    );
+  }
+
+  /// `Network Settings Sent`
+  String get networkSettingsAppliedTitle {
+    return Intl.message(
+      'Network Settings Sent',
+      name: 'networkSettingsAppliedTitle',
+      desc: 'Dialog title when network settings were sent to printer',
+      args: [],
+    );
+  }
+
+  /// `Network settings have been sent to the printer. Please restart the printer for changes to take effect.`
+  String get networkSettingsAppliedMessage {
+    return Intl.message(
+      'Network settings have been sent to the printer. Please restart the printer for changes to take effect.',
+      name: 'networkSettingsAppliedMessage',
+      desc:
+          'Message explaining printer needs restart after network settings change',
+      args: [],
+    );
+  }
+
+  /// `DHCP has been enabled. After restarting, the printer will obtain a new IP address from your router.`
+  String get networkSettingsDhcpAppliedMessage {
+    return Intl.message(
+      'DHCP has been enabled. After restarting, the printer will obtain a new IP address from your router.',
+      name: 'networkSettingsDhcpAppliedMessage',
+      desc: 'Message when DHCP was enabled',
+      args: [],
+    );
+  }
+
+  /// `Static IP ({ipAddress}) has been configured. After restarting, the printer will use this address.`
+  String networkSettingsStaticIpAppliedMessage(String ipAddress) {
+    return Intl.message(
+      'Static IP ($ipAddress) has been configured. After restarting, the printer will use this address.',
+      name: 'networkSettingsStaticIpAppliedMessage',
+      desc: 'Message when static IP was configured',
+      args: [ipAddress],
+    );
+  }
+
+  /// `Printer Restart Required`
+  String get restartPrinterRequired {
+    return Intl.message(
+      'Printer Restart Required',
+      name: 'restartPrinterRequired',
+      desc: 'Warning title about printer restart requirement',
+      args: [],
+    );
+  }
+
+  /// `Network settings were changed. The printer must be restarted for changes to take effect.`
+  String get pendingRebootWarning {
+    return Intl.message(
+      'Network settings were changed. The printer must be restarted for changes to take effect.',
+      name: 'pendingRebootWarning',
+      desc: 'Warning message about pending printer reboot',
+      args: [],
+    );
+  }
+
+  /// `After restarting the printer, use "Find Printers" to reconnect with the new settings.`
+  String get reconnectAfterRestart {
+    return Intl.message(
+      'After restarting the printer, use "Find Printers" to reconnect with the new settings.',
+      name: 'reconnectAfterRestart',
+      desc: 'Instructions to reconnect after printer restart',
+      args: [],
+    );
+  }
+
+  /// `Testing is unavailable until the printer is restarted and reconnected.`
+  String get testingBlockedPendingReboot {
+    return Intl.message(
+      'Testing is unavailable until the printer is restarted and reconnected.',
+      name: 'testingBlockedPendingReboot',
+      desc: 'Message when testing is blocked due to pending reboot',
+      args: [],
+    );
+  }
+
+  /// `Diagnostics is unavailable until the printer is restarted and reconnected.`
+  String get diagnosticsBlockedPendingReboot {
+    return Intl.message(
+      'Diagnostics is unavailable until the printer is restarted and reconnected.',
+      name: 'diagnosticsBlockedPendingReboot',
+      desc: 'Message when diagnostics is blocked due to pending reboot',
+      args: [],
+    );
+  }
+
+  /// `Reset Connection`
+  String get resetConnectionAndReconnect {
+    return Intl.message(
+      'Reset Connection',
+      name: 'resetConnectionAndReconnect',
+      desc: 'Button to reset connection for reconnecting with new settings',
+      args: [],
+    );
+  }
+
+  /// `This will remove the current connection. After restarting the printer, search for it again using "Find Printers".`
+  String get resetConnectionConfirmation {
+    return Intl.message(
+      'This will remove the current connection. After restarting the printer, search for it again using "Find Printers".',
+      name: 'resetConnectionConfirmation',
+      desc: 'Confirmation message for resetting connection',
+      args: [],
+    );
+  }
+
+  /// `1. Turn off the printer\n2. Wait 10 seconds\n3. Turn on the printer\n4. Click "Reset Connection" below\n5. Use "Find Printers" to reconnect`
+  String get printerRestartInstructions {
+    return Intl.message(
+      '1. Turn off the printer\n2. Wait 10 seconds\n3. Turn on the printer\n4. Click "Reset Connection" below\n5. Use "Find Printers" to reconnect',
+      name: 'printerRestartInstructions',
+      desc: 'Step by step instructions for restarting printer',
+      args: [],
+    );
+  }
+
+  /// `Understood`
+  String get understood {
+    return Intl.message(
+      'Understood',
+      name: 'understood',
+      desc: 'Button label for acknowledging information',
+      args: [],
+    );
+  }
+
+  /// `USB connection will continue to work normally.`
+  String get usbConnectionStillWorks {
+    return Intl.message(
+      'USB connection will continue to work normally.',
+      name: 'usbConnectionStillWorks',
+      desc:
+          'Note that USB connection is not affected by network settings change',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate

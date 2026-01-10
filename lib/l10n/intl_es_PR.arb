@@ -615,5 +615,87 @@
   "suggestionGrantUsbPermission": "Otorgue el permiso USB e intente nuevamente.",
   "@suggestionGrantUsbPermission": {
     "description": "Suggestion to grant USB permission"
+  },
+  "enableDhcp": "Habilitar DHCP",
+  "@enableDhcp": {
+    "description": "Label for DHCP toggle switch"
+  },
+  "enableDhcpDescription": "Obtener automáticamente la dirección IP de la red",
+  "@enableDhcpDescription": {
+    "description": "Description for DHCP toggle explaining what it does"
+  },
+  "staticIpSettings": "Configuración de IP Estática",
+  "@staticIpSettings": {
+    "description": "Section header for manual IP configuration when DHCP is disabled"
+  },
+  "dhcpEnabled": "DHCP está habilitado. La impresora obtendrá automáticamente la configuración de red de su router.",
+  "@dhcpEnabled": {
+    "description": "Information message when DHCP is enabled"
+  },
+  "dhcpRequiresMac": "Se requiere la dirección MAC para configurar DHCP a través de la red",
+  "@dhcpRequiresMac": {
+    "description": "Error message when MAC address is missing for DHCP configuration"
+  },
+  "networkSettingsAppliedTitle": "Configuración de Red Enviada",
+  "@networkSettingsAppliedTitle": {
+    "description": "Dialog title when network settings were sent to printer"
+  },
+  "networkSettingsAppliedMessage": "La configuración de red ha sido enviada a la impresora. Reinicie la impresora para aplicar los cambios.",
+  "@networkSettingsAppliedMessage": {
+    "description": "Message explaining printer needs restart after network settings change"
+  },
+  "networkSettingsDhcpAppliedMessage": "DHCP ha sido habilitado. Después de reiniciar, la impresora obtendrá una nueva dirección IP de su router.",
+  "@networkSettingsDhcpAppliedMessage": {
+    "description": "Message when DHCP was enabled"
+  },
+  "networkSettingsStaticIpAppliedMessage": "IP estática ({ipAddress}) ha sido configurada. Después de reiniciar, la impresora usará esta dirección.",
+  "@networkSettingsStaticIpAppliedMessage": {
+    "description": "Message when static IP was configured",
+    "placeholders": {
+      "ipAddress": {
+        "type": "String",
+        "description": "The new IP address"
+      }
+    }
+  },
+  "restartPrinterRequired": "Se Requiere Reiniciar la Impresora",
+  "@restartPrinterRequired": {
+    "description": "Warning title about printer restart requirement"
+  },
+  "pendingRebootWarning": "La configuración de red fue cambiada. La impresora debe reiniciarse para aplicar los cambios.",
+  "@pendingRebootWarning": {
+    "description": "Warning message about pending printer reboot"
+  },
+  "reconnectAfterRestart": "Después de reiniciar la impresora, use \"Buscar Impresoras\" para reconectar con la nueva configuración.",
+  "@reconnectAfterRestart": {
+    "description": "Instructions to reconnect after printer restart"
+  },
+  "testingBlockedPendingReboot": "La prueba no está disponible hasta que la impresora sea reiniciada y reconectada.",
+  "@testingBlockedPendingReboot": {
+    "description": "Message when testing is blocked due to pending reboot"
+  },
+  "diagnosticsBlockedPendingReboot": "El diagnóstico no está disponible hasta que la impresora sea reiniciada y reconectada.",
+  "@diagnosticsBlockedPendingReboot": {
+    "description": "Message when diagnostics is blocked due to pending reboot"
+  },
+  "resetConnectionAndReconnect": "Restablecer Conexión",
+  "@resetConnectionAndReconnect": {
+    "description": "Button to reset connection for reconnecting with new settings"
+  },
+  "resetConnectionConfirmation": "Esto eliminará la conexión actual. Después de reiniciar la impresora, búsquela nuevamente usando \"Buscar Impresoras\".",
+  "@resetConnectionConfirmation": {
+    "description": "Confirmation message for resetting connection"
+  },
+  "printerRestartInstructions": "1. Apague la impresora\n2. Espere 10 segundos\n3. Encienda la impresora\n4. Haga clic en \"Restablecer Conexión\" abajo\n5. Use \"Buscar Impresoras\" para reconectar",
+  "@printerRestartInstructions": {
+    "description": "Step by step instructions for restarting printer"
+  },
+  "understood": "Entendido",
+  "@understood": {
+    "description": "Button label for acknowledging information"
+  },
+  "usbConnectionStillWorks": "La conexión USB continuará funcionando normalmente.",
+  "@usbConnectionStillWorks": {
+    "description": "Note that USB connection is not affected by network settings change"
   }
 }

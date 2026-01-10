@@ -29,6 +29,40 @@ enum UsbPermissionStatus {
   denied,
 }
 
+/// Состояние ожидания перезагрузки принтера после смены сетевых настроек.
+///
+/// После изменения сетевых настроек (IP, маска, шлюз, DHCP) принтер необходимо
+/// перезагрузить для применения изменений. До перезагрузки:
+/// - Текущие сетевые параметры подключения становятся недействительными
+/// - Тестирование и диагностика по сети невозможны
+/// - USB-подключение продолжает работать нормально
+class PendingNetworkReboot {
+  /// Сетевые настройки, которые были отправлены на принтер.
+  final NetworkParams newSettings;
+
+  /// Время, когда настройки были отправлены.
+  final DateTime timestamp;
+
+  /// Тип подключения, через которое были отправлены настройки.
+  /// USB — настройки отправлены напрямую
+  /// Network — настройки отправлены через UDP broadcast
+  final PosPrinterConnectionType configuredVia;
+
+  /// Создаёт состояние ожидания перезагрузки.
+  const PendingNetworkReboot({
+    required this.newSettings,
+    required this.timestamp,
+    required this.configuredVia,
+  });
+
+  /// Возвращает true, если новые настройки включают DHCP.
+  /// По умолчанию false, если значение не задано.
+  bool get isDhcpEnabled => newSettings.dhcp ?? false;
+
+  /// Возвращает новый IP-адрес (или null для DHCP).
+  String? get newIpAddress => isDhcpEnabled ? null : newSettings.ipAddress;
+}
+
 /// Информация об ошибке принтера.
 class PrinterError {
   /// Сообщение об ошибке.
@@ -91,6 +125,10 @@ class PosPrinter with LoggerMixin {
   PrinterError? _lastError;
   UsbPermissionStatus _usbPermissionStatus = UsbPermissionStatus.unknown;
 
+  /// Состояние ожидания перезагрузки после смены сетевых настроек.
+  /// null означает, что принтер не ожидает перезагрузки.
+  PendingNetworkReboot? _pendingNetworkReboot;
+
   /// Текущий статус подключения принтера.
   PrinterConnectionStatus get status => _status;
 
@@ -99,6 +137,28 @@ class PosPrinter with LoggerMixin {
 
   /// Текущий статус USB разрешения.
   UsbPermissionStatus get usbPermissionStatus => _usbPermissionStatus;
+
+  /// Состояние ожидания перезагрузки после смены сетевых настроек.
+  ///
+  /// Не null, если сетевые настройки были изменены и принтер ещё не перезагружен.
+  /// В этом состоянии тестирование и диагностика по сети заблокированы.
+  PendingNetworkReboot? get pendingNetworkReboot => _pendingNetworkReboot;
+
+  /// Возвращает true, если принтер ожидает перезагрузки после смены сетевых настроек.
+  bool get hasPendingNetworkReboot => _pendingNetworkReboot != null;
+
+  /// Проверяет, заблокировано ли тестирование из-за ожидания перезагрузки.
+  ///
+  /// Тестирование блокируется только если:
+  /// - Есть ожидающая перезагрузка
+  /// - Принтер подключён по сети (USB-подключение работает всегда)
+  bool get isTestingBlockedByPendingReboot {
+    if (_pendingNetworkReboot == null) return false;
+
+    final connectionType = handler.settings.connectionParams?.connectionType;
+    // USB-подключение не блокируется
+    return connectionType == PosPrinterConnectionType.network;
+  }
 
   /// Проверяет, является ли принтер USB-принтером.
   bool get _isUsbPrinter =>
@@ -334,6 +394,70 @@ class PosPrinter with LoggerMixin {
   void clearError() {
     _lastError = null;
     _status = PrinterConnectionStatus.unknown;
+    notify();
+  }
+
+  // === Network Settings Pending Reboot Management ===
+
+  /// Устанавливает состояние ожидания перезагрузки после смены сетевых настроек.
+  ///
+  /// Вызывается после успешной отправки новых сетевых настроек на принтер.
+  /// [newSettings] — новые сетевые настройки, отправленные на принтер
+  /// [configuredVia] — тип подключения, через которое были отправлены настройки
+  void setNetworkSettingsPending({
+    required NetworkParams newSettings,
+    required PosPrinterConnectionType configuredVia,
+  }) {
+    final isDhcp = newSettings.dhcp ?? false;
+    logger.info(
+      'Network settings pending reboot',
+      data: {
+        'printerId': id,
+        'dhcp': isDhcp,
+        'newIp': isDhcp ? 'DHCP' : newSettings.ipAddress,
+        'configuredVia': configuredVia.name,
+      },
+    );
+    _pendingNetworkReboot = PendingNetworkReboot(
+      newSettings: newSettings,
+      timestamp: DateTime.now(),
+      configuredVia: configuredVia,
+    );
+    notify();
+  }
+
+  /// Очищает состояние ожидания перезагрузки.
+  ///
+  /// Вызывается когда пользователь подтверждает, что принтер перезагружен
+  /// и переподключён с новыми настройками.
+  void clearPendingNetworkReboot() {
+    if (_pendingNetworkReboot != null) {
+      logger.info('Cleared pending network reboot', data: {'printerId': id});
+      _pendingNetworkReboot = null;
+      notify();
+    }
+  }
+
+  /// Сбрасывает подключение и очищает состояние ожидания перезагрузки.
+  ///
+  /// Используется когда пользователь отключает принтер для переподключения
+  /// после перезагрузки с новыми сетевыми настройками.
+  Future<void> resetConnectionForNewNetworkSettings() async {
+    logger.info(
+      'Resetting connection for new network settings',
+      data: {'printerId': id},
+    );
+
+    // Очищаем параметры подключения — пользователь должен найти принтер заново
+    await handler.settings.updateConnectionParams(null);
+
+    // Очищаем pending state
+    _pendingNetworkReboot = null;
+
+    // Сбрасываем статус
+    _status = PrinterConnectionStatus.unknown;
+    _lastError = null;
+
     notify();
   }
 

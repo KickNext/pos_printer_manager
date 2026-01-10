@@ -624,5 +624,87 @@
   "suggestionGrantUsbPermission": "Grant USB permission and try again.",
   "@suggestionGrantUsbPermission": {
     "description": "Suggestion to grant USB permission"
+  },
+  "enableDhcp": "Enable DHCP",
+  "@enableDhcp": {
+    "description": "Label for DHCP toggle switch"
+  },
+  "enableDhcpDescription": "Automatically obtain IP address from network",
+  "@enableDhcpDescription": {
+    "description": "Description for DHCP toggle explaining what it does"
+  },
+  "staticIpSettings": "Static IP Configuration",
+  "@staticIpSettings": {
+    "description": "Section header for manual IP configuration when DHCP is disabled"
+  },
+  "dhcpEnabled": "DHCP is enabled. The printer will automatically obtain network settings from your router.",
+  "@dhcpEnabled": {
+    "description": "Information message when DHCP is enabled"
+  },
+  "dhcpRequiresMac": "MAC address is required to configure DHCP via network",
+  "@dhcpRequiresMac": {
+    "description": "Error message when MAC address is missing for DHCP configuration"
+  },
+  "networkSettingsAppliedTitle": "Network Settings Sent",
+  "@networkSettingsAppliedTitle": {
+    "description": "Dialog title when network settings were sent to printer"
+  },
+  "networkSettingsAppliedMessage": "Network settings have been sent to the printer. Please restart the printer for changes to take effect.",
+  "@networkSettingsAppliedMessage": {
+    "description": "Message explaining printer needs restart after network settings change"
+  },
+  "networkSettingsDhcpAppliedMessage": "DHCP has been enabled. After restarting, the printer will obtain a new IP address from your router.",
+  "@networkSettingsDhcpAppliedMessage": {
+    "description": "Message when DHCP was enabled"
+  },
+  "networkSettingsStaticIpAppliedMessage": "Static IP ({ipAddress}) has been configured. After restarting, the printer will use this address.",
+  "@networkSettingsStaticIpAppliedMessage": {
+    "description": "Message when static IP was configured",
+    "placeholders": {
+      "ipAddress": {
+        "type": "String",
+        "description": "The new IP address"
+      }
+    }
+  },
+  "restartPrinterRequired": "Printer Restart Required",
+  "@restartPrinterRequired": {
+    "description": "Warning title about printer restart requirement"
+  },
+  "pendingRebootWarning": "Network settings were changed. The printer must be restarted for changes to take effect.",
+  "@pendingRebootWarning": {
+    "description": "Warning message about pending printer reboot"
+  },
+  "reconnectAfterRestart": "After restarting the printer, use \"Find Printers\" to reconnect with the new settings.",
+  "@reconnectAfterRestart": {
+    "description": "Instructions to reconnect after printer restart"
+  },
+  "testingBlockedPendingReboot": "Testing is unavailable until the printer is restarted and reconnected.",
+  "@testingBlockedPendingReboot": {
+    "description": "Message when testing is blocked due to pending reboot"
+  },
+  "diagnosticsBlockedPendingReboot": "Diagnostics is unavailable until the printer is restarted and reconnected.",
+  "@diagnosticsBlockedPendingReboot": {
+    "description": "Message when diagnostics is blocked due to pending reboot"
+  },
+  "resetConnectionAndReconnect": "Reset Connection",
+  "@resetConnectionAndReconnect": {
+    "description": "Button to reset connection for reconnecting with new settings"
+  },
+  "resetConnectionConfirmation": "This will remove the current connection. After restarting the printer, search for it again using \"Find Printers\".",
+  "@resetConnectionConfirmation": {
+    "description": "Confirmation message for resetting connection"
+  },
+  "printerRestartInstructions": "1. Turn off the printer\n2. Wait 10 seconds\n3. Turn on the printer\n4. Click \"Reset Connection\" below\n5. Use \"Find Printers\" to reconnect",
+  "@printerRestartInstructions": {
+    "description": "Step by step instructions for restarting printer"
+  },
+  "understood": "Understood",
+  "@understood": {
+    "description": "Button label for acknowledging information"
+  },
+  "usbConnectionStillWorks": "USB connection will continue to work normally.",
+  "@usbConnectionStillWorks": {
+    "description": "Note that USB connection is not affected by network settings change"
   }
 }

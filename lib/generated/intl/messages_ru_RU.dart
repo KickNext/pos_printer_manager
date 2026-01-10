@@ -29,11 +29,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(count) => "Найдено принтеров: ${count}";
 
-  static String m4(number) => "Принтер ${number}";
+  static String m4(ipAddress) =>
+      "Настроен статический IP (${ipAddress}). После перезагрузки принтер будет использовать этот адрес.";
 
-  static String m5(error) => "Тест принтера не пройден: ${error}";
+  static String m5(number) => "Принтер ${number}";
 
-  static String m6(deviceInfo) => "USB разрешение получено: ${deviceInfo}";
+  static String m6(error) => "Тест принтера не пройден: ${error}";
+
+  static String m7(deviceInfo) => "USB разрешение получено: ${deviceInfo}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -73,6 +76,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Удаление этого принтера удалит все его настройки. Вы сможете добавить его снова позже, но вам потребуется заново настроить его.",
     ),
     "dhcp": MessageLookupByLibrary.simpleMessage("DHCP"),
+    "dhcpEnabled": MessageLookupByLibrary.simpleMessage(
+      "DHCP включен. Принтер автоматически получит сетевые настройки от вашего роутера.",
+    ),
+    "dhcpRequiresMac": MessageLookupByLibrary.simpleMessage(
+      "MAC-адрес требуется для настройки DHCP через сеть",
+    ),
     "diagnosing": MessageLookupByLibrary.simpleMessage("Диагностика..."),
     "diagnostics": MessageLookupByLibrary.simpleMessage("Диагностика"),
     "diagnosticsAllPassed": MessageLookupByLibrary.simpleMessage(
@@ -80,6 +89,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "diagnosticsAllPassedDescription": MessageLookupByLibrary.simpleMessage(
       "Все диагностические проверки пройдены успешно. Принтер настроен правильно.",
+    ),
+    "diagnosticsBlockedPendingReboot": MessageLookupByLibrary.simpleMessage(
+      "Диагностика недоступна, пока принтер не будет перезагружен и переподключён.",
     ),
     "diagnosticsProblemsDescription": MessageLookupByLibrary.simpleMessage(
       "Некоторые диагностические проверки не пройдены. Изучите проблемы ниже и следуйте рекомендациям для их устранения.",
@@ -100,6 +112,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disconnectPrinterQuestion": MessageLookupByLibrary.simpleMessage(
       "Отключить принтер?",
+    ),
+    "enableDhcp": MessageLookupByLibrary.simpleMessage("Включить DHCP"),
+    "enableDhcpDescription": MessageLookupByLibrary.simpleMessage(
+      "Автоматически получать IP-адрес из сети",
     ),
     "enabled": MessageLookupByLibrary.simpleMessage("Включено"),
     "failedToCreatePrinter": m2,
@@ -145,6 +161,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "networkSettings": MessageLookupByLibrary.simpleMessage(
       "Сетевые настройки",
     ),
+    "networkSettingsAppliedMessage": MessageLookupByLibrary.simpleMessage(
+      "Сетевые настройки отправлены на принтер. Перезагрузите принтер для применения изменений.",
+    ),
+    "networkSettingsAppliedTitle": MessageLookupByLibrary.simpleMessage(
+      "Сетевые настройки отправлены",
+    ),
+    "networkSettingsDhcpAppliedMessage": MessageLookupByLibrary.simpleMessage(
+      "DHCP включен. После перезагрузки принтер получит новый IP-адрес от вашего роутера.",
+    ),
+    "networkSettingsStaticIpAppliedMessage": m4,
     "networkSettingsTooltip": MessageLookupByLibrary.simpleMessage(
       "Настроить IP, маску подсети, шлюз",
     ),
@@ -181,6 +207,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notRequiredForNetworkPrinters": MessageLookupByLibrary.simpleMessage(
       "Не требуется для сетевых принтеров.",
     ),
+    "pendingRebootWarning": MessageLookupByLibrary.simpleMessage(
+      "Сетевые настройки были изменены. Принтер необходимо перезагрузить для применения изменений.",
+    ),
     "permissionDenied": MessageLookupByLibrary.simpleMessage(
       "Разрешение отклонено",
     ),
@@ -199,7 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "printerConnectivity": MessageLookupByLibrary.simpleMessage(
       "Связь с принтером",
     ),
-    "printerDefaultName": m4,
+    "printerDefaultName": m5,
     "printerDetails": MessageLookupByLibrary.simpleMessage(
       "Информация о принтере",
     ),
@@ -210,7 +239,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "printerRespondedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Принтер успешно ответил на тестовую команду.",
     ),
-    "printerTestFailed": m5,
+    "printerRestartInstructions": MessageLookupByLibrary.simpleMessage(
+      "1. Выключите принтер\n2. Подождите 10 секунд\n3. Включите принтер\n4. Нажмите «Сбросить подключение» ниже\n5. Используйте «Найти принтеры» для переподключения",
+    ),
+    "printerTestFailed": m6,
     "printing": MessageLookupByLibrary.simpleMessage("Печать..."),
     "productId": MessageLookupByLibrary.simpleMessage("Product ID"),
     "productName": MessageLookupByLibrary.simpleMessage("Название продукта"),
@@ -225,6 +257,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "receiptPrinterDescription": MessageLookupByLibrary.simpleMessage(
       "Для чеков и счетов",
     ),
+    "reconnectAfterRestart": MessageLookupByLibrary.simpleMessage(
+      "После перезагрузки принтера используйте «Найти принтеры» для подключения с новыми настройками.",
+    ),
     "refresh": MessageLookupByLibrary.simpleMessage("Обновить"),
     "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
     "removePrinter": MessageLookupByLibrary.simpleMessage("Удалить принтер"),
@@ -238,6 +273,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Переименовать принтер",
     ),
     "requesting": MessageLookupByLibrary.simpleMessage("Запрос..."),
+    "resetConnectionAndReconnect": MessageLookupByLibrary.simpleMessage(
+      "Сбросить подключение",
+    ),
+    "resetConnectionConfirmation": MessageLookupByLibrary.simpleMessage(
+      "Это удалит текущее подключение. После перезагрузки принтера найдите его снова через «Найти принтеры».",
+    ),
+    "restartPrinterRequired": MessageLookupByLibrary.simpleMessage(
+      "Требуется перезагрузка принтера",
+    ),
     "retry": MessageLookupByLibrary.simpleMessage("Повторить"),
     "runDiagnosticsTooltip": MessageLookupByLibrary.simpleMessage(
       "Запустить полную диагностику и показать проблемы, если они есть",
@@ -258,6 +302,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выберите тип принтера, который хотите добавить.",
     ),
     "serialNumber": MessageLookupByLibrary.simpleMessage("Серийный номер"),
+    "staticIpSettings": MessageLookupByLibrary.simpleMessage(
+      "Статический IP-адрес",
+    ),
     "stepName": MessageLookupByLibrary.simpleMessage("Название"),
     "stepType": MessageLookupByLibrary.simpleMessage("Тип"),
     "subnetMask": MessageLookupByLibrary.simpleMessage("Маска подсети"),
@@ -284,6 +331,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Убедитесь, что принтер подключен и виден устройству.",
     ),
     "testPrint": MessageLookupByLibrary.simpleMessage("Тестовая печать"),
+    "testingBlockedPendingReboot": MessageLookupByLibrary.simpleMessage(
+      "Тестирование недоступно, пока принтер не будет перезагружен и переподключён.",
+    ),
     "tipCheckAndroBarNetwork": MessageLookupByLibrary.simpleMessage(
       "Проверьте сетевое подключение к устройству AndroBar",
     ),
@@ -308,9 +358,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "tryReconnectingUsb": MessageLookupByLibrary.simpleMessage(
       "Попробуйте переподключить USB устройство.",
     ),
+    "understood": MessageLookupByLibrary.simpleMessage("Понятно"),
     "unknown": MessageLookupByLibrary.simpleMessage("Неизвестно"),
     "usb": MessageLookupByLibrary.simpleMessage("USB"),
     "usbConnection": MessageLookupByLibrary.simpleMessage("USB подключение"),
+    "usbConnectionStillWorks": MessageLookupByLibrary.simpleMessage(
+      "USB-подключение продолжит работать без изменений.",
+    ),
     "usbPermission": MessageLookupByLibrary.simpleMessage("USB разрешение"),
     "usbPermissionCheck": MessageLookupByLibrary.simpleMessage(
       "USB разрешение",
@@ -333,7 +387,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "usbPermissionGrantedSuccess": MessageLookupByLibrary.simpleMessage(
       "USB разрешение получено",
     ),
-    "usbPermissionGrantedWithDevice": m6,
+    "usbPermissionGrantedWithDevice": m7,
     "usbPermissionNotGranted": MessageLookupByLibrary.simpleMessage(
       "USB разрешение не получено.",
     ),

@@ -29,11 +29,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(count) => "Se encontraron ${count} impresora(s)";
 
-  static String m4(number) => "Impresora ${number}";
+  static String m4(ipAddress) =>
+      "IP estática (${ipAddress}) ha sido configurada. Después de reiniciar, la impresora usará esta dirección.";
 
-  static String m5(error) => "La prueba de impresora falló: ${error}";
+  static String m5(number) => "Impresora ${number}";
 
-  static String m6(deviceInfo) => "Permiso USB otorgado: ${deviceInfo}";
+  static String m6(error) => "La prueba de impresora falló: ${error}";
+
+  static String m7(deviceInfo) => "Permiso USB otorgado: ${deviceInfo}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -73,6 +76,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Eliminar esta impresora borrará toda su configuración. Puede agregarla nuevamente más tarde, pero deberá reconfigurarla.",
     ),
     "dhcp": MessageLookupByLibrary.simpleMessage("DHCP"),
+    "dhcpEnabled": MessageLookupByLibrary.simpleMessage(
+      "DHCP está habilitado. La impresora obtendrá automáticamente la configuración de red de su router.",
+    ),
+    "dhcpRequiresMac": MessageLookupByLibrary.simpleMessage(
+      "Se requiere la dirección MAC para configurar DHCP a través de la red",
+    ),
     "diagnosing": MessageLookupByLibrary.simpleMessage("Diagnosticando..."),
     "diagnostics": MessageLookupByLibrary.simpleMessage("Diagnósticos"),
     "diagnosticsAllPassed": MessageLookupByLibrary.simpleMessage(
@@ -80,6 +89,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "diagnosticsAllPassedDescription": MessageLookupByLibrary.simpleMessage(
       "Todas las pruebas de diagnóstico pasaron exitosamente. Su impresora está configurada correctamente.",
+    ),
+    "diagnosticsBlockedPendingReboot": MessageLookupByLibrary.simpleMessage(
+      "El diagnóstico no está disponible hasta que la impresora sea reiniciada y reconectada.",
     ),
     "diagnosticsProblemsDescription": MessageLookupByLibrary.simpleMessage(
       "Algunas pruebas de diagnóstico fallaron. Revise los problemas a continuación y siga las sugerencias para resolverlos.",
@@ -100,6 +112,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disconnectPrinterQuestion": MessageLookupByLibrary.simpleMessage(
       "¿Desconectar Impresora?",
+    ),
+    "enableDhcp": MessageLookupByLibrary.simpleMessage("Habilitar DHCP"),
+    "enableDhcpDescription": MessageLookupByLibrary.simpleMessage(
+      "Obtener automáticamente la dirección IP de la red",
     ),
     "enabled": MessageLookupByLibrary.simpleMessage("Habilitado"),
     "failedToCreatePrinter": m2,
@@ -151,6 +167,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "networkSettings": MessageLookupByLibrary.simpleMessage(
       "Configuración de Red",
     ),
+    "networkSettingsAppliedMessage": MessageLookupByLibrary.simpleMessage(
+      "La configuración de red ha sido enviada a la impresora. Reinicie la impresora para aplicar los cambios.",
+    ),
+    "networkSettingsAppliedTitle": MessageLookupByLibrary.simpleMessage(
+      "Configuración de Red Enviada",
+    ),
+    "networkSettingsDhcpAppliedMessage": MessageLookupByLibrary.simpleMessage(
+      "DHCP ha sido habilitado. Después de reiniciar, la impresora obtendrá una nueva dirección IP de su router.",
+    ),
+    "networkSettingsStaticIpAppliedMessage": m4,
     "networkSettingsTooltip": MessageLookupByLibrary.simpleMessage(
       "Configurar IP, máscara de subred, puerta de enlace",
     ),
@@ -187,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notRequiredForNetworkPrinters": MessageLookupByLibrary.simpleMessage(
       "No requerido para impresoras de red.",
     ),
+    "pendingRebootWarning": MessageLookupByLibrary.simpleMessage(
+      "La configuración de red fue cambiada. La impresora debe reiniciarse para aplicar los cambios.",
+    ),
     "permissionDenied": MessageLookupByLibrary.simpleMessage(
       "Permiso Denegado",
     ),
@@ -205,7 +234,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "printerConnectivity": MessageLookupByLibrary.simpleMessage(
       "Conectividad de Impresora",
     ),
-    "printerDefaultName": m4,
+    "printerDefaultName": m5,
     "printerDetails": MessageLookupByLibrary.simpleMessage(
       "Detalles de la Impresora",
     ),
@@ -218,7 +247,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "printerRespondedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "La impresora respondió exitosamente al comando de prueba.",
     ),
-    "printerTestFailed": m5,
+    "printerRestartInstructions": MessageLookupByLibrary.simpleMessage(
+      "1. Apague la impresora\n2. Espere 10 segundos\n3. Encienda la impresora\n4. Haga clic en \"Restablecer Conexión\" abajo\n5. Use \"Buscar Impresoras\" para reconectar",
+    ),
+    "printerTestFailed": m6,
     "printing": MessageLookupByLibrary.simpleMessage("Imprimiendo..."),
     "productId": MessageLookupByLibrary.simpleMessage("ID de Producto"),
     "productName": MessageLookupByLibrary.simpleMessage("Nombre del Producto"),
@@ -235,6 +267,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "receiptPrinterDescription": MessageLookupByLibrary.simpleMessage(
       "Para recibos y facturas",
     ),
+    "reconnectAfterRestart": MessageLookupByLibrary.simpleMessage(
+      "Después de reiniciar la impresora, use \"Buscar Impresoras\" para reconectar con la nueva configuración.",
+    ),
     "refresh": MessageLookupByLibrary.simpleMessage("Actualizar"),
     "remove": MessageLookupByLibrary.simpleMessage("Eliminar"),
     "removePrinter": MessageLookupByLibrary.simpleMessage("Eliminar Impresora"),
@@ -248,6 +283,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Renombrar Impresora",
     ),
     "requesting": MessageLookupByLibrary.simpleMessage("Solicitando..."),
+    "resetConnectionAndReconnect": MessageLookupByLibrary.simpleMessage(
+      "Restablecer Conexión",
+    ),
+    "resetConnectionConfirmation": MessageLookupByLibrary.simpleMessage(
+      "Esto eliminará la conexión actual. Después de reiniciar la impresora, búsquela nuevamente usando \"Buscar Impresoras\".",
+    ),
+    "restartPrinterRequired": MessageLookupByLibrary.simpleMessage(
+      "Se Requiere Reiniciar la Impresora",
+    ),
     "retry": MessageLookupByLibrary.simpleMessage("Reintentar"),
     "runDiagnosticsTooltip": MessageLookupByLibrary.simpleMessage(
       "Ejecutar diagnósticos completos y mostrar problemas si los hay",
@@ -270,6 +314,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Elija el tipo de impresora que desea agregar.",
     ),
     "serialNumber": MessageLookupByLibrary.simpleMessage("Número de Serie"),
+    "staticIpSettings": MessageLookupByLibrary.simpleMessage(
+      "Configuración de IP Estática",
+    ),
     "stepName": MessageLookupByLibrary.simpleMessage("Nombre"),
     "stepType": MessageLookupByLibrary.simpleMessage("Tipo"),
     "subnetMask": MessageLookupByLibrary.simpleMessage("Máscara de Subred"),
@@ -296,6 +343,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verifique que la impresora esté conectada y visible para el dispositivo.",
     ),
     "testPrint": MessageLookupByLibrary.simpleMessage("Prueba de Impresión"),
+    "testingBlockedPendingReboot": MessageLookupByLibrary.simpleMessage(
+      "La prueba no está disponible hasta que la impresora sea reiniciada y reconectada.",
+    ),
     "tipCheckAndroBarNetwork": MessageLookupByLibrary.simpleMessage(
       "Verifique la conectividad de red al dispositivo AndroBar",
     ),
@@ -320,9 +370,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "tryReconnectingUsb": MessageLookupByLibrary.simpleMessage(
       "Intente reconectar el dispositivo USB.",
     ),
+    "understood": MessageLookupByLibrary.simpleMessage("Entendido"),
     "unknown": MessageLookupByLibrary.simpleMessage("Desconocido"),
     "usb": MessageLookupByLibrary.simpleMessage("USB"),
     "usbConnection": MessageLookupByLibrary.simpleMessage("Conexión USB"),
+    "usbConnectionStillWorks": MessageLookupByLibrary.simpleMessage(
+      "La conexión USB continuará funcionando normalmente.",
+    ),
     "usbPermission": MessageLookupByLibrary.simpleMessage("Permiso USB"),
     "usbPermissionCheck": MessageLookupByLibrary.simpleMessage("Permiso USB"),
     "usbPermissionDeniedError": MessageLookupByLibrary.simpleMessage(
@@ -343,7 +397,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "usbPermissionGrantedSuccess": MessageLookupByLibrary.simpleMessage(
       "Permiso USB otorgado",
     ),
-    "usbPermissionGrantedWithDevice": m6,
+    "usbPermissionGrantedWithDevice": m7,
     "usbPermissionNotGranted": MessageLookupByLibrary.simpleMessage(
       "Permiso USB no otorgado.",
     ),

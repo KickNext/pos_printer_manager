@@ -615,5 +615,87 @@
   "suggestionGrantUsbPermission": "Предоставьте USB разрешение и повторите попытку.",
   "@suggestionGrantUsbPermission": {
     "description": "Suggestion to grant USB permission"
+  },
+  "enableDhcp": "Включить DHCP",
+  "@enableDhcp": {
+    "description": "Label for DHCP toggle switch"
+  },
+  "enableDhcpDescription": "Автоматически получать IP-адрес из сети",
+  "@enableDhcpDescription": {
+    "description": "Description for DHCP toggle explaining what it does"
+  },
+  "staticIpSettings": "Статический IP-адрес",
+  "@staticIpSettings": {
+    "description": "Section header for manual IP configuration when DHCP is disabled"
+  },
+  "dhcpEnabled": "DHCP включен. Принтер автоматически получит сетевые настройки от вашего роутера.",
+  "@dhcpEnabled": {
+    "description": "Information message when DHCP is enabled"
+  },
+  "dhcpRequiresMac": "MAC-адрес требуется для настройки DHCP через сеть",
+  "@dhcpRequiresMac": {
+    "description": "Error message when MAC address is missing for DHCP configuration"
+  },
+  "networkSettingsAppliedTitle": "Сетевые настройки отправлены",
+  "@networkSettingsAppliedTitle": {
+    "description": "Dialog title when network settings were sent to printer"
+  },
+  "networkSettingsAppliedMessage": "Сетевые настройки отправлены на принтер. Перезагрузите принтер для применения изменений.",
+  "@networkSettingsAppliedMessage": {
+    "description": "Message explaining printer needs restart after network settings change"
+  },
+  "networkSettingsDhcpAppliedMessage": "DHCP включен. После перезагрузки принтер получит новый IP-адрес от вашего роутера.",
+  "@networkSettingsDhcpAppliedMessage": {
+    "description": "Message when DHCP was enabled"
+  },
+  "networkSettingsStaticIpAppliedMessage": "Настроен статический IP ({ipAddress}). После перезагрузки принтер будет использовать этот адрес.",
+  "@networkSettingsStaticIpAppliedMessage": {
+    "description": "Message when static IP was configured",
+    "placeholders": {
+      "ipAddress": {
+        "type": "String",
+        "description": "The new IP address"
+      }
+    }
+  },
+  "restartPrinterRequired": "Требуется перезагрузка принтера",
+  "@restartPrinterRequired": {
+    "description": "Warning title about printer restart requirement"
+  },
+  "pendingRebootWarning": "Сетевые настройки были изменены. Принтер необходимо перезагрузить для применения изменений.",
+  "@pendingRebootWarning": {
+    "description": "Warning message about pending printer reboot"
+  },
+  "reconnectAfterRestart": "После перезагрузки принтера используйте «Найти принтеры» для подключения с новыми настройками.",
+  "@reconnectAfterRestart": {
+    "description": "Instructions to reconnect after printer restart"
+  },
+  "testingBlockedPendingReboot": "Тестирование недоступно, пока принтер не будет перезагружен и переподключён.",
+  "@testingBlockedPendingReboot": {
+    "description": "Message when testing is blocked due to pending reboot"
+  },
+  "diagnosticsBlockedPendingReboot": "Диагностика недоступна, пока принтер не будет перезагружен и переподключён.",
+  "@diagnosticsBlockedPendingReboot": {
+    "description": "Message when diagnostics is blocked due to pending reboot"
+  },
+  "resetConnectionAndReconnect": "Сбросить подключение",
+  "@resetConnectionAndReconnect": {
+    "description": "Button to reset connection for reconnecting with new settings"
+  },
+  "resetConnectionConfirmation": "Это удалит текущее подключение. После перезагрузки принтера найдите его снова через «Найти принтеры».",
+  "@resetConnectionConfirmation": {
+    "description": "Confirmation message for resetting connection"
+  },
+  "printerRestartInstructions": "1. Выключите принтер\n2. Подождите 10 секунд\n3. Включите принтер\n4. Нажмите «Сбросить подключение» ниже\n5. Используйте «Найти принтеры» для переподключения",
+  "@printerRestartInstructions": {
+    "description": "Step by step instructions for restarting printer"
+  },
+  "understood": "Понятно",
+  "@understood": {
+    "description": "Button label for acknowledging information"
+  },
+  "usbConnectionStillWorks": "USB-подключение продолжит работать без изменений.",
+  "@usbConnectionStillWorks": {
+    "description": "Note that USB connection is not affected by network settings change"
   }
 }

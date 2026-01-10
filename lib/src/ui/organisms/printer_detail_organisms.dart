@@ -49,9 +49,9 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
   /// Last error message from printing.
   String? _lastError;
 
-  /// Проверяет, можно ли выполнить тестовую печать.
-  bool get _canTestPrint =>
-      widget.printer.handler.settings.connectionParams != null;
+  /// Проверяет, заблокировано ли тестирование из-за ожидания перезагрузки.
+  bool get _isBlockedByPendingReboot =>
+      widget.printer.isTestingBlockedByPendingReboot;
 
   @override
   Widget build(BuildContext context) {
@@ -179,17 +179,26 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
               runSpacing: 8,
               children: [
                 // Test Print button
-                if (_canTestPrint)
+                // Показываем кнопку только если есть параметры подключения
+                if (widget.printer.handler.settings.connectionParams != null)
                   Builder(
                     builder: (context) {
                       final l = _L.of(context);
+                      // Кнопка заблокирована если идёт печать или ожидается перезагрузка
+                      final isDisabled =
+                          _isTestPrinting || _isBlockedByPendingReboot;
+
                       return ActionButton(
                         label: _isTestPrinting ? l.printing : l.testPrint,
                         icon: PrinterIcons.testPrint,
-                        onPressed: _isTestPrinting ? null : _handleTestPrint,
+                        onPressed: isDisabled ? null : _handleTestPrint,
                         isLoading: _isTestPrinting,
                         variant: ActionButtonVariant.primary,
                         size: ActionButtonSize.small,
+                        // Показываем tooltip с объяснением, почему кнопка заблокирована
+                        tooltip: _isBlockedByPendingReboot
+                            ? l.testingBlockedPendingReboot
+                            : null,
                       );
                     },
                   ),
@@ -198,18 +207,26 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
                 Builder(
                   builder: (context) {
                     final l = _L.of(context);
+                    // Диагностика заблокирована если уже выполняется
+                    // или ожидается перезагрузка сетевого принтера
+                    final isDisabled =
+                        _isRunningDiagnostics || _isBlockedByPendingReboot;
+
                     return ActionButton(
                       label: _isRunningDiagnostics
                           ? l.diagnosing
                           : l.diagnostics,
                       icon: PrinterIcons.sectionDiagnostics,
-                      onPressed: _isRunningDiagnostics
+                      onPressed: isDisabled
                           ? null
                           : _runDiagnosticsAndShowDialog,
                       isLoading: _isRunningDiagnostics,
                       variant: ActionButtonVariant.secondary,
                       size: ActionButtonSize.small,
-                      tooltip: l.runDiagnosticsTooltip,
+                      // Показываем tooltip с объяснением
+                      tooltip: _isBlockedByPendingReboot
+                          ? l.diagnosticsBlockedPendingReboot
+                          : l.runDiagnosticsTooltip,
                     );
                   },
                 ),
@@ -225,6 +242,20 @@ class _PrinterHeaderOrganismState extends State<PrinterHeaderOrganism> {
                   ),
               ],
             ),
+
+            // ============================================================
+            // PENDING REBOOT WARNING: Предупреждение об ожидании перезагрузки
+            // ============================================================
+            if (widget.printer.hasPendingNetworkReboot) ...[
+              const SizedBox(height: 16),
+              _PendingRebootWarningSection(
+                printer: widget.printer,
+                onResetConnection: () async {
+                  await widget.printer.resetConnectionForNewNetworkSettings();
+                  if (mounted) setState(() {});
+                },
+              ),
+            ],
 
             // ============================================================
             // TROUBLESHOOTING TIPS: Советы по устранению неполадок
@@ -881,5 +912,160 @@ class _DiagnosticResultItem extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Секция предупреждения о необходимости перезагрузки принтера.
+///
+/// Отображается когда сетевые настройки были изменены, но принтер ещё не
+/// перезагружен. Показывает:
+/// - Предупреждение о том, что настройки ожидают перезагрузки
+/// - Инструкции по перезагрузке
+/// - Кнопку для сброса подключения и поиска принтера заново
+class _PendingRebootWarningSection extends StatelessWidget {
+  /// Принтер с ожидающей перезагрузкой.
+  final PosPrinter printer;
+
+  /// Callback при нажатии на кнопку сброса подключения.
+  final VoidCallback onResetConnection;
+
+  const _PendingRebootWarningSection({
+    required this.printer,
+    required this.onResetConnection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l = _L.of(context);
+    final theme = Theme.of(context);
+    final pendingReboot = printer.pendingNetworkReboot;
+
+    if (pendingReboot == null) return const SizedBox.shrink();
+
+    // Определяем тип подключения для отображения дополнительной информации
+    final isUsbConnected =
+        printer.handler.settings.connectionParams?.connectionType ==
+        PosPrinterConnectionType.usb;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.error.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // === Заголовок с иконкой ===
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.restart_alt_rounded,
+                  color: theme.colorScheme.onErrorContainer,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l.restartPrinterRequired,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onErrorContainer,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // === Описание проблемы ===
+          Text(
+            l.pendingRebootWarning,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onErrorContainer,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // === Инструкции ===
+          Text(
+            l.reconnectAfterRestart,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onErrorContainer.withValues(alpha: 0.8),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+
+          // === Примечание о USB (если подключен по USB) ===
+          if (isUsbConnected) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(
+                  Icons.usb_rounded,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l.usbConnectionStillWorks,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          const SizedBox(height: 16),
+
+          // === Кнопка сброса подключения ===
+          ActionButton(
+            label: l.resetConnectionAndReconnect,
+            icon: Icons.link_off_rounded,
+            onPressed: () => _showResetConfirmation(context),
+            variant: ActionButtonVariant.secondary,
+            size: ActionButtonSize.small,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Показывает диалог подтверждения сброса подключения.
+  Future<void> _showResetConfirmation(BuildContext context) async {
+    final l = _L.of(context);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: ConfirmationDialogMolecule(
+          icon: Icons.link_off_rounded,
+          title: l.resetConnectionAndReconnect,
+          message: l.resetConnectionConfirmation,
+          confirmLabel: l.confirm,
+          onConfirm: () => Navigator.pop(ctx, true),
+          onCancel: () => Navigator.pop(ctx, false),
+        ),
+      ),
+    );
+
+    if (confirmed == true) {
+      onResetConnection();
+    }
   }
 }
