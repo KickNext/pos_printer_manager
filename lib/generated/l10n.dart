@@ -324,12 +324,12 @@ class PrinterManagerL10n {
     );
   }
 
-  /// `Ready to Print`
+  /// `Last Test Successful`
   String get readyToPrint {
     return Intl.message(
-      'Ready to Print',
+      'Last Test Successful',
       name: 'readyToPrint',
-      desc: 'Status when printer is connected and ready',
+      desc: 'Status when last printer operation was successful',
       args: [],
     );
   }

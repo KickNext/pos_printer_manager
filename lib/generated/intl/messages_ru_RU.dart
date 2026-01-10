@@ -252,7 +252,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "readyToConnectDescription": MessageLookupByLibrary.simpleMessage(
       "Принтер создан. Теперь вы можете настроить подключение.",
     ),
-    "readyToPrint": MessageLookupByLibrary.simpleMessage("Готов к печати"),
+    "readyToPrint": MessageLookupByLibrary.simpleMessage(
+      "Последний тест успешен",
+    ),
     "receiptPrinter": MessageLookupByLibrary.simpleMessage("Чековый принтер"),
     "receiptPrinterDescription": MessageLookupByLibrary.simpleMessage(
       "Для чеков и счетов",

@@ -108,7 +108,7 @@
   "@clearError": {
     "description": "Clear error button label"
   },
-  "readyToPrint": "Lista para Imprimir",
+  "readyToPrint": "Última Prueba Exitosa",
   "@readyToPrint": {
     "description": "Status when printer is connected and ready"
   },

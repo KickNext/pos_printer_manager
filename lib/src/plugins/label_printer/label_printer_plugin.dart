@@ -113,7 +113,7 @@ class LabelPrinterHandler extends PrinterProtocolHandler<LabelPrinterSettings> {
 
     // Создаем тестовые данные этикетки
     final testData = LabelData(
-      itemName: 'Test item for print label test',
+      itemName: 'Test "item" for print label test',
       unitAbr: 'kg',
       oldPrice: r'$250010.34',
       price: r'$250006.34',

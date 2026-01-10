@@ -246,7 +246,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "readyToConnectDescription": MessageLookupByLibrary.simpleMessage(
       "Your printer has been created. You can now configure the connection.",
     ),
-    "readyToPrint": MessageLookupByLibrary.simpleMessage("Ready to Print"),
+    "readyToPrint": MessageLookupByLibrary.simpleMessage(
+      "Last Test Successful",
+    ),
     "receiptPrinter": MessageLookupByLibrary.simpleMessage("Receipt Printer"),
     "receiptPrinterDescription": MessageLookupByLibrary.simpleMessage(
       "For receipts and bills",

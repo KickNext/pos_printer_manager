@@ -25,6 +25,27 @@ library;
 
 import 'package:pos_printer_manager/src/protocol/print_job.dart';
 
+/// Санитизирует текст для использования в TSPL командах.
+///
+/// TSPL использует двойные кавычки для ограничения строк в командах
+/// TEXT и BLOCK. Если текст содержит двойные кавычки, они ломают
+/// синтаксис команды. Эта функция просто удаляет двойные кавычки,
+/// так как TSPL принтеры не поддерживают Unicode символы.
+///
+/// Пример проблемы:
+/// ```
+/// TEXT 20,20,"2",0,1,1,"Item "Large" Size"  // ОШИБКА: разрыв строки
+/// ```
+///
+/// После санитизации:
+/// ```
+/// TEXT 20,20,"2",0,1,1,"Item Large Size"  // OK
+/// ```
+String _sanitizeTsplText(String text) {
+  // Удаляем двойные кавычки — TSPL принтеры не поддерживают Unicode.
+  return text.replaceAll('"', '');
+}
+
 // LabelData теперь определён в protocol/print_job.dart
 // и экспортируется через pos_printer_manager.dart
 
@@ -91,9 +112,17 @@ String buildTsplLabel(LabelData d) {
   final int rightColX = labelWidthDots - rightColWidth; // 307
   final int qrTextX = 280; // Сдвигаем QR текст чуть левее
 
+  // Санитизируем все текстовые поля для TSPL (убираем двойные кавычки).
+  final itemName = _sanitizeTsplText(d.itemName);
+  final price = _sanitizeTsplText(d.price);
+  final unitAbr = _sanitizeTsplText(d.unitAbr);
+  final storeName = _sanitizeTsplText(d.storeName);
+  final date = _sanitizeTsplText(d.date);
+  final qrText = d.qrText; // QR-код не санитизируем — там только данные.
+
   final oldPriceBlock = (d.oldPrice != null && d.oldPrice.toString().isNotEmpty)
       ? '''
-TEXT 20,130,"2",0,1,1,"${d.oldPrice}"
+TEXT 20,130,"2",0,1,1,"${_sanitizeTsplText(d.oldPrice!)}"
 BAR 20,136,200,3
 '''
       : '';
@@ -103,13 +132,13 @@ SIZE 57 mm, 32 mm
 GAP 2 mm,0
 DIRECTION 1
 CLS
-BLOCK 20,20,250,96,"3",0,1,1,"${d.itemName}"
+BLOCK 20,20,250,96,"3",0,1,1,"$itemName"
 $oldPriceBlock
-TEXT 20,160,"4",0,1,1,"${d.price} /${d.unitAbr}"
-TEXT $qrTextX,20,"1",0,1,1,"${d.qrText}"
-QRCODE $rightColX,35,L,5,A,0,"${d.qrText}"
-TEXT 20,220,"2",0,1,1,"${d.storeName}"
-TEXT $rightColX,220,"2",0,1,1,"${d.date}"
+TEXT 20,160,"4",0,1,1,"$price /$unitAbr"
+TEXT $qrTextX,20,"1",0,1,1,"$qrText"
+QRCODE $rightColX,35,L,5,A,0,"$qrText"
+TEXT 20,220,"2",0,1,1,"$storeName"
+TEXT $rightColX,220,"2",0,1,1,"$date"
 PRINT 1
 ''';
 }

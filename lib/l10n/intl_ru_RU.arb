@@ -108,7 +108,7 @@
   "@clearError": {
     "description": "Clear error button label"
   },
-  "readyToPrint": "Готов к печати",
+  "readyToPrint": "Последний тест успешен",
   "@readyToPrint": {
     "description": "Status when printer is connected and ready"
   },

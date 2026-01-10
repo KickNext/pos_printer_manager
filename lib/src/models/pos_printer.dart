@@ -265,6 +265,68 @@ class PosPrinter with LoggerMixin {
     return handler.manager.withUsbPermission(connectionParams, operation);
   }
 
+  // === Connection Status Check ===
+
+  /// Проверяет статус подключения принтера без выполнения печати.
+  ///
+  /// Этот метод запрашивает статус у принтера через протокол
+  /// (ZPL/TSPL/ESC-POS) и обновляет [status] соответственно.
+  ///
+  /// Для USB-принтеров автоматически проверяет/запрашивает разрешение.
+  ///
+  /// Возвращает `true` если принтер подключён и готов к работе.
+  Future<bool> checkConnectionStatus() async {
+    // Если нет параметров подключения — статус неизвестен
+    if (handler.settings.connectionParams == null) {
+      logger.debug(
+        'Cannot check status: no connection params',
+        data: {'printerId': id},
+      );
+      return false;
+    }
+
+    logger.info('Checking connection status', data: {'printerId': id});
+
+    try {
+      bool isConnected;
+
+      // Для USB-принтеров проверяем с учётом разрешения
+      if (_isUsbPrinter) {
+        isConnected = await handler.manager.withUsbPermission(
+          handler.settings.connectionParams!,
+          () async {
+            _usbPermissionStatus = UsbPermissionStatus.granted;
+            return handler.getStatus();
+          },
+        );
+      } else {
+        isConnected = await handler.getStatus();
+      }
+
+      if (isConnected) {
+        _updateStatus(PrinterConnectionStatus.connected);
+        logger.info('Printer is connected', data: {'printerId': id});
+      } else {
+        _updateStatus(PrinterConnectionStatus.error);
+        logger.warning('Printer is not responding', data: {'printerId': id});
+      }
+
+      return isConnected;
+    } on UsbPermissionDeniedException catch (e) {
+      _usbPermissionStatus = UsbPermissionStatus.denied;
+      _updateError('USB permission denied: ${e.message}');
+      logger.warning(
+        'USB permission denied during status check',
+        data: {'printerId': id},
+      );
+      return false;
+    } catch (e, st) {
+      _updateError(e.toString());
+      logger.error('Connection status check failed', error: e, stackTrace: st);
+      return false;
+    }
+  }
+
   // === Print Methods ===
 
   /// Пытается выполнить печать и обновляет статус на основе результата.
