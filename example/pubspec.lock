@@ -232,11 +232,11 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "0e1ad4c5f11a1dbd5f04c729ad19b776af2b1080"
-      resolved-ref: "0e1ad4c5f11a1dbd5f04c729ad19b776af2b1080"
+      ref: "4332bf72fb2909c111690ccc46edc1f13c7d265b"
+      resolved-ref: "4332bf72fb2909c111690ccc46edc1f13c7d265b"
       url: "https://github.com/KickNext/pos_printers.git"
     source: git
-    version: "0.6.0+2025120201"
+    version: "0.7.0+2026022001"
   shared_preferences:
     dependency: transitive
     description:

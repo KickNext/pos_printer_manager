@@ -1,7 +1,7 @@
 name: pos_printer_manager
 description: "A service for printing receipts and labels using various printers."
 publish_to: none
-version: 0.6.0+2025120201
+version: 0.7.0+2026022001
 
 environment:
   sdk: ^3.10.1
@@ -19,7 +19,7 @@ dependencies:
   pos_printers:
     git:
       url: https://github.com/KickNext/pos_printers.git
-      ref: 0e1ad4c5f11a1dbd5f04c729ad19b776af2b1080
+      ref: 4332bf72fb2909c111690ccc46edc1f13c7d265b
 
 dev_dependencies:
   flutter_test:

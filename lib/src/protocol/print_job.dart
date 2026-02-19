@@ -248,9 +248,7 @@ class LabelData {
 /// 3. LF — перевод строки
 /// 4. GS V A 16 — частичный отрез бумаги
 Uint8List buildEscTestPrintCommand(String message) {
-  final esc = <int>[
-    0x1B, 0x40, // ESC @ = инициализация принтера
-  ];
+  final esc = <int>[];
 
   // Кодируем текст в Latin-1 (для кириллицы нужен cp866 или gbk)
   final textBytes = latin1.encode(message);

@@ -18,8 +18,10 @@ class PrinterManagerL10n {
   static PrinterManagerL10n? _current;
 
   static PrinterManagerL10n get current {
-    assert(_current != null,
-        'No instance of PrinterManagerL10n was loaded. Try to initialize the PrinterManagerL10n delegate before accessing PrinterManagerL10n.current.');
+    assert(
+      _current != null,
+      'No instance of PrinterManagerL10n was loaded. Try to initialize the PrinterManagerL10n delegate before accessing PrinterManagerL10n.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class PrinterManagerL10n {
 
   static PrinterManagerL10n of(BuildContext context) {
     final instance = PrinterManagerL10n.maybeOf(context);
-    assert(instance != null,
-        'No instance of PrinterManagerL10n present in the widget tree. Did you add PrinterManagerL10n.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of PrinterManagerL10n present in the widget tree. Did you add PrinterManagerL10n.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -446,6 +450,26 @@ class PrinterManagerL10n {
       'Additional Settings',
       name: 'additionalSettings',
       desc: 'Section header for plugin-specific settings',
+      args: [],
+    );
+  }
+
+  /// `Upside Down`
+  String get upsideDownMode {
+    return Intl.message(
+      'Upside Down',
+      name: 'upsideDownMode',
+      desc: 'Toggle title for upside-down printing mode',
+      args: [],
+    );
+  }
+
+  /// `Print in 180° rotated mode`
+  String get upsideDownModeDescription {
+    return Intl.message(
+      'Print in 180° rotated mode',
+      name: 'upsideDownModeDescription',
+      desc: 'Toggle subtitle for upside-down printing mode',
       args: [],
     );
   }

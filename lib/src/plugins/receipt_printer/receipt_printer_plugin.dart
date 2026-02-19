@@ -13,7 +13,20 @@ class ReceiptPrinterSettings extends PrinterSettings {
   ReceiptPrinterSettings({
     required super.initConnectionParams,
     required super.onSettingsChanged,
-  });
+    required bool upsideDown,
+  }) : _upsideDown = upsideDown;
+
+  bool _upsideDown;
+
+  bool get upsideDown => _upsideDown;
+
+  Future<void> updateUpsideDown(bool newValue) async {
+    if (_upsideDown == newValue) {
+      return;
+    }
+    _upsideDown = newValue;
+    await onSettingsChanged();
+  }
 
   /// Размер бумаги (по умолчанию 80мм).
   final PaperSize paperSize = PaperSize.mm80;
@@ -31,7 +44,7 @@ class ReceiptPrinterSettings extends PrinterSettings {
   );
 
   @override
-  Map<String, dynamic> get extraSettingsToJson => {};
+  Map<String, dynamic> get extraSettingsToJson => {'upsideDown': _upsideDown};
 }
 
 /// Обработчик протокола для чекового принтера.
@@ -108,6 +121,7 @@ class ReceiptPrinterHandler
         settings.connectionParams!,
         receiptHTML,
         settings.paperSize.value,
+        upsideDown: settings.upsideDown,
       );
       _logger.info('Receipt printed successfully');
       return PrintResult(success: true);

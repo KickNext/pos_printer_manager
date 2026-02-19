@@ -67,6 +67,10 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
             onConnectionChanged: () => setState(() {}),
           );
 
+          final requiredUpsideDownSection = _RequiredUpsideDownSettingsCard(
+            printer: widget.printer,
+          );
+
           final hasPlugins = widget.printer.handler.customWidgets.isNotEmpty;
           final pluginsSection = _PluginSettingsCard(printer: widget.printer);
 
@@ -94,7 +98,12 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                       Expanded(child: buildColumn([infoSection])),
                       const SizedBox(width: gap),
                       // Колонка 2: Подключение
-                      Expanded(child: buildColumn([connectionSection])),
+                      Expanded(
+                        child: buildColumn([
+                          connectionSection,
+                          requiredUpsideDownSection,
+                        ]),
+                      ),
                       const SizedBox(width: gap),
                       // Колонка 3: Плагины и удаление
                       Expanded(
@@ -116,6 +125,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                       Expanded(
                         child: buildColumn([
                           connectionSection,
+                          requiredUpsideDownSection,
                           if (hasPlugins) pluginsSection,
                           dangerSection,
                         ]),
@@ -126,6 +136,7 @@ class _PrinterDetailsScreenState extends State<PrinterDetailsScreen> {
                 : buildColumn([
                     infoSection,
                     connectionSection,
+                    requiredUpsideDownSection,
                     if (hasPlugins) pluginsSection,
                     dangerSection,
                   ]),
@@ -245,6 +256,51 @@ class _PluginSettingsCard extends StatelessWidget {
             const SizedBox(height: 16),
             Wrap(spacing: 12, runSpacing: 12, children: pluginWidgets),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Обязательные настройки печати для чекового и кухонного принтеров.
+///
+/// Включает переключатель режима печати вверх ногами (180°).
+/// Настройка является базовой для этих типов принтеров и не относится
+/// к plugin-specific секции Additional Settings.
+class _RequiredUpsideDownSettingsCard extends StatelessWidget {
+  final PosPrinter printer;
+
+  const _RequiredUpsideDownSettingsCard({required this.printer});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = _L.of(context);
+    final settings = printer.handler.settings;
+
+    final bool value;
+    final Future<void> Function(bool) onChanged;
+
+    if (settings is ReceiptPrinterSettings) {
+      value = settings.upsideDown;
+      onChanged = settings.updateUpsideDown;
+    } else if (settings is KitchenPrinterSettings) {
+      value = settings.upsideDown;
+      onChanged = settings.updateUpsideDown;
+    } else {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(l10n.upsideDownMode),
+          subtitle: Text(l10n.upsideDownModeDescription),
+          value: value,
+          onChanged: (newValue) {
+            unawaited(onChanged(newValue));
+          },
         ),
       ),
     );

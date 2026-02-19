@@ -32,10 +32,14 @@ enum PrinterPOSType {
           printerPosType: PrinterPOSType.receiptPrinter,
           allowOverwrite:
               true, // Позволяем перезапись для повторной инициализации
-          ctor: (params, json) => ReceiptPrinterSettings(
-            initConnectionParams: params,
-            onSettingsChanged: () async => await manager.saveConfigs(),
-          ),
+          ctor: (params, json) {
+            final upsideDown = json['upsideDown'] as bool? ?? false;
+            return ReceiptPrinterSettings(
+              initConnectionParams: params,
+              onSettingsChanged: () async => await manager.saveConfigs(),
+              upsideDown: upsideDown,
+            );
+          },
           createHandler: (settings) => ReceiptPrinterHandler(
             settings: settings as ReceiptPrinterSettings,
             manager: manager,
@@ -58,6 +62,7 @@ enum PrinterPOSType {
               initConnectionParams: params,
               onSettingsChanged: () async => await manager.saveConfigs(),
               categories: categories,
+              upsideDown: json['upsideDown'] as bool? ?? false,
             );
           },
           createHandler: (settings) => KitchenPrinterHandler(

@@ -80,6 +80,7 @@ class _HarnessState extends State<_Harness> {
         widget.onSettingsChanged?.call();
       },
       categories: List<CategoryForPrinter>.from(widget.initial),
+      upsideDown: false,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onSettingsReady?.call(settings);

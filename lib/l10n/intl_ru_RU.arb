@@ -160,6 +160,14 @@
   "@additionalSettings": {
     "description": "Section header for plugin-specific settings"
   },
+  "upsideDownMode": "Печать вверх ногами",
+  "@upsideDownMode": {
+    "description": "Toggle title for upside-down printing mode"
+  },
+  "upsideDownModeDescription": "Печатать в перевернутом режиме (180°)",
+  "@upsideDownModeDescription": {
+    "description": "Toggle subtitle for upside-down printing mode"
+  },
   "addPrinter": "Добавить принтер",
   "@addPrinter": {
     "description": "Add printer button/dialog title"

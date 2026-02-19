@@ -160,6 +160,14 @@
   "@additionalSettings": {
     "description": "Section header for plugin-specific settings"
   },
+  "upsideDownMode": "Invertido",
+  "@upsideDownMode": {
+    "description": "Toggle title for upside-down printing mode"
+  },
+  "upsideDownModeDescription": "Imprimir en modo rotado 180°",
+  "@upsideDownModeDescription": {
+    "description": "Toggle subtitle for upside-down printing mode"
+  },
   "addPrinter": "Agregar Impresora",
   "@addPrinter": {
     "description": "Add printer button/dialog title"

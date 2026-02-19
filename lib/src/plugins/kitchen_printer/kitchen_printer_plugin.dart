@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:pos_printer_manager/pos_printer_manager.dart';
 
@@ -19,13 +18,19 @@ class KitchenPrinterSettings extends PrinterSettings {
     required super.initConnectionParams,
     required super.onSettingsChanged,
     required List<CategoryForPrinter> categories,
-  }) : _categories = List<CategoryForPrinter>.from(categories);
+    required bool upsideDown,
+  }) : _categories = List<CategoryForPrinter>.from(categories),
+       _upsideDown = upsideDown;
 
   /// Размер бумаги (по умолчанию 80мм).
   final PaperSize paperSize = PaperSize.mm80;
 
   /// Внутренний изменяемый список категорий.
   final List<CategoryForPrinter> _categories;
+
+  bool _upsideDown;
+
+  bool get upsideDown => _upsideDown;
 
   /// Категории блюд, назначенные этому принтеру.
   ///
@@ -66,9 +71,18 @@ class KitchenPrinterSettings extends PrinterSettings {
     _logger.debug('Categories updated', data: {'count': _categories.length});
   }
 
+  Future<void> updateUpsideDown(bool newValue) async {
+    if (_upsideDown == newValue) {
+      return;
+    }
+    _upsideDown = newValue;
+    await onSettingsChanged();
+  }
+
   @override
   Map<String, dynamic> get extraSettingsToJson => {
     'categories': _categories.map((e) => e.toJson()).toList(),
+    'upsideDown': _upsideDown,
   };
 }
 
@@ -134,6 +148,7 @@ class KitchenPrinterHandler
         settings.connectionParams!,
         dataForPrint,
         settings.paperSize.value,
+        upsideDown: settings.upsideDown,
       );
       _logger.info('Kitchen order printed successfully');
       return PrintResult(success: true);

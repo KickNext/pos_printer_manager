@@ -531,18 +531,20 @@ class PrintersManager with ChangeNotifier, LoggerMixin {
   Future<void> printEscHTML(
     PrinterConnectionParamsDTO printer,
     String html,
-    int width,
-  ) async {
-    return api.printEscHTML(printer, html, width);
+    int width, {
+    bool upsideDown = false,
+  }) async {
+    return api.printEscHTML(printer, html, width, upsideDown: upsideDown);
   }
 
   /// Print raw ESC/POS commands
   Future<void> printEscRawData(
     PrinterConnectionParamsDTO printer,
     Uint8List data,
-    int width,
-  ) async {
-    return api.printEscRawData(printer, data, width);
+    int width, {
+    bool upsideDown = false,
+  }) async {
+    return api.printEscRawData(printer, data, width, upsideDown: upsideDown);
   }
 
   // === ZPL Label Printing ===
