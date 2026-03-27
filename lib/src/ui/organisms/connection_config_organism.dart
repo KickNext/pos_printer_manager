@@ -193,14 +193,22 @@ class _ConnectionConfigOrganismState extends State<ConnectionConfigOrganism> {
   Future<void> _showPrinterFinder() async {
     await showDialog(
       context: context,
+      // Запрещаем закрытие диалога тапом по барьеру —
+      // пользователь должен явно нажать «Отмена» или выбрать принтер.
+      barrierDismissible: false,
       builder: (dialogContext) => PrinterDiscoveryOrganism(
         printer: widget.printer,
         onPrinterSelected: (params) async {
-          await widget.printer.handler.settings.updateConnectionParams(params);
-          widget.printer.updateStatus(true);
+          // Сначала закрываем диалог, чтобы root navigator был в чистом
+          // состоянии до того, как notification-каскад (PrintersManager →
+          // PrintService → HomeViewModel) перестроит дерево виджетов.
+          // Без этого rebuild HomeView происходит при ещё открытом диалоге
+          // на root navigator, что может сломать вложенные навигаторы.
           if (dialogContext.mounted) {
             Navigator.of(dialogContext).pop();
           }
+          await widget.printer.handler.settings.updateConnectionParams(params);
+          widget.printer.updateStatus(true);
         },
         onCancel: () => Navigator.of(dialogContext).pop(),
       ),

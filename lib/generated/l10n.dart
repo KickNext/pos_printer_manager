@@ -18,10 +18,8 @@ class PrinterManagerL10n {
   static PrinterManagerL10n? _current;
 
   static PrinterManagerL10n get current {
-    assert(
-      _current != null,
-      'No instance of PrinterManagerL10n was loaded. Try to initialize the PrinterManagerL10n delegate before accessing PrinterManagerL10n.current.',
-    );
+    assert(_current != null,
+        'No instance of PrinterManagerL10n was loaded. Try to initialize the PrinterManagerL10n delegate before accessing PrinterManagerL10n.current.');
     return _current!;
   }
 
@@ -43,10 +41,8 @@ class PrinterManagerL10n {
 
   static PrinterManagerL10n of(BuildContext context) {
     final instance = PrinterManagerL10n.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of PrinterManagerL10n present in the widget tree. Did you add PrinterManagerL10n.delegate in localizationsDelegates?',
-    );
+    assert(instance != null,
+        'No instance of PrinterManagerL10n present in the widget tree. Did you add PrinterManagerL10n.delegate in localizationsDelegates?');
     return instance!;
   }
 
